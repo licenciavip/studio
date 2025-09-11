@@ -1,3 +1,40 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "netflix-logo",
+      "description": "Netflix logo",
+      "imageUrl": "https://picsum.photos/seed/netflixlogo/200/200",
+      "imageHint": "netflix logo"
+    },
+    {
+      "id": "spotify-logo",
+      "description": "Spotify logo",
+      "imageUrl": "https://picsum.photos/seed/spotifylogo/200/200",
+      "imageHint": "spotify logo"
+    },
+    {
+      "id": "chatgpt-logo",
+      "description": "ChatGPT logo",
+      "imageUrl": "https://picsum.photos/seed/chatgptlogo/200/200",
+      "imageHint": "openai logo"
+    },
+    {
+      "id": "hbo-logo",
+      "description": "HBO Max logo",
+      "imageUrl": "https://picsum.photos/seed/hbologo/200/200",
+      "imageHint": "hbo logo"
+    },
+    {
+      "id": "disney-plus-logo",
+      "description": "Disney+ logo",
+      "imageUrl": "https://picsum.photos/seed/disneypluslogo/200/200",
+      "imageHint": "disney logo"
+    },
+    {
+      "id": "youtube-premium-logo",
+      "description": "YouTube Premium logo",
+      "imageUrl": "https://picsum.photos/seed/ytlogo/200/200",
+      "imageHint": "youtube logo"
+    }
+  ]
 }
