@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Menu, Share2, Bell, Globe, User, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -68,6 +68,10 @@ export default function Header() {
                 </Button>
               </SheetTrigger>
               <SheetContent side="right">
+                <SheetTitle className="sr-only">Menú de navegación</SheetTitle>
+                <SheetDescription className="sr-only">
+                    Navegación principal y opciones de perfil
+                </SheetDescription>
                 <div className="grid gap-4 py-6">
                   <Link href="/" className="flex items-center gap-2 font-bold mb-4">
                     <Share2 className="h-6 w-6 text-primary" />
