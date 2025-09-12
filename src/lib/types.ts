@@ -26,6 +26,7 @@ export type Order = {
   price: number;
   status: OrderStatus;
   expires: string; // date string
+  logoId: ImagePlaceholder['id'];
 };
 
 export type Group = {

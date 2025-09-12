@@ -100,6 +100,7 @@ export const orders: Order[] = [
     price: 9.99,
     status: 'Activo',
     expires: '2024-08-15',
+    logoId: 'netflix-logo'
   },
   {
     id: 'ord-002',
@@ -109,6 +110,7 @@ export const orders: Order[] = [
     price: 10.00,
     status: 'Pendiente',
     expires: '2024-08-20',
+    logoId: 'chatgpt-logo'
   },
     {
     id: 'ord-003',
@@ -118,6 +120,7 @@ export const orders: Order[] = [
     price: 5.00,
     status: 'En disputa',
     expires: '2024-08-10',
+    logoId: 'disney-plus-logo'
   },
     {
     id: 'ord-004',
@@ -127,6 +130,7 @@ export const orders: Order[] = [
     price: 4.00,
     status: 'Finalizado',
     expires: '2024-07-25',
+    logoId: 'youtube-premium-logo'
   }
 ];
 

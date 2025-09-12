@@ -4,14 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet";
-import { Menu, Share2, Bell, Globe, User, Star } from "lucide-react";
+import { Menu, Share2, Bell, Globe, User, Star, HelpCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
-  { href: "/", label: "Inicio" },
-  { href: "/publicar", label: "Compartir" },
-  { href: "/explorar", label: "Unirme" },
-  { href: "/mis-ordenes", label: "Mis Órdenes" },
+  { href: "/publicar", label: "Compartir mi suscripción" },
+  { href: "/explorar", label: "Unirme a una suscripción" },
+  { href: "/ayuda", label: "Ayuda" },
 ];
 
 export default function Header() {
@@ -37,6 +36,10 @@ export default function Header() {
               {link.label}
             </Link>
           ))}
+           <Link href="/mis-ordenes" className={cn(
+                "text-sm font-medium transition-colors hover:text-primary",
+                pathname === "/mis-ordenes" ? "text-primary" : "text-muted-foreground"
+              )}>Mis Grupos</Link>
         </nav>
         <div className="flex items-center gap-4">
           <div className="hidden md:flex items-center gap-4">
@@ -64,11 +67,11 @@ export default function Header() {
               <SheetTrigger asChild>
                 <Button variant="outline" size="icon">
                   <Menu className="h-6 w-6" />
-                  <span className="sr-only">Open menu</span>
+                  <span className="sr-only">Abrir menú</span>
                 </Button>
               </SheetTrigger>
               <SheetContent side="right">
-                <SheetTitle className="sr-only">Menú de navegación</SheetTitle>
+                <SheetTitle className="sr-only">Menú</SheetTitle>
                 <SheetDescription className="sr-only">
                     Navegación principal y opciones de perfil
                 </SheetDescription>
@@ -90,11 +93,15 @@ export default function Header() {
                         {link.label}
                       </Link>
                     ))}
+                     <Link href="/mis-ordenes" className={cn(
+                        "flex w-full items-center py-2 text-lg font-medium",
+                        pathname === "/mis-ordenes" ? "text-primary" : "text-foreground"
+                      )}>Mis Grupos</Link>
                   </nav>
                   <div className="border-t pt-4 mt-4 grid gap-2">
                      <Link href="/billetera" className="flex items-center py-2 text-lg font-medium">
                         <User className="mr-2 h-5 w-5" />
-                        Perfil
+                        Perfil y Billetera
                      </Link>
                      <button className="flex items-center py-2 text-lg font-medium text-left">
                         <Bell className="mr-2 h-5 w-5" />
