@@ -137,7 +137,7 @@ export default function Home() {
 
        {/* Unirse a un grupo Button */}
        <div className="text-center pt-8">
-           <Button asChild size="lg" className="bg-accent hover:bg-accent/90">
+           <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground transition-transform hover:scale-105">
              <Link href="/explorar">
                 <PlusCircle className="mr-2 h-5 w-5"/>
                 Unirse a un Grupo

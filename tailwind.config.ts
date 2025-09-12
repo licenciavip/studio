@@ -17,9 +17,13 @@ export default {
     },
     extend: {
       fontFamily: {
-        body: ['PT Sans', 'sans-serif'],
+        body: ['Inter', 'sans-serif'],
         headline: ['Playfair Display', 'serif'],
         code: ['monospace'],
+      },
+      fontWeight: {
+        normal: '400',
+        bold: '700',
       },
       colors: {
         background: 'hsl(var(--background))',

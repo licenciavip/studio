@@ -23,7 +23,7 @@ export default function SubscriptionCard({ subscription }: SubscriptionCardProps
   const slotsAvailable = subscription.availableSlots > 0;
 
   return (
-    <Card className="flex flex-col overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+    <Card className="flex flex-col overflow-hidden transition-transform duration-300 ease-in-out hover:-translate-y-2 hover:shadow-2xl">
       <CardHeader className="flex-row items-start gap-4 p-4">
         {logo && (
           <Image
@@ -66,7 +66,7 @@ export default function SubscriptionCard({ subscription }: SubscriptionCardProps
       </CardContent>
       <CardFooter className="p-4 bg-muted/50">
         {slotsAvailable ? (
-          <Button asChild className="w-full bg-accent hover:bg-accent/90">
+          <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90 transition-transform hover:scale-105">
             <Link href={`/checkout/${subscription.id}`}>Unirse al grupo</Link>
           </Button>
         ) : (
