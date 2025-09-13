@@ -8,7 +8,7 @@ import { Menu, Share2, Bell, Globe, User, Star, HelpCircle } from "lucide-react"
 import { cn } from "@/lib/utils";
 
 const navLinks = [
-  { href: "/publicar", label: "Compartir mi suscripción" },
+  { href: "/compartir", label: "Compartir mi suscripción" },
   { href: "/explorar", label: "Unirme a una suscripción" },
   { href: "/ayuda", label: "Ayuda" },
 ];
@@ -30,7 +30,7 @@ export default function Header() {
               href={link.href}
               className={cn(
                 "text-sm font-medium transition-colors hover:text-primary",
-                pathname === link.href ? "text-primary" : "text-muted-foreground"
+                pathname.startsWith(link.href) ? "text-primary" : "text-muted-foreground"
               )}
             >
               {link.label}
@@ -87,7 +87,7 @@ export default function Header() {
                         href={link.href}
                         className={cn(
                           "flex w-full items-center py-2 text-lg font-medium",
-                          pathname === link.href ? "text-primary" : "text-foreground"
+                          pathname.startsWith(link.href) ? "text-primary" : "text-foreground"
                         )}
                       >
                         {link.label}
