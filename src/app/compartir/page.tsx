@@ -1,39 +1,92 @@
-import { subscriptions } from "@/lib/data";
-import SubscriptionCard from "@/components/subscription-card";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Film, Music, School } from "lucide-react";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Film,
+  Music,
+  School,
+  Gamepad2,
+  Palette,
+  ShieldCheck,
+  BrainCircuit,
+  Swords,
+  HeartPulse,
+  Settings2,
+} from "lucide-react";
+import Link from "next/link";
 
 type Category = {
   title: string;
+  description: string;
   icon: React.ReactNode;
-  services: string[];
+  href: string;
 };
 
 const categories: Category[] = [
   {
     title: "Películas y Series",
-    icon: <Film className="h-6 w-6 text-primary" />,
-    services: ["Netflix", "Disney+", "HBO Max"],
+    description: "Netflix, Disney+, HBO Max",
+    icon: <Film className="h-10 w-10 text-primary" />,
+    href: "/publicar?category=streaming",
   },
   {
     title: "Música",
-    icon: <Music className="h-6 w-6 text-primary" />,
-    services: ["Spotify"],
+    description: "Spotify, Apple Music, Tidal",
+    icon: <Music className="h-10 w-10 text-primary" />,
+    href: "/publicar?category=musica",
   },
   {
-    title: "Educación y Productividad",
-    icon: <School className="h-6 w-6 text-primary" />,
-    services: ["ChatGPT", "YouTube Premium"],
+    title: "Educación",
+    description: "Coursera, Duolingo, Platzi",
+    icon: <School className="h-10 w-10 text-primary" />,
+    href: "/publicar?category=educacion",
+  },
+  {
+    title: "Gaming",
+    description: "PS Plus, Xbox Game Pass",
+    icon: <Gamepad2 className="h-10 w-10 text-primary" />,
+    href: "/publicar?category=gaming",
+  },
+  {
+    title: "Diseño",
+    description: "Adobe Creative Cloud, Canva",
+    icon: <Palette className="h-10 w-10 text-primary" />,
+    href: "/publicar?category=diseno",
+  },
+  {
+    title: "VPNs y Seguridad",
+    description: "NordVPN, ExpressVPN",
+    icon: <ShieldCheck className="h-10 w-10 text-primary" />,
+    href: "/publicar?category=seguridad",
+  },
+  {
+    title: "Inteligencia Artificial",
+    description: "ChatGPT Plus, Midjourney",
+    icon: <BrainCircuit className="h-10 w-10 text-primary" />,
+    href: "/publicar?category=ia",
+  },
+  {
+    title: "Deportes",
+    description: "Star+, NBA League Pass",
+    icon: <Swords className="h-10 w-10 text-primary" />,
+    href: "/publicar?category=deportes",
+  },
+  {
+    title: "Bienestar",
+    description: "Calm, Headspace",
+    icon: <HeartPulse className="h-10 w-10 text-primary" />,
+    href: "/publicar?category=bienestar",
+  },
+  {
+    title: "Software",
+    description: "Microsoft 365, Setapp",
+    icon: <Settings2 className="h-10 w-10 text-primary" />,
+    href: "/publicar?category=software",
   },
 ];
-
-// Usamos las mismas suscripciones para mostrar las tarjetas, pero la acción será diferente.
-// Filtramos para tener un solo ejemplo por servicio para no duplicar.
-const uniqueServices = Array.from(new Set(subscriptions.map(s => s.service)))
-  .map(service => {
-    return subscriptions.find(s => s.service === service)!;
-  });
-
 
 export default function CompartirPage() {
   return (
@@ -43,27 +96,23 @@ export default function CompartirPage() {
           Comparte tu Suscripción
         </h1>
         <p className="mt-3 max-w-md mx-auto text-base text-foreground/80 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-          Selecciona el servicio que quieres compartir y empieza a ganar dinero.
+          Selecciona la categoría del servicio que quieres compartir.
         </p>
       </div>
 
-      <div className="space-y-12">
+       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
         {categories.map((category) => (
-          <div key={category.title}>
-            <div className="flex items-center gap-4 mb-6">
-              {category.icon}
-              <h2 className="text-2xl font-headline font-bold">{category.title}</h2>
-            </div>
-            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {uniqueServices
-                .filter((sub) => category.services.includes(sub.service))
-                .map((sub) => (
-                  <SubscriptionCard key={sub.id} subscription={sub} showAction="share" />
-                ))}
-            </div>
-          </div>
+          <Link href={category.href} key={category.title}>
+            <Card className="text-center flex flex-col items-center justify-center p-6 h-full transition-transform duration-300 ease-in-out hover:-translate-y-2 hover:shadow-2xl cursor-pointer">
+              <CardHeader className="p-0">
+                {category.icon}
+                <CardTitle className="mt-4 font-headline text-lg">
+                  {category.title}
+                </CardTitle>
+              </CardHeader>
+            </Card>
+          </Link>
         ))}
-        
       </div>
     </div>
   );
