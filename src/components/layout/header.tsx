@@ -36,9 +36,9 @@ export default function Header() {
               {link.label}
             </Link>
           ))}
-           <Link href="/mis-ordenes" className={cn(
+           <Link href="/mis-grupos" className={cn(
                 "text-sm font-medium transition-colors hover:text-primary",
-                pathname === "/mis-ordenes" ? "text-primary" : "text-muted-foreground"
+                pathname === "/mis-grupos" ? "text-primary" : "text-muted-foreground"
               )}>Mis Grupos</Link>
         </nav>
         <div className="flex items-center gap-4">
@@ -93,9 +93,9 @@ export default function Header() {
                         {link.label}
                       </Link>
                     ))}
-                     <Link href="/mis-ordenes" className={cn(
+                     <Link href="/mis-grupos" className={cn(
                         "flex w-full items-center py-2 text-lg font-medium",
-                        pathname === "/mis-ordenes" ? "text-primary" : "text-foreground"
+                        pathname === "/mis-grupos" ? "text-primary" : "text-foreground"
                       )}>Mis Grupos</Link>
                   </nav>
                   <div className="border-t pt-4 mt-4 grid gap-2">
