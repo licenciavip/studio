@@ -8,9 +8,10 @@ import { Menu, Share2, Bell, Globe, User, Star, HelpCircle } from "lucide-react"
 import { cn } from "@/lib/utils";
 
 const navLinks = [
-  { href: "/compartir", label: "Compartir mi suscripción" },
-  { href: "/explorar", label: "Unirme a una suscripción" },
-  { href: "/ayuda", label: "Ayuda" },
+  { href: "/compartir", label: "Compartir" },
+  { href: "/explorar", label: "Unirme" },
+  { href: "/mis-grupos", label: "Mis Grupos" },
+  { href: "/mis-ordenes", label: "Mis Órdenes" },
 ];
 
 export default function Header() {
@@ -36,25 +37,23 @@ export default function Header() {
               {link.label}
             </Link>
           ))}
-           <Link href="/mis-grupos" className={cn(
-                "text-sm font-medium transition-colors hover:text-primary",
-                pathname === "/mis-grupos" ? "text-primary" : "text-muted-foreground"
-              )}>Mis Grupos</Link>
         </nav>
         <div className="flex items-center gap-4">
           <div className="hidden md:flex items-center gap-4">
-            <Button variant="ghost" size="icon">
+            <Link href="/ayuda">
+                <Button variant="ghost" size="icon" aria-label="Ayuda">
+                    <HelpCircle className="h-5 w-5" />
+                </Button>
+            </Link>
+            <Button variant="ghost" size="icon" aria-label="Notificaciones">
               <Bell className="h-5 w-5" />
-              <span className="sr-only">Notificaciones</span>
             </Button>
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" aria-label="Moneda/País">
               <Globe className="h-5 w-5" />
-              <span className="sr-only">Moneda/País</span>
             </Button>
             <Link href="/billetera" className="flex items-center gap-2">
-                 <Button variant="ghost" size="icon">
+                 <Button variant="ghost" size="icon" aria-label="Perfil">
                     <User className="h-5 w-5" />
-                    <span className="sr-only">Perfil</span>
                 </Button>
                 <div className="flex items-center">
                     <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
@@ -93,10 +92,10 @@ export default function Header() {
                         {link.label}
                       </Link>
                     ))}
-                     <Link href="/mis-grupos" className={cn(
+                    <Link href="/ayuda" className={cn(
                         "flex w-full items-center py-2 text-lg font-medium",
-                        pathname === "/mis-grupos" ? "text-primary" : "text-foreground"
-                      )}>Mis Grupos</Link>
+                        pathname.startsWith('/ayuda') ? "text-primary" : "text-foreground"
+                    )}>Ayuda</Link>
                   </nav>
                   <div className="border-t pt-4 mt-4 grid gap-2">
                      <Link href="/billetera" className="flex items-center py-2 text-lg font-medium">
