@@ -32,10 +32,10 @@ export default function ExplorarPage() {
     <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <div className="text-center mb-10">
         <h1 className="text-4xl font-headline font-extrabold tracking-tight sm:text-5xl md:text-6xl">
-          Únete a un Grupo Compartido
+          Explora Nuestros Grupos
         </h1>
         <p className="mt-3 max-w-md mx-auto text-base text-foreground/80 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-          Encuentra y únete a grupos para compartir tus suscripciones favoritas al mejor precio.
+          Encuentra y únete a grupos para compartir tus suscripciones favoritas o publica la tuya.
         </p>
       </div>
 

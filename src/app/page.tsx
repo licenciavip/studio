@@ -12,7 +12,7 @@ export default function Home() {
             size="lg"
             className="h-16 w-full sm:w-auto text-lg px-12 rounded-xl bg-accent text-accent-foreground hover:bg-accent/90 transition-transform duration-300 ease-in-out hover:scale-105"
           >
-            <Link href="/publicar">
+            <Link href="/explorar">
               <Share2 className="mr-3 h-6 w-6" />
               Compartir mi suscripción
             </Link>
