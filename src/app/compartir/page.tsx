@@ -1,94 +1,46 @@
+"use client";
+
+import { useState } from "react";
 import {
   Card,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Film,
-  Music,
-  School,
-  Gamepad2,
-  Palette,
-  ShieldCheck,
-  BrainCircuit,
-  Swords,
-  HeartPulse,
-  Settings2,
-} from "lucide-react";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { ChevronDown } from "lucide-react";
 
-type Category = {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  href: string;
+type Service = {
+  name: string;
+  isNew?: boolean;
 };
 
-const categories: Category[] = [
-  {
-    title: "Películas y Series",
-    description: "Netflix, Disney+, HBO Max",
-    icon: <Film className="h-10 w-10 text-primary" />,
-    href: "/publicar?category=streaming",
-  },
-  {
-    title: "Música",
-    description: "Spotify, Apple Music, Tidal",
-    icon: <Music className="h-10 w-10 text-primary" />,
-    href: "/publicar?category=musica",
-  },
-  {
-    title: "Educación",
-    description: "Coursera, Duolingo, Platzi",
-    icon: <School className="h-10 w-10 text-primary" />,
-    href: "/publicar?category=educacion",
-  },
-  {
-    title: "Gaming",
-    description: "PS Plus, Xbox Game Pass",
-    icon: <Gamepad2 className="h-10 w-10 text-primary" />,
-    href: "/publicar?category=gaming",
-  },
-  {
-    title: "Diseño",
-    description: "Adobe Creative Cloud, Canva",
-    icon: <Palette className="h-10 w-10 text-primary" />,
-    href: "/publicar?category=diseno",
-  },
-  {
-    title: "VPNs y Seguridad",
-    description: "NordVPN, ExpressVPN",
-    icon: <ShieldCheck className="h-10 w-10 text-primary" />,
-    href: "/publicar?category=seguridad",
-  },
-  {
-    title: "Inteligencia Artificial",
-    description: "ChatGPT Plus, Midjourney",
-    icon: <BrainCircuit className="h-10 w-10 text-primary" />,
-    href: "/publicar?category=ia",
-  },
-  {
-    title: "Deportes",
-    description: "Star+, NBA League Pass",
-    icon: <Swords className="h-10 w-10 text-primary" />,
-    href: "/publicar?category=deportes",
-  },
-  {
-    title: "Bienestar",
-    description: "Calm, Headspace",
-    icon: <HeartPulse className="h-10 w-10 text-primary" />,
-    href: "/publicar?category=bienestar",
-  },
-  {
-    title: "Software",
-    description: "Microsoft 365, Setapp",
-    icon: <Settings2 className="h-10 w-10 text-primary" />,
-    href: "/publicar?category=software",
-  },
+// Based on the provided image
+const allServices: Service[] = [
+    { name: "AmazonMusic", isNew: true }, { name: "Apple" }, { name: "AtresPlayer" }, { name: "Avast" },
+    { name: "Calm", isNew: true }, { name: "CanvaPro" }, { name: "CapCut", isNew: true }, { name: "ChatGPT", isNew: true },
+    { name: "Crunchyroll" }, { name: "Curiosity4K", isNew: true }, { name: "Dazn", isNew: true }, { name: "Deezer" },
+    { name: "DirecTVGO" }, { name: "Disney+" }, { name: "Dropbox" }, { name: "Duolingo" },
+    { name: "F1 TV", isNew: true }, { name: "Gaia" }, { name: "Gemini AI", isNew: true }, { name: "Google", isNew: true },
+    { name: "HBO Max" }, { name: "Inteligencia Artificial" }, { name: "L1 MAX", isNew: true }, { name: "MLS", isNew: true },
+    { name: "Movistar TV App", isNew: true }, { name: "MUBI" }, { name: "NBA League Pass" }, { name: "Netflix+" },
+    { name: "Nintendo" }, { name: "Office365" }, { name: "Paramount+" }, { name: "Platzi" },
+    { name: "PrimeVideo" }, { name: "Spotify" }, { name: "Tidal" }, { name: "TrueCaller", isNew: true },
+    { name: "Universal+", isNew: true }, { name: "VIKIPass Plus" }, { name: "Vix" }, { name: "VPNs" },
+    { name: "WOW Presents Plus", isNew: true }, { name: "YouTube" }
 ];
 
+const INITIAL_VISIBLE_COUNT = 12;
+
 export default function CompartirPage() {
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
+
+  const showMore = () => {
+    setVisibleCount(allServices.length);
+  };
+
+  const visibleServices = allServices.slice(0, visibleCount);
+
   return (
     <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <div className="text-center mb-10">
@@ -96,24 +48,35 @@ export default function CompartirPage() {
           Comparte tu Suscripción
         </h1>
         <p className="mt-3 max-w-md mx-auto text-base text-foreground/80 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-          Selecciona la categoría del servicio que quieres compartir.
+          Selecciona el servicio que quieres compartir para empezar a ganar dinero.
         </p>
       </div>
 
-       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-        {categories.map((category) => (
-          <Link href={category.href} key={category.title}>
-            <Card className="text-center flex flex-col items-center justify-center p-6 h-full transition-transform duration-300 ease-in-out hover:-translate-y-2 hover:shadow-2xl cursor-pointer">
-              <CardHeader className="p-0">
-                {category.icon}
-                <CardTitle className="mt-4 font-headline text-lg">
-                  {category.title}
+       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {visibleServices.map((service) => (
+          <Link href={`/publicar?service=${encodeURIComponent(service.name.toLowerCase())}`} key={service.name}>
+            <Card className="text-center flex flex-col items-center justify-center p-4 h-full transition-transform duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg cursor-pointer min-h-[100px]">
+              <CardHeader className="p-0 relative w-full">
+                <CardTitle className="font-sans text-base font-medium">
+                  {service.name}
                 </CardTitle>
+                {service.isNew && (
+                   <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-xs font-bold text-amber-500">NUEVO</span>
+                )}
               </CardHeader>
             </Card>
           </Link>
         ))}
       </div>
+
+      {visibleCount < allServices.length && (
+        <div className="text-center mt-10">
+          <Button onClick={showMore} variant="outline" size="lg">
+            <ChevronDown className="mr-2 h-5 w-5" />
+            Ver más
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
