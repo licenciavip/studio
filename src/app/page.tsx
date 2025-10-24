@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Share2, UserPlus } from "lucide-react";
@@ -15,7 +16,7 @@ export default function Home() {
             size="lg"
             className="h-16 w-full sm:w-auto text-lg px-12 rounded-xl bg-accent text-accent-foreground hover:bg-accent/90 transition-transform duration-300 ease-in-out hover:scale-105"
           >
-            <Link href="/explorar?flow=share">
+            <Link href="/compartir">
               <Share2 className="mr-3 h-6 w-6" />
               Compartir mi suscripción
             </Link>
@@ -25,7 +26,7 @@ export default function Home() {
             size="lg"
             className="h-16 w-full sm:w-auto text-lg px-12 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 transition-transform duration-300 ease-in-out hover:scale-105"
           >
-            <Link href="/explorar?flow=join">
+            <Link href="/explorar">
               <UserPlus className="mr-3 h-6 w-6" />
               Unirme a una suscripción
             </Link>
