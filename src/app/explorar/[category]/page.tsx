@@ -2,6 +2,9 @@ import SubscriptionCard from "@/components/subscription-card";
 import { subscriptions } from "@/lib/data";
 import type { CategorySlug } from "@/lib/types";
 import { notFound } from "next/navigation";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 // Define un mapa de los slugs de categoría a sus títulos legibles por humanos.
 const categoryNames: Record<CategorySlug, string> = {
@@ -33,7 +36,13 @@ export default function CategoryPage({ params }: { params: { category: CategoryS
 
   return (
     <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
-      <div className="text-center mb-10">
+       <div className="relative text-center mb-10">
+        <Button asChild variant="outline" className="absolute left-0 top-1/2 -translate-y-1/2">
+            <Link href="/explorar">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Regresar
+            </Link>
+        </Button>
         <h1 className="text-4xl font-headline font-extrabold tracking-tight sm:text-5xl md:text-6xl">
           {categoryName}
         </h1>
