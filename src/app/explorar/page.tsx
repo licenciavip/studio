@@ -1,6 +1,5 @@
 import {
   Card,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -15,13 +14,11 @@ import {
   Swords,
   HeartPulse,
   Settings2,
-  Users,
 } from "lucide-react";
 import Link from "next/link";
 
 type Category = {
   title: string;
-  description: string;
   icon: React.ReactNode;
   href: string;
 };
@@ -29,63 +26,53 @@ type Category = {
 const categories: Category[] = [
   {
     title: "Películas y Series",
-    description: "Netflix, Disney+, HBO Max",
-    icon: <Film className="h-10 w-10 text-primary" />,
+    icon: <Film className="h-8 w-8 text-primary" />,
     href: "/explorar/streaming",
   },
   {
-    title: "Música",
-    description: "Spotify, Apple Music, Tidal",
-    icon: <Music className="h-10 w-10 text-primary" />,
-    href: "/explorar/musica",
-  },
-  {
-    title: "Educación",
-    description: "Coursera, Duolingo, Platzi",
-    icon: <School className="h-10 w-10 text-primary" />,
-    href: "/explorar/educacion",
-  },
-  {
     title: "Gaming",
-    description: "PS Plus, Xbox Game Pass",
-    icon: <Gamepad2 className="h-10 w-10 text-primary" />,
+    icon: <Gamepad2 className="h-8 w-8 text-primary" />,
     href: "/explorar/gaming",
   },
   {
     title: "Diseño",
-    description: "Adobe Creative Cloud, Canva",
-    icon: <Palette className="h-10 w-10 text-primary" />,
+    icon: <Palette className="h-8 w-8 text-primary" />,
     href: "/explorar/diseno",
   },
   {
-    title: "VPNs y Seguridad",
-    description: "NordVPN, ExpressVPN",
-    icon: <ShieldCheck className="h-10 w-10 text-primary" />,
-    href: "/explorar/seguridad",
-  },
-  {
-    title: "Inteligencia Artificial",
-    description: "ChatGPT Plus, Midjourney",
-    icon: <BrainCircuit className="h-10 w-10 text-primary" />,
-    href: "/explorar/ia",
+    title: "Música",
+    icon: <Music className="h-8 w-8 text-primary" />,
+    href: "/explorar/musica",
   },
   {
     title: "Deportes",
-    description: "Star+, NBA League Pass",
-    icon: <Swords className="h-10 w-10 text-primary" />,
+    icon: <Swords className="h-8 w-8 text-primary" />,
     href: "/explorar/deportes",
   },
   {
-    title: "Bienestar",
-    description: "Calm, Headspace",
-    icon: <HeartPulse className="h-10 w-10 text-primary" />,
-    href: "/explorar/bienestar",
+    title: "VPNs",
+    icon: <ShieldCheck className="h-8 w-8 text-primary" />,
+    href: "/explorar/seguridad",
+  },
+    {
+    title: "Inteligencia Artificial",
+    icon: <BrainCircuit className="h-8 w-8 text-primary" />,
+    href: "/explorar/ia",
   },
   {
+    title: "Educación",
+    icon: <School className="h-8 w-8 text-primary" />,
+    href: "/explorar/educacion",
+  },
+    {
     title: "Software",
-    description: "Microsoft 365, Setapp",
-    icon: <Settings2 className="h-10 w-10 text-primary" />,
+    icon: <Settings2 className="h-8 w-8 text-primary" />,
     href: "/explorar/software",
+  },
+    {
+    title: "Bienestar",
+    icon: <HeartPulse className="h-8 w-8 text-primary" />,
+    href: "/explorar/bienestar",
   },
 ];
 
@@ -96,18 +83,17 @@ export default function ExplorarPage() {
         <h1 className="text-4xl font-headline font-extrabold tracking-tight sm:text-5xl md:text-6xl">
           Únete a un Grupo Compartido
         </h1>
-        <p className="mt-3 max-w-md mx-auto text-base text-foreground/80 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-          Selecciona una categoría para ver los grupos disponibles.
-        </p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {categories.map((category) => (
           <Link href={category.href} key={category.title}>
-            <Card className="text-center flex flex-col items-center justify-center p-6 h-full transition-transform duration-300 ease-in-out hover:-translate-y-2 hover:shadow-2xl cursor-pointer">
+            <Card className="flex items-center p-4 h-full transition-transform duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg cursor-pointer">
+              <div className="bg-primary/10 p-3 rounded-lg mr-4">
+                 {category.icon}
+              </div>
               <CardHeader className="p-0">
-                {category.icon}
-                <CardTitle className="mt-4 font-headline text-lg">
+                <CardTitle className="font-sans text-base font-semibold">
                   {category.title}
                 </CardTitle>
               </CardHeader>
