@@ -36,19 +36,21 @@ export default function CategoryPage({ params }: { params: { category: CategoryS
 
   return (
     <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
-       <div className="relative text-center mb-10">
+       <div className="flex justify-center items-center relative text-center mb-10">
         <Button asChild variant="outline" className="absolute left-0 top-1/2 -translate-y-1/2">
             <Link href="/explorar">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Regresar
             </Link>
         </Button>
-        <h1 className="text-4xl font-headline font-extrabold tracking-tight sm:text-5xl md:text-6xl">
-          {categoryName}
-        </h1>
-        <p className="mt-3 max-w-md mx-auto text-base text-foreground/80 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-          Grupos disponibles para unirte en la categoría {categoryName.toLowerCase()}. ¡Ahorra en tus servicios favoritos!
-        </p>
+        <div className="flex-grow">
+          <h1 className="text-4xl font-headline font-extrabold tracking-tight sm:text-5xl md:text-6xl">
+            {categoryName}
+          </h1>
+          <p className="mt-3 max-w-md mx-auto text-base text-foreground/80 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
+            Grupos disponibles para unirte en la categoría {categoryName.toLowerCase()}. ¡Ahorra en tus servicios favoritos!
+          </p>
+        </div>
       </div>
 
       {categorySubscriptions.length > 0 ? (
