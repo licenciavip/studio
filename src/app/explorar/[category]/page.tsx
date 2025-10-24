@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ChevronRight } from "lucide-react";
 import type { CategorySlug } from "@/lib/types";
-import { notFound } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import {
@@ -28,12 +28,10 @@ const categoryNames: Record<CategorySlug, string> = {
   software: "Software",
 };
 
-export default function CategoryPage({
-  params,
-}: {
-  params: { category: CategorySlug };
-}) {
-  const { category } = params;
+export default function CategoryPage() {
+  const params = useParams();
+  const category = params.category as CategorySlug;
+
   const services = servicesByCategory[category];
   const categoryName = categoryNames[category];
 
@@ -52,7 +50,7 @@ export default function CategoryPage({
             </Link>
           </Button>
         </div>
-        <div className="flex-1 text-center">
+        <div className="flex-[2] text-center">
           <h1 className="text-4xl font-headline font-extrabold tracking-tight sm:text-5xl md:text-6xl">
             Selecciona un servicio
           </h1>
