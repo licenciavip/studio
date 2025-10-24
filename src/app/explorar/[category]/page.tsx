@@ -4,14 +4,13 @@
 import { servicesByCategory } from "@/lib/data";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Users, ChevronRight } from "lucide-react";
+import { ArrowLeft, ChevronRight } from "lucide-react";
 import type { CategorySlug } from "@/lib/types";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import {
   Card,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";

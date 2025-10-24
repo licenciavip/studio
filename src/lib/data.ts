@@ -1,7 +1,7 @@
 
 // This file will be removed once Firebase is connected.
 // It is used for placeholder data in the meantime.
-import type { CategorySlug } from "@/lib/types";
+import type { CategorySlug, Subscription } from "@/lib/types";
 
 export type Service = {
   id: string;
@@ -62,6 +62,79 @@ export const servicesByCategory: Record<CategorySlug, Service[]> = {
       { id: "headspace", name: "Headspace", logoId: "headspace-logo" },
   ],
 };
+
+
+export const subscriptions: Subscription[] = [
+  {
+    id: "1",
+    service: "Disney+",
+    host: "Juanca10",
+    price: 23.90,
+    currency: "S/",
+    rating: 4.8,
+    availableSlots: 2,
+    totalSlots: 5,
+    logoId: "disney-plus-logo",
+    country: "Perú",
+    avatarUrl: "https://picsum.photos/seed/avatar1/100/100"
+  },
+  {
+    id: "2",
+    service: "Disney+",
+    host: "Ana_Movies",
+    price: 24.50,
+    currency: "S/",
+    rating: 4.9,
+    availableSlots: 1,
+    totalSlots: 4,
+    logoId: "disney-plus-logo",
+    country: "Perú",
+    avatarUrl: "https://picsum.photos/seed/avatar2/100/100"
+  },
+  {
+    id: "3",
+    service: "Netflix",
+    host: "SeriesFan",
+    price: 30.00,
+    currency: "S/",
+    rating: 4.7,
+    availableSlots: 1,
+    totalSlots: 2,
+    logoId: "netflix-logo",
+    country: "Colombia",
+    avatarUrl: "https://picsum.photos/seed/avatar3/100/100"
+  },
+  {
+    id: "4",
+    service: "Spotify",
+    host: "MusicLover",
+    price: 15.00,
+    currency: "S/",
+    rating: 5.0,
+    availableSlots: 3,
+    totalSlots: 6,
+    logoId: "spotify-logo",
+    country: "Argentina",
+    avatarUrl: "https://picsum.photos/seed/avatar4/100/100"
+  },
+];
+
+
+export const getSubscriptionsByService = (serviceId: string) => {
+    const serviceName = serviceId.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    // This is a simplified search. In a real scenario, you'd match more robustly.
+    return subscriptions.filter(sub => sub.service.toLowerCase().includes(serviceName.split(' ')[0].toLowerCase()));
+}
+
+export const getServiceById = (serviceId: string): Service | undefined => {
+    for (const category in servicesByCategory) {
+        const service = servicesByCategory[category as CategorySlug].find(s => s.id === serviceId);
+        if (service) {
+            return service;
+        }
+    }
+    return undefined;
+}
 
 
 // This file will be removed once Firebase is connected.
