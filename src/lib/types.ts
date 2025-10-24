@@ -2,6 +2,8 @@ import type { ImagePlaceholder } from './placeholder-images';
 
 export type SubscriptionService = 'Netflix' | 'Spotify' | 'ChatGPT' | 'HBO Max' | 'Disney+' | 'YouTube Premium';
 
+export type CategorySlug = 'streaming' | 'musica' | 'ia' | 'gaming' | 'educacion' | 'diseno' | 'seguridad' | 'deportes' | 'bienestar' | 'software';
+
 export type Country = 'Perú' | 'LatAm';
 
 export type Subscription = {
@@ -14,6 +16,7 @@ export type Subscription = {
   country: Country;
   host: string;
   logoId: ImagePlaceholder['id'];
+  category: CategorySlug;
 };
 
 export type OrderStatus = 'Pendiente' | 'Activo' | 'En disputa' | 'Finalizado';

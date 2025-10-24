@@ -10,7 +10,8 @@ export const subscriptions: Subscription[] = [
     rating: 4.8,
     country: 'Perú',
     host: 'Juan Perez',
-    logoId: 'netflix-logo'
+    logoId: 'netflix-logo',
+    category: 'streaming'
   },
   {
     id: '2',
@@ -21,7 +22,8 @@ export const subscriptions: Subscription[] = [
     rating: 4.9,
     country: 'LatAm',
     host: 'Maria Garcia',
-    logoId: 'spotify-logo'
+    logoId: 'spotify-logo',
+    category: 'musica'
   },
   {
     id: '3',
@@ -32,7 +34,8 @@ export const subscriptions: Subscription[] = [
     rating: 4.5,
     country: 'LatAm',
     host: 'Carlos R.',
-    logoId: 'chatgpt-logo'
+    logoId: 'chatgpt-logo',
+    category: 'ia'
   },
   {
     id: '4',
@@ -43,7 +46,8 @@ export const subscriptions: Subscription[] = [
     rating: 4.7,
     country: 'Perú',
     host: 'Ana Lopez',
-    logoId: 'disney-plus-logo'
+    logoId: 'disney-plus-logo',
+    category: 'streaming'
   },
   {
     id: '5',
@@ -54,7 +58,8 @@ export const subscriptions: Subscription[] = [
     rating: 4.6,
     country: 'LatAm',
     host: 'Luis F.',
-    logoId: 'hbo-logo'
+    logoId: 'hbo-logo',
+    category: 'streaming'
   },
   {
     id: '6',
@@ -65,7 +70,8 @@ export const subscriptions: Subscription[] = [
     rating: 4.9,
     country: 'Perú',
     host: 'Sofia T.',
-    logoId: 'youtube-premium-logo'
+    logoId: 'youtube-premium-logo',
+    category: 'streaming'
   },
     {
     id: '7',
@@ -76,7 +82,8 @@ export const subscriptions: Subscription[] = [
     rating: 5.0,
     country: 'LatAm',
     host: 'Diego H.',
-    logoId: 'netflix-logo'
+    logoId: 'netflix-logo',
+    category: 'streaming'
   },
     {
     id: '8',
@@ -87,7 +94,8 @@ export const subscriptions: Subscription[] = [
     rating: 4.8,
     country: 'Perú',
     host: 'Valeria C.',
-    logoId: 'spotify-logo'
+    logoId: 'spotify-logo',
+    category: 'musica'
   }
 ];
 
