@@ -18,63 +18,64 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import type { CategorySlug } from "@/lib/types";
 
 type Category = {
   title: string;
+  slug: CategorySlug;
   icon: React.ReactNode;
-  href: string;
 };
 
 const categories: Category[] = [
   {
     title: "Películas y Series",
+    slug: "streaming",
     icon: <Film className="h-8 w-8 text-primary" />,
-    href: "/explorar/streaming",
   },
   {
     title: "Gaming",
+    slug: "gaming",
     icon: <Gamepad2 className="h-8 w-8 text-primary" />,
-    href: "/explorar/gaming",
   },
   {
     title: "Diseño",
+    slug: "diseno",
     icon: <Palette className="h-8 w-8 text-primary" />,
-    href: "/explorar/diseno",
   },
   {
     title: "Música",
+    slug: "musica",
     icon: <Music className="h-8 w-8 text-primary" />,
-    href: "/explorar/musica",
   },
   {
     title: "Deportes",
+    slug: "deportes",
     icon: <Swords className="h-8 w-8 text-primary" />,
-    href: "/explorar/deportes",
   },
   {
-    title: "VPNs",
+    title: "VPNs y Seguridad",
+    slug: "seguridad",
     icon: <ShieldCheck className="h-8 w-8 text-primary" />,
-    href: "/explorar/seguridad",
   },
     {
     title: "Inteligencia Artificial",
+    slug: "ia",
     icon: <BrainCircuit className="h-8 w-8 text-primary" />,
-    href: "/explorar/ia",
   },
   {
     title: "Educación",
+    slug: "educacion",
     icon: <School className="h-8 w-8 text-primary" />,
-    href: "/explorar/educacion",
   },
     {
     title: "Software",
+    slug: "software",
     icon: <Settings2 className="h-8 w-8 text-primary" />,
-    href: "/explorar/software",
   },
     {
     title: "Bienestar",
+    slug: "bienestar",
     icon: <HeartPulse className="h-8 w-8 text-primary" />,
-    href: "/explorar/bienestar",
   },
 ];
 
@@ -92,7 +93,7 @@ export default function ExplorarPage() {
         </div>
         <div className="flex-1 text-center">
             <h1 className="text-4xl font-headline font-extrabold tracking-tight sm:text-5xl md:text-6xl">
-              Únete a un Grupo
+              Selecciona una categoría
             </h1>
         </div>
         <div className="flex-1"></div>
@@ -100,7 +101,7 @@ export default function ExplorarPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {categories.map((category) => (
-          <Link href={category.href} key={category.title}>
+          <Link href={`/explorar/${category.slug}`} key={category.title}>
             <Card className="flex items-center p-4 h-full transition-transform duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg cursor-pointer">
               <div className="bg-primary/10 p-3 rounded-lg mr-4">
                  {category.icon}
