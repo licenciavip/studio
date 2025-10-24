@@ -81,16 +81,21 @@ const categories: Category[] = [
 export default function ExplorarPage() {
   return (
     <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
-      <div className="flex justify-center items-center relative mb-10">
-         <Button asChild variant="outline" className="absolute left-0 top-1/2 -translate-y-1/2">
-            <Link href="/">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Regresar
-            </Link>
-        </Button>
-        <h1 className="text-4xl font-headline font-extrabold tracking-tight text-center sm:text-5xl md:text-6xl">
-          Únete a un Grupo Compartido
-        </h1>
+      <div className="flex items-center justify-between mb-10">
+        <div className="flex-1">
+            <Button asChild variant="outline">
+                <Link href="/">
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Regresar
+                </Link>
+            </Button>
+        </div>
+        <div className="flex-1 text-center">
+            <h1 className="text-4xl font-headline font-extrabold tracking-tight sm:text-5xl md:text-6xl">
+              Únete a un Grupo
+            </h1>
+        </div>
+        <div className="flex-1"></div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
