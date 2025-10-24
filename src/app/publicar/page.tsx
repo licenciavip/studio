@@ -1,7 +1,8 @@
+
 "use client";
 
 import { useState, useMemo, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -21,9 +22,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Info, Loader2 } from "lucide-react";
+import { Info, Loader2, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { CategorySlug } from "@/lib/types";
+import Link from "next/link";
 
 const PLATFORM_FEE = 0.1; // 10%
 
@@ -60,15 +62,13 @@ const categoryNames: Record<CategorySlug, string> = {
 };
 
 function PublicarForm() {
+  const router = useRouter();
   const searchParams = useSearchParams();
-  const category = searchParams.get("category") as CategorySlug | null;
+  const serviceParam = searchParams.get("service");
 
   const [netoDeseado, setNetoDeseado] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
-
-  const services = category ? categoryServices[category] : [];
-  const categoryName = category ? categoryNames[category] : "";
 
   const precioFinal = useMemo(() => {
     const neto = parseFloat(netoDeseado);
@@ -87,43 +87,33 @@ function PublicarForm() {
         title: "¡Grupo publicado!",
         description: "Tu oferta de suscripción ya está visible para todos.",
       });
+      router.push("/mis-grupos");
     }, 1500);
   };
+  
+  const serviceName = serviceParam ? serviceParam.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'un Grupo';
 
   return (
     <div className="container mx-auto max-w-2xl py-12 px-4">
+      <div className="relative text-center mb-8">
+        <Button asChild variant="outline" className="absolute left-0 top-1/2 -translate-y-1/2">
+            <Link href="/compartir">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Regresar
+            </Link>
+        </Button>
+        <h1 className="text-3xl font-headline font-bold">
+            Publicar un Grupo de {serviceName}
+        </h1>
+      </div>
       <form onSubmit={handleSubmit}>
         <Card>
           <CardHeader>
-            <CardTitle className="font-headline text-3xl">
-              {categoryName ? `Publicar un Grupo de ${categoryName}` : "Publicar un Grupo"}
-            </CardTitle>
             <CardDescription>
               Comparte tu suscripción y gana dinero. Nosotros nos encargamos de la gestión.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="service">Servicio de Suscripción</Label>
-              <Select name="service" required>
-                <SelectTrigger id="service">
-                  <SelectValue placeholder="Elige un servicio de la categoría" />
-                </SelectTrigger>
-                <SelectContent>
-                  {services.length > 0 ? (
-                    services.map((service) => (
-                      <SelectItem key={service.value} value={service.value}>
-                        {service.label}
-                      </SelectItem>
-                    ))
-                  ) : (
-                     <SelectItem value="null" disabled>
-                        Por favor, selecciona una categoría primero.
-                      </SelectItem>
-                  )}
-                </SelectContent>
-              </Select>
-            </div>
             <div className="space-y-2">
               <Label htmlFor="slots">Cupos para compartir</Label>
               <Input id="slots" name="slots" type="number" placeholder="Ej: 3" min="1" required />
@@ -152,8 +142,11 @@ function PublicarForm() {
               </AlertDescription>
             </Alert>
           </CardContent>
-          <CardFooter>
-            <Button type="submit" className="w-full bg-accent hover:bg-accent/90" disabled={isSubmitting || services.length === 0}>
+          <CardFooter className="flex justify-end gap-2">
+            <Button asChild variant="ghost">
+                <Link href="/compartir">Cancelar</Link>
+            </Button>
+            <Button type="submit" className="w-full sm:w-auto bg-accent hover:bg-accent/90" disabled={isSubmitting}>
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isSubmitting ? "Publicando..." : "Publicar Grupo"}
             </Button>
@@ -167,7 +160,7 @@ function PublicarForm() {
 
 export default function PublicarPage() {
     return (
-        <Suspense fallback={<div>Cargando...</div>}>
+        <Suspense fallback={<div className="flex h-screen items-center justify-center">Cargando...</div>}>
             <PublicarForm />
         </Suspense>
     )

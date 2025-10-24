@@ -1,8 +1,9 @@
+
 "use client";
 
 import { useState } from "react";
 import { getSubscriptionById } from "@/lib/data";
-import { notFound } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import Image from "next/image";
 import {
   Card,
@@ -18,9 +19,10 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { CheckCircle, CreditCard, Landmark, Loader2 } from "lucide-react";
+import { CheckCircle, CreditCard, Landmark, Loader2, ArrowLeft } from "lucide-react";
 
 export default function CheckoutPage({ params }: { params: { id: string } }) {
+  const router = useRouter();
   const [paymentStatus, setPaymentStatus] = useState<
     "idle" | "verifying" | "approved"
   >("idle");
@@ -70,9 +72,15 @@ export default function CheckoutPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="container mx-auto max-w-4xl py-12 px-4">
-      <h1 className="text-3xl font-headline font-bold text-center mb-8">
-        Completar tu Compra
-      </h1>
+       <div className="relative text-center mb-8">
+         <Button onClick={() => router.back()} variant="outline" className="absolute left-0 top-1/2 -translate-y-1/2">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Regresar
+        </Button>
+        <h1 className="text-3xl font-headline font-bold">
+          Completar tu Compra
+        </h1>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
         <Card>
           <CardHeader className="flex-row items-center gap-4">
