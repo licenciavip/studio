@@ -3,38 +3,188 @@
     {
       "id": "netflix-logo",
       "description": "Netflix logo",
-      "imageUrl": "https://picsum.photos/seed/netflixlogo/200/200",
+      "imageUrl": "https://images.unsplash.com/photo-1717295248299-74c084c31184?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxuZXRmbGl4JTIwbG9nb3xlbnwwfHx8fDE3NjEzNDk2ODR8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "netflix logo"
     },
     {
       "id": "spotify-logo",
       "description": "Spotify logo",
-      "imageUrl": "https://picsum.photos/seed/spotifylogo/200/200",
+      "imageUrl": "https://images.unsplash.com/photo-1706879350865-e1cdb3792b22?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxzcG90aWZ5JTIwbG9nb3xlbnwwfHx8fDE3NjEzMzU5ODd8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "spotify logo"
     },
     {
       "id": "chatgpt-logo",
       "description": "ChatGPT logo",
-      "imageUrl": "https://picsum.photos/seed/chatgptlogo/200/200",
+      "imageUrl": "https://images.unsplash.com/photo-1761223976721-8fb221946658?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxvcGVuYWklMjBsb2dvfGVufDB8fHx8MTc2MTM0OTY4NHww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "openai logo"
     },
     {
       "id": "hbo-logo",
       "description": "HBO Max logo",
-      "imageUrl": "https://picsum.photos/seed/hbologo/200/200",
+      "imageUrl": "https://images.unsplash.com/photo-1704244377777-3f78360fdd50?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxoYm8lMjBsb2dvfGVufDB8fHx8MTc2MTM0OTY4NHww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "hbo logo"
     },
     {
       "id": "disney-plus-logo",
       "description": "Disney+ logo",
-      "imageUrl": "https://picsum.photos/seed/disneypluslogo/200/200",
+      "imageUrl": "https://images.unsplash.com/photo-1624259416658-35ccbf144757?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxkaXNuZXklMjBsb2dvfGVufDB8fHx8MTc2MTM0OTY4NHww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "disney logo"
     },
     {
       "id": "youtube-premium-logo",
       "description": "YouTube Premium logo",
-      "imageUrl": "https://picsum.photos/seed/ytlogo/200/200",
+      "imageUrl": "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHx5b3V0dWJlJTIwbG9nb3xlbnwwfHx8fDE3NjEzNDk2ODR8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "youtube logo"
+    },
+    {
+      "id": "apple-tv-plus-logo",
+      "description": "Apple TV+ logo",
+      "imageUrl": "https://images.unsplash.com/photo-1662946834880-99adabd21f80?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxhcHBsZSUyMGxvZ298ZW58MHx8fHwxNzYxMjU0NjU2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "apple logo"
+    },
+    {
+      "id": "directv-go-logo",
+      "description": "DirecTV Go logo",
+      "imageUrl": "https://images.unsplash.com/photo-1653426218624-fcce2081e493?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxkaXJlY3R2JTIwbG9nb3xlbnwwfHx8fDE3NjEzNDk2ODR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "directv logo"
+    },
+    {
+      "id": "prime-video-logo",
+      "description": "Prime Video logo",
+      "imageUrl": "https://images.unsplash.com/photo-1602359337719-a8bcbd1f7b51?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxhbWF6b24lMjBsb2dvfGVufDB8fHx8MTc2MTMzNDI4NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "amazon logo"
+    },
+    {
+      "id": "paramount-plus-logo",
+      "description": "Paramount+ logo",
+      "imageUrl": "https://images.unsplash.com/photo-1662467150540-e2bba9eecf05?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwYXJhbW91bnQlMjBsb2dvfGVufDB8fHx8MTc2MTM0OTY4NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "paramount logo"
+    },
+    {
+      "id": "crunchyroll-logo",
+      "description": "Crunchyroll logo",
+      "imageUrl": "https://images.unsplash.com/photo-1667840579428-599d8e942363?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxjcnVuY2h5cm9sbCUyMGxvZ298ZW58MHx8fHwxNzYxMzQ5Njg0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "crunchyroll logo"
+    },
+    {
+      "id": "apple-music-logo",
+      "description": "Apple Music logo",
+      "imageUrl": "https://images.unsplash.com/photo-1600783245357-dae0e49605aa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhcHBsZSUyMG11c2ljfGVufDB8fHx8MTc2MTM0OTY4NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "apple music"
+    },
+    {
+      "id": "tidal-logo",
+      "description": "Tidal logo",
+      "imageUrl": "https://images.unsplash.com/photo-1672268931087-9384cca148d8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx0aWRhbCUyMGxvZ298ZW58MHx8fHwxNzYxMzQ5Njg0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "tidal logo"
+    },
+    {
+      "id": "youtube-music-logo",
+      "description": "YouTube Music logo",
+      "imageUrl": "https://images.unsplash.com/photo-1601275639140-e9d60a48191f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHx5b3V0dWJlJTIwbXVzaWN8ZW58MHx8fHwxNzYxMzQ5Njg0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "youtube music"
+    },
+    {
+      "id": "ps-plus-logo",
+      "description": "PlayStation Plus logo",
+      "imageUrl": "https://images.unsplash.com/photo-1640087502535-e2361a139357?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxwbGF5c3RhdGlvbiUyMGxvZ298ZW58MHx8fHwxNzYxMjgwMjk2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "playstation logo"
+    },
+    {
+      "id": "xbox-game-pass-logo",
+      "description": "Xbox Game Pass logo",
+      "imageUrl": "https://images.unsplash.com/photo-1640087502535-e2361a139357?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx4Ym94JTIwbG9nb3xlbnwwfHx8fDE3NjEyODAyOTZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "xbox logo"
+    },
+    {
+      "id": "nintendo-switch-online-logo",
+      "description": "Nintendo Switch Online logo",
+      "imageUrl": "https://images.unsplash.com/photo-1672814519670-16eedb80ac83?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8bmludGVuZG8lMjBsb2dvfGVufDB8fHx8MTc2MTM0OTY4NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "nintendo logo"
+    },
+    {
+      "id": "canva-logo",
+      "description": "Canva logo",
+      "imageUrl": "https://images.unsplash.com/photo-1599686100490-c386c444baf1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxjYW52YSUyMGxvZ298ZW58MHx8fHwxNzYxMzAwODIxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "canva logo"
+    },
+    {
+      "id": "adobe-cc-logo",
+      "description": "Adobe Creative Cloud logo",
+      "imageUrl": "https://images.unsplash.com/photo-1706778573754-e52010c13b97?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxhZG9iZSUyMGxvZ298ZW58MHx8fHwxNzYxMzQ5Njg0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "adobe logo"
+    },
+    {
+      "id": "nordvpn-logo",
+      "description": "NordVPN logo",
+      "imageUrl": "https://images.unsplash.com/photo-1678659372486-767c8777b9c7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxub3JkdnBuJTIwbG9nb3xlbnwwfHx8fDE3NjEzNDk2ODR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "nordvpn logo"
+    },
+    {
+      "id": "expressvpn-logo",
+      "description": "ExpressVPN logo",
+      "imageUrl": "https://images.unsplash.com/photo-1659509342258-36b5d7797237?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxleHByZXNzdnBuJTIwbG9nb3xlbnwwfHx8fDE3NjEzNDk2ODR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "expressvpn logo"
+    },
+    {
+      "id": "midjourney-logo",
+      "description": "Midjourney logo",
+      "imageUrl": "https://images.unsplash.com/photo-1574071744270-6b1c3fae0e4c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxtaWRqb3VybmV5JTIwcm9ib3R8ZW58MHx8fHwxNzYxMzQ5Njg0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "midjourney robot"
+    },
+    {
+      "id": "duolingo-logo",
+      "description": "Duolingo logo",
+      "imageUrl": "https://images.unsplash.com/photo-1699488169395-b95cf019f7bb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8ZHVvbGluZ28lMjBvd2x8ZW58MHx8fHwxNzYxMzQ5Njg0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "duolingo owl"
+    },
+    {
+      "id": "coursera-logo",
+      "description": "Coursera logo",
+      "imageUrl": "https://images.unsplash.com/photo-1527957557037-d079c24f24be?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxjb3Vyc2VyYSUyMGxvZ298ZW58MHx8fHwxNzYxMzAwODIxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "coursera logo"
+    },
+    {
+      "id": "platzi-logo",
+      "description": "Platzi logo",
+      "imageUrl": "https://images.unsplash.com/photo-1653499676737-becf2c9562c8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxwbGF0emklMjBsb2dvfGVufDB8fHx8MTc2MTM0OTY4NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "platzi logo"
+    },
+    {
+      "id": "microsoft-365-logo",
+      "description": "Microsoft 365 logo",
+      "imageUrl": "https://images.unsplash.com/photo-1658203897339-0b8c64a42fba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxtaWNyb3NvZnQlMjBsb2dvfGVufDB8fHx8MTc2MTI5Njk1NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "microsoft logo"
+    },
+    {
+      "id": "setapp-logo",
+      "description": "Setapp logo",
+      "imageUrl": "https://images.unsplash.com/photo-1613905383527-8994ba2f9896?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxzZXRhcHAlMjBsb2dvfGVufDB8fHx8MTc2MTM0OTY4NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "setapp logo"
+    },
+    {
+      "id": "nba-league-pass-logo",
+      "description": "NBA League Pass logo",
+      "imageUrl": "https://images.unsplash.com/photo-1619908269410-c893de3c9eb6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxuYmElMjBsb2dvfGVufDB8fHx8MTc2MTM0OTY4NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "nba logo"
+    },
+    {
+      "id": "star-plus-deportes-logo",
+      "description": "Star+ logo",
+      "imageUrl": "https://images.unsplash.com/photo-1613973430928-466fe5b748a1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxzdGFyJTIwbG9nb3xlbnwwfHx8fDE3NjEzNDk2ODR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "star logo"
+    },
+    {
+      "id": "calm-logo",
+      "description": "Calm logo",
+      "imageUrl": "https://images.unsplash.com/photo-1713428856219-20e151269843?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxjYWxtJTIwYXBwfGVufDB8fHx8MTc2MTM0OTY4NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "calm app"
+    },
+    {
+      "id": "headspace-logo",
+      "description": "Headspace logo",
+      "imageUrl": "https://images.unsplash.com/photo-1660665416754-e0c780103b3c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxoZWFkc3BhY2UlMjBhcHB8ZW58MHx8fHwxNzYxMzQ5Njg0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "headspace app"
     }
   ]
 }
