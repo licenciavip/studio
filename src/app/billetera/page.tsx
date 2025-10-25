@@ -57,7 +57,7 @@ export default function BilleteraPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline">Solicitar Retiro</CardTitle>
+          <CardTitle>Solicitar Retiro</CardTitle>
           <CardDescription>
             Elige tu método de retiro preferido. El monto mínimo es $10.00.
           </CardDescription>

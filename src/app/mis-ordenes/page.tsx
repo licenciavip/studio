@@ -33,11 +33,17 @@ function StatusBadge({ status }: { status: OrderStatus }) {
 export default function MisOrdenesPage() {
   return (
     <div className="container mx-auto max-w-5xl py-12 px-4">
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-headline font-bold">Mis Órdenes</h1>
+        <p className="text-muted-foreground">
+          Aquí puedes ver el historial y estado de todas tus suscripciones.
+        </p>
+      </div>
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline text-3xl">Mis Órdenes</CardTitle>
+          <CardTitle>Historial de Órdenes</CardTitle>
           <CardDescription>
-            Aquí puedes ver el historial y estado de todas tus suscripciones.
+            El detalle de todas las suscripciones a las que te has unido.
           </CardDescription>
         </CardHeader>
         <CardContent>

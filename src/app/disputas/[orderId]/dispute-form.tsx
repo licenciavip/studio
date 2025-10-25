@@ -24,7 +24,7 @@ const initialState: {
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending} className="w-full sm:w-auto bg-accent hover:bg-accent/90">
+    <Button type="submit" disabled={pending} className="w-full sm:w-auto">
       {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
       {pending ? 'Enviando...' : 'Abrir Disputa'}
     </Button>

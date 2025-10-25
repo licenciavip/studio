@@ -5,11 +5,11 @@ import { Share2, UserPlus } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="flex-1 flex flex-col items-center justify-center bg-background text-center">
-      <h1 className="text-4xl font-headline font-extrabold tracking-tight sm:text-5xl md:text-6xl mb-10">
+    <div className="flex-1 flex flex-col items-center justify-center bg-background text-center px-4">
+      <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl mb-10">
         Gestión de suscripciones
       </h1>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto max-w-2xl">
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
           <Button
             asChild

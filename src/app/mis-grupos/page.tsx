@@ -22,11 +22,17 @@ function StatusBadge({ status }: { status: Group['status'] }) {
 export default function MisGruposPage() {
   return (
     <div className="container mx-auto max-w-5xl py-12 px-4">
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-headline font-bold">Mis Grupos</h1>
+        <p className="text-muted-foreground">
+          Gestiona tus grupos, mira tus ganancias y el estado de los cupos.
+        </p>
+      </div>
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline text-3xl">Mis Grupos</CardTitle>
+          <CardTitle>Grupos Activos</CardTitle>
           <CardDescription>
-            Gestiona tus grupos de suscripción, mira tus ganancias y el estado de los cupos.
+            Estos son los grupos que estás compartiendo actualmente.
           </CardDescription>
         </CardHeader>
         <CardContent>
