@@ -6,7 +6,7 @@ import Footer from "@/components/layout/footer";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: "CupoCompartido",
+  title: "Poolera",
   description: "Marketplace de suscripciones compartidas.",
   icons: {
     icon: '/favicon.svg',

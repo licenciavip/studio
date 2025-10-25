@@ -134,7 +134,7 @@ export default function CheckoutPage({ params }: { params: { id: string } }) {
                       <AlertDescription className="space-y-2 text-sm">
                         <p><strong>BCP Soles:</strong> 191-12345678-0-99</p>
                         <p><strong>Interbank Soles:</strong> 003-876-0123456789</p>
-                        <p><strong>Titular:</strong> CupoCompartido SAC</p>
+                        <p><strong>Titular:</strong> Poolera SAC</p>
                         <p><strong>RUC:</strong> 20123456789</p>
                       </AlertDescription>
                   </Alert>

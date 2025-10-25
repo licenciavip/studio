@@ -18,7 +18,7 @@ export default function AyudaPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <h3 className="font-semibold">¿Cómo funciona CupoCompartido?</h3>
+            <h3 className="font-semibold">¿Cómo funciona Poolera?</h3>
             <p className="text-muted-foreground">
               Nuestra plataforma conecta a personas que quieren compartir los gastos de sus suscripciones digitales. Puedes ofrecer los cupos que no usas o unirte a grupos ya existentes para ahorrar dinero.
             </p>
