@@ -1,4 +1,3 @@
-
 import {
   Card,
   CardHeader,
@@ -102,7 +101,7 @@ export default function CompartirPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {categories.map((category) => (
-          <Link href={`/publicar?category=${category.slug}`} key={category.title}>
+          <Link href={`/compartir/${category.slug}`} key={category.title}>
             <Card className="flex items-center p-4 h-full transition-transform duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg cursor-pointer">
               <div className="bg-primary/10 p-3 rounded-lg mr-4">
                  {category.icon}

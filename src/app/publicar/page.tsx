@@ -14,61 +14,31 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Info, Loader2, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import type { CategorySlug } from "@/lib/types";
 import Link from "next/link";
+import { servicesByCategory } from "@/lib/data";
 
 const PLATFORM_FEE = 0.1; // 10%
-
-const categoryServices = {
-  streaming: [
-    { value: "netflix", label: "Netflix" },
-    { value: "disney-plus", label: "Disney+" },
-    { value: "hbo-max", label: "HBO Max" },
-    { value: "youtube-premium", label: "YouTube Premium" },
-    { value: "star-plus", label: "Star+" },
-  ],
-  musica: [{ value: "spotify", label: "Spotify" }, { value: "apple-music", label: "Apple Music" }, { value: "tidal", label: "Tidal" }],
-  educacion: [{ value: "coursera", label: "Coursera" }, { value: "duolingo", label: "Duolingo" }, { value: "platzi", label: "Platzi" }],
-  gaming: [{ value: "ps-plus", label: "PS Plus" }, { value: "xbox-game-pass", label: "Xbox Game Pass" }],
-  diseno: [{ value: "adobe-cc", label: "Adobe Creative Cloud" }, { value: "canva", label: "Canva" }],
-  seguridad: [{ value: "nordvpn", label: "NordVPN" }, { value: "expressvpn", label: "ExpressVPN" }],
-  ia: [{ value: "chatgpt", label: "ChatGPT Plus" }, { value: "midjourney", label: "Midjourney" }],
-  deportes: [{ value: "star-plus-deportes", label: "Star+ (Deportes)" }, { value: "nba-league-pass", label: "NBA League Pass" }],
-  bienestar: [{ value: "calm", label: "Calm" }, { value: "headspace", label: "Headspace" }],
-  software: [{ value: "microsoft-365", label: "Microsoft 365" }, { value: "setapp", label: "Setapp" }],
-};
-
-const categoryNames: Record<CategorySlug, string> = {
-  streaming: "Películas y Series",
-  musica: "Música",
-  educacion: "Educación",
-  gaming: "Gaming",
-  diseno: "Diseño",
-  seguridad: "VPNs y Seguridad",
-  ia: "Inteligencia Artificial",
-  deportes: "Deportes",
-  bienestar: "Bienestar",
-  software: "Software",
-};
 
 function PublicarForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const categoryParam = searchParams.get("category");
   const serviceParam = searchParams.get("service");
 
   const [netoDeseado, setNetoDeseado] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+
+  const service = useMemo(() => {
+    if (!categoryParam || !serviceParam) return null;
+    // @ts-ignore
+    const services = servicesByCategory[categoryParam];
+    if (!services) return null;
+    return services.find(s => s.id === serviceParam);
+  }, [categoryParam, serviceParam]);
 
   const precioFinal = useMemo(() => {
     const neto = parseFloat(netoDeseado);
@@ -91,13 +61,13 @@ function PublicarForm() {
     }, 1500);
   };
   
-  const serviceName = serviceParam ? serviceParam.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'un Grupo';
+  const serviceName = service ? service.name : 'un Grupo';
 
   return (
     <div className="container mx-auto max-w-2xl py-12 px-4">
       <div className="relative text-center mb-8">
         <Button asChild variant="outline" className="absolute left-0 top-1/2 -translate-y-1/2">
-            <Link href="/compartir">
+            <Link href={`/compartir/${categoryParam || ''}`}>
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Regresar
             </Link>
