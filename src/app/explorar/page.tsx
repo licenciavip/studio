@@ -93,7 +93,7 @@ export default function ExplorarPage() {
             </Button>
         </div>
         <div className="flex-1 text-center">
-            <h1 className="text-4xl font-headline font-extrabold tracking-tight sm:text-5xl md:text-6xl">
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
               Selecciona una categoría
             </h1>
         </div>
