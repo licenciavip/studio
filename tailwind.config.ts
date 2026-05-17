@@ -25,7 +25,7 @@ export default {
         background: '#faf8ff',
         foreground: '#131b2e',
         primary: {
-          DEFAULT: '#5d5fef',
+          DEFAULT: '#4343d5',
           container: '#5d5fef',
           fixed: '#e1e0ff',
           foreground: '#ffffff',
@@ -59,7 +59,7 @@ export default {
         },
         border: '#c7c4d7',
         input: '#eaedff',
-        ring: '#5d5fef',
+        ring: '#4343d5',
       },
       borderRadius: {
         lg: '1rem',
