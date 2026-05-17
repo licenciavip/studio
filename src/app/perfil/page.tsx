@@ -1,9 +1,8 @@
-
 "use client";
 
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { currentUser } from "@/lib/data";
+import { useAuth } from "@/firebase";
 import { 
   Mail, 
   Smartphone, 
@@ -17,23 +16,25 @@ import {
 } from "lucide-react";
 
 export default function PerfilPage() {
+  const auth = useAuth();
+  const user = auth?.currentUser;
+
   return (
     <div className="max-w-2xl mx-auto space-y-6 py-8">
       {/* Profile Identity Card */}
       <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-3xl p-6 shadow-sm">
         <div className="flex items-center gap-4 mb-6">
-          <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-inner border-2 border-primary-fixed">
+          <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-inner border-2 border-primary-fixed relative">
             <Image 
-              src={currentUser.avatar} 
-              alt={currentUser.name} 
-              width={80}
-              height={80}
+              src={user?.photoURL || "https://picsum.photos/seed/user/200/200"} 
+              alt={user?.displayName || "User"} 
+              fill
               className="object-cover"
             />
           </div>
           <div className="flex-1">
-            <h1 className="text-3xl font-sora font-bold text-on-surface">{currentUser.name}</h1>
-            <p className="text-sm font-medium text-on-surface-variant">Miembro desde {currentUser.memberSince}</p>
+            <h1 className="text-3xl font-sora font-bold text-on-surface">{user?.displayName || "Usuario de Poolera"}</h1>
+            <p className="text-sm font-medium text-on-surface-variant">Miembro desde Enero 2023</p>
           </div>
           <Button variant="ghost" size="icon" className="rounded-full bg-surface-container text-primary hover:bg-primary hover:text-white transition-all">
             <Edit2 className="h-5 w-5" />
@@ -50,7 +51,7 @@ export default function PerfilPage() {
             </div>
             <div className="flex flex-col">
               <span className="text-[10px] text-on-surface-variant font-bold uppercase">Email</span>
-              <span className="text-sm font-medium text-on-surface">{currentUser.email}</span>
+              <span className="text-sm font-medium text-on-surface">{user?.email || "Sin email"}</span>
             </div>
           </div>
 
@@ -60,7 +61,7 @@ export default function PerfilPage() {
             </div>
             <div className="flex flex-col">
               <span className="text-[10px] text-on-surface-variant font-bold uppercase">Teléfono</span>
-              <span className="text-sm font-medium text-on-surface">{currentUser.phone}</span>
+              <span className="text-sm font-medium text-on-surface">+1 (555) 012-3456</span>
             </div>
           </div>
         </div>
@@ -72,7 +73,7 @@ export default function PerfilPage() {
         <div className="p-6 border-b border-outline-variant/20">
           <h4 className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-4">Seguridad</h4>
           <nav className="space-y-2">
-            <button className="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-surface-container transition-colors group">
+            <button className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-surface-container transition-colors group">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-on-surface-variant group-hover:text-primary transition-colors">
                   <Lock className="h-5 w-5" />
@@ -82,7 +83,7 @@ export default function PerfilPage() {
               <ChevronRight className="h-5 w-5 text-outline-variant" />
             </button>
 
-            <button className="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-surface-container transition-colors group">
+            <button className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-surface-container transition-colors group">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-on-surface-variant group-hover:text-primary transition-colors">
                   <Fingerprint className="h-5 w-5" />
@@ -100,7 +101,7 @@ export default function PerfilPage() {
         <div className="p-6">
           <h4 className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-4">Ayuda y Soporte</h4>
           <nav className="space-y-2">
-            <button className="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-surface-container transition-colors group">
+            <button className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-surface-container transition-colors group">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-on-surface-variant group-hover:text-primary transition-colors">
                   <HelpCircle className="h-5 w-5" />
@@ -110,9 +111,9 @@ export default function PerfilPage() {
               <ExternalLink className="h-5 w-5 text-outline-variant" />
             </button>
 
-            <button className="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-surface-container transition-colors group text-error mt-4">
+            <button className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-surface-container transition-colors group text-red-600 mt-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-error/10 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center">
                   <LogOut className="h-5 w-5" />
                 </div>
                 <span className="text-sm font-bold">Cerrar Sesión</span>
