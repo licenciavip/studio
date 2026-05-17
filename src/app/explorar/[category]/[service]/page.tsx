@@ -1,7 +1,7 @@
 
 'use client';
 
-import { notFound, useParams, useRouter } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import { getServiceById, getSubscriptionsByService } from '@/lib/data';
 import SubscriptionCard from '@/components/subscription-card';
 import { Button } from '@/components/ui/button';
@@ -10,8 +10,6 @@ import Link from 'next/link';
 
 export default function ServiceGroupsPage() {
   const params = useParams();
-  const router = useRouter();
-
   const category = params.category as string;
   const serviceId = params.service as string;
 
@@ -34,10 +32,10 @@ export default function ServiceGroupsPage() {
           </Button>
         </div>
         <div className="flex-[2] text-center">
-          <h1 className="text-4xl font-headline font-extrabold tracking-tight sm:text-5xl md:text-6xl">
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
             Grupos disponibles
           </h1>
-          <p className="mt-3 max-w-md mx-auto text-base text-foreground/80 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
+          <p className="mt-2 text-muted-foreground">
             Servicio: {service.name}
           </p>
         </div>
@@ -51,8 +49,13 @@ export default function ServiceGroupsPage() {
           ))}
         </div>
       ) : (
-        <div className="text-center py-16 border-dashed border-2 rounded-lg">
-          <p className="text-muted-foreground">No hay grupos disponibles para este servicio en este momento.</p>
+        <div className="text-center py-20 border-dashed border-2 rounded-2xl bg-muted/30">
+          <p className="text-muted-foreground text-lg">No hay grupos disponibles para este servicio en este momento.</p>
+          <Button asChild variant="link" className="mt-4">
+            <Link href={`/publicar?category=${category}&service=${serviceId}`}>
+              ¡Sé el primero en compartir uno!
+            </Link>
+          </Button>
         </div>
       )}
     </div>

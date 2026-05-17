@@ -65,19 +65,24 @@ function PublicarForm() {
 
   return (
     <div className="container mx-auto max-w-2xl py-12 px-4">
-      <div className="relative text-center mb-8">
-        <Button asChild variant="outline" className="absolute left-0 top-1/2 -translate-y-1/2">
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex-1">
+          <Button asChild variant="outline">
             <Link href={`/compartir/${categoryParam || ''}`}>
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Regresar
             </Link>
-        </Button>
-        <h1 className="text-3xl font-headline font-bold">
-            Publicar un Grupo de {serviceName}
-        </h1>
+          </Button>
+        </div>
+        <div className="flex-[2] text-center">
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            Publicar en {serviceName}
+          </h1>
+        </div>
+        <div className="flex-1"></div>
       </div>
       <form onSubmit={handleSubmit}>
-        <Card>
+        <Card className="border-none shadow-sm bg-card">
           <CardHeader>
             <CardDescription>
               Comparte tu suscripción y gana dinero. Nosotros nos encargamos de la gestión.
@@ -86,7 +91,7 @@ function PublicarForm() {
           <CardContent className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="slots">Cupos para compartir</Label>
-              <Input id="slots" name="slots" type="number" placeholder="Ej: 3" min="1" required />
+              <Input id="slots" name="slots" type="number" placeholder="Ej: 3" min="1" required className="rounded-xl" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="net-earnings">Neto deseado por cupo (USD)</Label>
@@ -100,12 +105,13 @@ function PublicarForm() {
                 required
                 value={netoDeseado}
                 onChange={(e) => setNetoDeseado(e.target.value)}
+                className="rounded-xl"
               />
             </div>
-            <Alert>
-              <Info className="h-4 w-4" />
-              <AlertTitle>Precio Final para el Cliente</AlertTitle>
-              <AlertDescription>
+            <Alert className="bg-primary/5 border-primary/20 rounded-xl">
+              <Info className="h-4 w-4 text-primary" />
+              <AlertTitle className="text-primary font-semibold">Precio Final para el Cliente</AlertTitle>
+              <AlertDescription className="text-primary/80">
                 El precio final por cupo será de{" "}
                 <span className="font-bold text-primary">${precioFinal.toFixed(2)}</span>. Esto incluye
                 nuestra comisión de servicio.
@@ -116,7 +122,7 @@ function PublicarForm() {
             <Button asChild variant="ghost">
                 <Link href="/compartir">Cancelar</Link>
             </Button>
-            <Button type="submit" className="w-full sm:w-auto" disabled={isSubmitting}>
+            <Button type="submit" className="w-full sm:w-auto rounded-xl px-8" disabled={isSubmitting}>
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isSubmitting ? "Publicando..." : "Publicar Grupo"}
             </Button>
@@ -126,7 +132,6 @@ function PublicarForm() {
     </div>
   );
 }
-
 
 export default function PublicarPage() {
     return (

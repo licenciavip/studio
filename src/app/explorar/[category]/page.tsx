@@ -51,10 +51,10 @@ export default function CategoryPage() {
           </Button>
         </div>
         <div className="flex-[2] text-center">
-          <h1 className="text-4xl font-headline font-extrabold tracking-tight sm:text-5xl md:text-6xl">
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
             Selecciona un servicio
           </h1>
-          <p className="mt-3 max-w-md mx-auto text-base text-foreground/80 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
+          <p className="mt-2 text-muted-foreground">
             Categoría: {categoryName}
           </p>
         </div>
@@ -65,17 +65,18 @@ export default function CategoryPage() {
           const logo = PlaceHolderImages.find((img) => img.id === service.logoId);
           return (
             <Link href={`/explorar/${category}/${service.id}`} key={service.id}>
-              <Card className="flex flex-col h-full justify-between p-4 transition-transform duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg cursor-pointer">
+              <Card className="flex flex-col h-full justify-between p-4 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg cursor-pointer border-none shadow-sm bg-card">
                 <CardHeader className="flex-row items-center gap-4 p-0">
                   {logo && (
-                    <Image
-                      src={logo.imageUrl}
-                      alt={logo.description}
-                      width={48}
-                      height={48}
-                      className="rounded-lg border"
-                      data-ai-hint={logo.imageHint}
-                    />
+                    <div className="relative w-12 h-12 overflow-hidden rounded-xl border">
+                      <Image
+                        src={logo.imageUrl}
+                        alt={logo.description}
+                        fill
+                        className="object-cover"
+                        data-ai-hint={logo.imageHint}
+                      />
+                    </div>
                   )}
                   <CardTitle className="font-sans text-lg font-semibold">
                     {service.name}
