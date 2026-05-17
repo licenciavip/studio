@@ -1,100 +1,124 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { DollarSign, Wallet, Loader2 } from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
+import { useState } from "react";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
 
 export default function BilleteraPage() {
   const [isWithdrawing, setIsWithdrawing] = useState(false);
   const { toast } = useToast();
 
-  const handleWithdraw = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleWithdraw = () => {
     setIsWithdrawing(true);
     setTimeout(() => {
       setIsWithdrawing(false);
       toast({
         title: "Retiro solicitado",
-        description: "Tu solicitud de retiro ha sido procesada y se completará en 24-48 horas."
-      })
+        description: "Tu solicitud de retiro ha sido procesada.",
+      });
     }, 2000);
-  }
+  };
 
   return (
-    <div className="container mx-auto max-w-4xl py-12 px-4">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-headline font-bold">Mi Billetera</h1>
-        <p className="text-muted-foreground">Consulta tus saldos y solicita retiros.</p>
-      </div>
+    <div className="space-y-8">
+      {/* Balance Card */}
+      <section>
+        <div className="relative overflow-hidden bg-primary-container p-8 rounded-[2.5rem] text-primary-foreground shadow-lg shadow-primary/20">
+          <div className="relative z-10">
+            <p className="text-sm font-medium opacity-80 mb-2">Saldo Disponible</p>
+            <h1 className="text-6xl font-headline font-bold mb-8 tracking-tight">$142.50</h1>
+            <div className="flex flex-wrap gap-4">
+              <Button className="bg-white text-primary rounded-2xl px-6 py-6 h-auto font-bold flex items-center gap-2 hover:bg-white/90">
+                <span className="material-symbols-outlined">add_circle</span>
+                Cargar Saldo
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={handleWithdraw}
+                disabled={isWithdrawing}
+                className="bg-primary/20 border-white/30 text-white rounded-2xl px-6 py-6 h-auto font-bold flex items-center gap-2"
+              >
+                {isWithdrawing ? <Loader2 className="animate-spin" /> : <span className="material-symbols-outlined">account_balance</span>}
+                Retirar
+              </Button>
+            </div>
+          </div>
+          <div className="absolute -right-12 -bottom-12 w-48 h-48 bg-white/10 rounded-full blur-3xl"></div>
+        </div>
+      </section>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Saldo Liberado</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">$150.75</div>
-            <p className="text-xs text-muted-foreground">Disponible para retirar</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Saldo Retenido (Escrow)</CardTitle>
-            <Wallet className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">$45.50</div>
-            <p className="text-xs text-muted-foreground">Pagos de ciclos activos</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Solicitar Retiro</CardTitle>
-          <CardDescription>
-            Elige tu método de retiro preferido. El monto mínimo es $10.00.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="yape" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="yape">Yape (Perú)</TabsTrigger>
-              <TabsTrigger value="wallet">Wallet (LatAm)</TabsTrigger>
-            </TabsList>
-            <form onSubmit={handleWithdraw}>
-              <div className="space-y-4 pt-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="amount">Monto a retirar (USD)</Label>
-                    <Input id="amount" type="number" placeholder="150.75" step="0.01" min="10" required />
-                  </div>
-                <TabsContent value="yape" className="m-0 p-0">
-                    <div className="space-y-2">
-                      <Label htmlFor="yape-phone">Número de Yape</Label>
-                      <Input id="yape-phone" type="tel" placeholder="987654321" required/>
-                    </div>
-                </TabsContent>
-                <TabsContent value="wallet" className="m-0 p-0">
-                    <div className="space-y-2">
-                      <Label htmlFor="wallet-address">Dirección de Wallet (USDT)</Label>
-                      <Input id="wallet-address" placeholder="0x..." required/>
-                    </div>
-                </TabsContent>
-                <Button type="submit" className="w-full mt-4" disabled={isWithdrawing}>
-                  {isWithdrawing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  {isWithdrawing ? "Procesando..." : "Solicitar Retiro"}
-                </Button>
+      {/* Activity Section */}
+      <section className="space-y-4">
+        <div className="flex justify-between items-end mb-2">
+          <h2 className="text-2xl font-headline font-bold text-foreground">Actividad Reciente</h2>
+          <button className="text-primary text-sm font-bold hover:underline">Ver todo</button>
+        </div>
+        
+        <div className="space-y-3">
+          {[
+            { title: "Netflix Premium Group", date: "Oct 12, 2023", amount: "-$4.50", type: "error" },
+            { title: "Recarga de Billetera", date: "Oct 10, 2023", amount: "+$50.00", type: "secondary" },
+            { title: "Spotify Family Plan", date: "Oct 08, 2023", amount: "-$3.20", type: "error" },
+          ].map((item, i) => (
+            <div key={i} className="flex items-center justify-between p-4 bg-white border border-outline-variant/30 rounded-3xl shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 flex items-center justify-center rounded-2xl bg-surface-container text-primary">
+                  <span className="material-symbols-outlined">{i === 1 ? 'add_card' : 'subscriptions'}</span>
+                </div>
+                <div>
+                  <p className="font-bold text-foreground">{item.title}</p>
+                  <p className="text-xs text-muted-foreground">{item.date}</p>
+                </div>
               </div>
-            </form>
-          </Tabs>
-        </CardContent>
-      </Card>
+              <div className="text-right">
+                <p className={`font-bold ${item.amount.startsWith('+') ? 'text-secondary' : 'text-destructive'}`}>
+                  {item.amount}
+                </p>
+                <span className="px-2 py-0.5 bg-secondary-container/20 text-secondary text-[10px] font-bold rounded uppercase">Completado</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Profile/Settings Aside Preview */}
+      <section className="bg-white border border-outline-variant/30 rounded-[2.5rem] p-6 shadow-sm">
+        <div className="flex items-center gap-4 mb-6">
+          <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-inner">
+            <Image 
+              src="https://picsum.photos/seed/alex/200/200" 
+              alt="Alex Thompson" 
+              width={64} 
+              height={64} 
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div className="flex-1">
+            <h3 className="text-xl font-headline font-bold text-foreground">Alex Thompson</h3>
+            <p className="text-xs text-muted-foreground">Miembro desde Enero 2023</p>
+          </div>
+          <Button variant="ghost" size="icon" className="rounded-full bg-surface-container text-primary">
+            <span className="material-symbols-outlined">edit</span>
+          </Button>
+        </div>
+        
+        <div className="space-y-4">
+          <div className="flex items-center gap-3 p-3 rounded-2xl hover:bg-surface-container transition-colors cursor-pointer group">
+            <span className="material-symbols-outlined text-outline group-hover:text-primary">mail</span>
+            <span className="text-sm font-medium text-foreground">alex.t@example.com</span>
+          </div>
+          <div className="flex items-center justify-between p-4 bg-surface border border-outline-variant/20 rounded-2xl">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-6 bg-foreground rounded flex items-center justify-center text-[8px] text-white font-bold tracking-tighter">VISA</div>
+              <p className="text-sm font-bold text-foreground">•••• 4242</p>
+            </div>
+            <span className="text-[10px] font-bold text-primary uppercase">Principal</span>
+          </div>
+        </div>
+      </section>
     </div>
-  )
+  );
 }
