@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -59,4 +60,9 @@
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Redondeado extra para tarjetas de diseño moderno */
+.rounded-3xl {
+  border-radius: 2.5rem;
 }

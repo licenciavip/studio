@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -8,7 +9,7 @@ const navItems = [
   { href: "/explorar", label: "Explorar", icon: "explore" },
   { href: "/mis-grupos", label: "Grupos", icon: "group" },
   { href: "/billetera", label: "Billetera", icon: "account_balance_wallet" },
-  { href: "/ayuda", label: "Ayuda", icon: "help_outline" },
+  { href: "/ayuda", label: "Perfil", icon: "person" },
 ];
 
 export function BottomNav() {
