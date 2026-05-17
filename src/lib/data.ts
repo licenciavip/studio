@@ -1,7 +1,6 @@
 
-// This file will be removed once Firebase is connected.
-// It is used for placeholder data in the meantime.
-import type { CategorySlug, Subscription } from "@/lib/types";
+// Archivo de datos centralizado para Poolera
+import type { CategorySlug, Subscription, OrderStatus } from "@/lib/types";
 
 export type Service = {
   id: string;
@@ -63,89 +62,70 @@ export const servicesByCategory: Record<CategorySlug, Service[]> = {
   ],
 };
 
+export const currentUser = {
+  name: "Alex Thompson",
+  email: "alex.t@example.com",
+  phone: "+1 (555) 012-3456",
+  memberSince: "Enero 2023",
+  avatar: "https://picsum.photos/seed/alex/200/200",
+  balance: 142.50,
+  paymentMethods: [
+    { id: "pm-1", type: "VISA", last4: "4242", isPrimary: true }
+  ]
+};
+
+export const walletTransactions = [
+  { id: "t1", title: "Netflix Premium Group", date: "Oct 12, 2023", amount: -4.50, category: "Suscripción", icon: "subscriptions" },
+  { id: "t2", title: "Recarga de Billetera", date: "Oct 10, 2023", amount: 50.00, category: "Transferencia", icon: "add_card" },
+  { id: "t3", title: "Spotify Family Plan", date: "Oct 08, 2023", amount: -3.20, category: "Suscripción", icon: "music_note" },
+];
 
 export const subscriptions: Subscription[] = [
   {
     id: "1",
     service: "Disney+",
     host: "Juanca10",
-    price: 23.90,
-    currency: "S/",
+    price: 2.99,
+    currency: "$",
     rating: 4.8,
     availableSlots: 2,
     totalSlots: 5,
     logoId: "disney-plus-logo",
-    country: "Perú",
+    country: "Global",
     avatarUrl: "https://picsum.photos/seed/avatar1/100/100"
   },
   {
     id: "2",
-    service: "Disney+",
-    host: "Ana_Movies",
-    price: 24.50,
-    currency: "S/",
-    rating: 4.9,
-    availableSlots: 1,
-    totalSlots: 4,
-    logoId: "disney-plus-logo",
-    country: "Perú",
-    avatarUrl: "https://picsum.photos/seed/avatar2/100/100"
-  },
-  {
-    id: "3",
     service: "Netflix",
     host: "SeriesFan",
-    price: 30.00,
-    currency: "S/",
+    price: 4.50,
+    currency: "$",
     rating: 4.7,
     availableSlots: 1,
     totalSlots: 2,
     logoId: "netflix-logo",
-    country: "Colombia",
+    country: "Global",
     avatarUrl: "https://picsum.photos/seed/avatar3/100/100"
   },
   {
-    id: "4",
+    id: "3",
     service: "Spotify",
     host: "MusicLover",
-    price: 15.00,
-    currency: "S/",
+    price: 3.20,
+    currency: "$",
     rating: 5.0,
     availableSlots: 3,
     totalSlots: 6,
     logoId: "spotify-logo",
-    country: "Argentina",
+    country: "Global",
     avatarUrl: "https://picsum.photos/seed/avatar4/100/100"
   },
 ];
 
-
-export const getSubscriptionsByService = (serviceId: string) => {
-    const serviceName = serviceId.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-    // This is a simplified search. In a real scenario, you'd match more robustly.
-    return subscriptions.filter(sub => sub.service.toLowerCase().includes(serviceName.split(' ')[0].toLowerCase()));
-}
-
-export const getServiceById = (serviceId: string): Service | undefined => {
-    for (const category in servicesByCategory) {
-        const service = servicesByCategory[category as CategorySlug].find(s => s.id === serviceId);
-        if (service) {
-            return service;
-        }
-    }
-    return undefined;
-}
-
-export const getSubscriptionById = (subscriptionId: string): Subscription | undefined => {
-  return subscriptions.find(sub => sub.id === subscriptionId);
-}
-
-// This file will be removed once Firebase is connected.
-// It is used for placeholder data in the meantime.
-
 export type Group = {
   id: string;
   service: string;
+  host: string;
   slots: {
     filled: number;
     total: number;
@@ -153,16 +133,48 @@ export type Group = {
   publicPrice: number;
   netEarning: number;
   status: 'Activo' | 'Incompleto';
+  credentials: {
+    email: string;
+    pass: string;
+  };
+  nextBill: string;
 };
 
 export const groups: Group[] = [
-    { id: '1', service: 'Netflix Premium', slots: { filled: 3, total: 4 }, publicPrice: 9.50, netEarning: 8.55, status: 'Activo' },
-    { id: '2', service: 'Spotify Familiar', slots: { filled: 5, total: 6 }, publicPrice: 5.00, netEarning: 4.50, status: 'Activo' },
-    { id: '3', service: 'HBO Max', slots: { filled: 1, total: 3 }, publicPrice: 4.00, netEarning: 3.60, status: 'Incompleto' },
+    { 
+      id: '1', 
+      service: 'Netflix Premium', 
+      host: 'Alex Chen',
+      slots: { filled: 3, total: 5 }, 
+      publicPrice: 4.50, 
+      netEarning: 4.05, 
+      status: 'Activo',
+      credentials: { email: "netflix-fam@poolera.com", pass: "SecurePass123!" },
+      nextBill: "24 Oct"
+    },
+    { 
+      id: '2', 
+      service: 'Spotify Family', 
+      host: 'Sarah Miller',
+      slots: { filled: 6, total: 6 }, 
+      publicPrice: 3.20, 
+      netEarning: 2.88, 
+      status: 'Activo',
+      credentials: { email: "spotify-pool@poolera.com", pass: "MusicRocks99!" },
+      nextBill: "02 Nov"
+    },
+    { 
+      id: '3', 
+      service: 'Disney+ Yearly', 
+      host: 'Jordan Lee',
+      slots: { filled: 1, total: 4 }, 
+      publicPrice: 2.99, 
+      netEarning: 2.69, 
+      status: 'Incompleto',
+      credentials: { email: "disney-yearly@poolera.com", pass: "Mickey2024!" },
+      nextBill: "15 Dic"
+    },
 ];
-
-
-export type OrderStatus = 'Activo' | 'Pendiente' | 'En disputa' | 'Finalizado';
 
 export type Order = {
   id: string;
@@ -174,8 +186,21 @@ export type Order = {
 };
 
 export const orders: Order[] = [
-    { id: 'order-1', service: 'Netflix Premium', host: 'Juanca10', price: 9.50, status: 'Activo', expires: '2024-08-15' },
-    { id: 'order-2', service: 'Spotify Familiar', host: 'MusicLover22', price: 5.00, status: 'Activo', expires: '2024-08-20' },
-    { id: 'order-3', service: 'HBO Max', host: 'CinefiloX', price: 4.00, status: 'En disputa', expires: '2024-08-10' },
-    { id: 'order-4', service: 'Youtube Premium', host: 'AdFreeLife', price: 3.50, status: 'Finalizado', expires: '2024-07-25' },
+    { id: 'order-1', service: 'Netflix Premium', host: 'Juanca10', price: 4.50, status: 'Activo', expires: '2024-08-15' },
+    { id: 'order-2', service: 'Spotify Familiar', host: 'MusicLover22', price: 3.20, status: 'Activo', expires: '2024-08-20' },
+    { id: 'order-3', service: 'HBO Max', host: 'CinefiloX', price: 3.50, status: 'En disputa', expires: '2024-08-10' },
 ];
+
+export const getSubscriptionById = (id: string) => subscriptions.find(s => s.id === id);
+export const getServiceById = (id: string) => {
+  for (const cat in servicesByCategory) {
+    const service = servicesByCategory[cat as CategorySlug].find(s => s.id === id);
+    if (service) return service;
+  }
+  return null;
+};
+export const getSubscriptionsByService = (serviceId: string) => {
+  const service = getServiceById(serviceId);
+  if (!service) return [];
+  return subscriptions.filter(s => s.service.toLowerCase().includes(service.name.toLowerCase()));
+};

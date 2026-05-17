@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -5,7 +6,19 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Mail, Smartphone, Lock, Fingerprint, HelpCircle, LogOut, ChevronRight, ExternalLink, Edit2 } from "lucide-react";
+import { currentUser, walletTransactions } from "@/lib/data";
+import { 
+  Loader2, 
+  Mail, 
+  Smartphone, 
+  Lock, 
+  Fingerprint, 
+  HelpCircle, 
+  LogOut, 
+  ChevronRight, 
+  ExternalLink, 
+  Edit2 
+} from "lucide-react";
 
 export default function BilleteraPage() {
   const [isWithdrawing, setIsWithdrawing] = useState(false);
@@ -27,12 +40,12 @@ export default function BilleteraPage() {
       {/* Columna Izquierda: Sección de Billetera */}
       <section className="lg:col-span-7 space-y-8">
         {/* Card de Balance */}
-        <div className="relative overflow-hidden bg-primary-container p-8 rounded-[2.5rem] text-white shadow-lg shadow-primary/20">
+        <div className="relative overflow-hidden bg-primary-container p-8 rounded-3xl text-on-primary-container shadow-lg shadow-primary/20">
           <div className="relative z-10">
             <p className="text-sm font-medium opacity-80 mb-2 uppercase tracking-wider">Saldo Disponible</p>
-            <h1 className="text-6xl font-sora font-bold mb-8 tracking-tight">$142.50</h1>
+            <h1 className="text-6xl font-sora font-bold mb-8 tracking-tight">${currentUser.balance.toFixed(2)}</h1>
             <div className="flex flex-wrap gap-4">
-              <Button className="bg-white text-primary rounded-2xl px-6 py-6 h-auto font-bold flex items-center gap-2 hover:bg-white/90 transition-all active:scale-95">
+              <Button className="bg-surface-container-lowest text-primary rounded-xl px-6 py-3 h-auto font-bold flex items-center gap-2 hover:bg-white transition-all active:scale-95 shadow-sm">
                 <span className="material-symbols-outlined">add_circle</span>
                 Cargar Saldo
               </Button>
@@ -40,7 +53,7 @@ export default function BilleteraPage() {
                 variant="outline" 
                 onClick={handleWithdraw}
                 disabled={isWithdrawing}
-                className="bg-primary/20 border-white/30 text-white rounded-2xl px-6 py-6 h-auto font-bold flex items-center gap-2 hover:bg-primary/30 transition-all active:scale-95"
+                className="bg-primary/20 border-on-primary-container/30 text-on-primary-container rounded-xl px-6 py-3 h-auto font-bold flex items-center gap-2 hover:bg-primary/30 transition-all active:scale-95"
               >
                 {isWithdrawing ? <Loader2 className="animate-spin h-5 w-5" /> : <span className="material-symbols-outlined">account_balance</span>}
                 Retirar
@@ -54,31 +67,27 @@ export default function BilleteraPage() {
         {/* Historial de Actividad */}
         <div className="space-y-4">
           <div className="flex justify-between items-end mb-2">
-            <h2 className="text-2xl font-sora font-bold text-foreground">Actividad Reciente</h2>
+            <h2 className="text-2xl font-sora font-bold text-on-surface">Actividad Reciente</h2>
             <button className="text-primary text-sm font-bold hover:underline">Ver todo</button>
           </div>
           
           <div className="space-y-3">
-            {[
-              { title: "Netflix Premium Group", date: "Oct 12, 2023", amount: "-$4.50", type: "subscription", icon: "subscriptions" },
-              { title: "Recarga de Billetera", date: "Oct 10, 2023", amount: "+$50.00", type: "topup", icon: "add_card" },
-              { title: "Spotify Family Plan", date: "Oct 08, 2023", amount: "-$3.20", type: "subscription", icon: "music_note" },
-            ].map((item, i) => (
-              <div key={i} className="flex items-center justify-between p-4 bg-white border border-outline-variant/30 rounded-3xl shadow-sm hover:shadow-md transition-all">
+            {walletTransactions.map((item) => (
+              <div key={item.id} className="flex items-center justify-between p-4 bg-surface-container-lowest border border-outline-variant/30 rounded-2xl shadow-sm hover:shadow-md transition-all">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 flex items-center justify-center rounded-2xl bg-surface-container text-primary">
+                  <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-surface-container text-primary">
                     <span className="material-symbols-outlined">{item.icon}</span>
                   </div>
                   <div>
-                    <p className="font-bold text-foreground">{item.title}</p>
-                    <p className="text-xs text-muted-foreground">{item.date}</p>
+                    <p className="font-bold text-on-surface">{item.title}</p>
+                    <p className="text-xs text-on-surface-variant">{item.category} • {item.date}</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className={`font-bold ${item.amount.startsWith('+') ? 'text-secondary' : 'text-destructive'}`}>
-                    {item.amount}
+                  <p className={`font-bold ${item.amount > 0 ? 'text-secondary' : 'text-error'}`}>
+                    {item.amount > 0 ? `+$${item.amount.toFixed(2)}` : `-$${Math.abs(item.amount).toFixed(2)}`}
                   </p>
-                  <span className="px-2 py-0.5 bg-secondary-container/20 text-secondary text-[10px] font-bold rounded uppercase">Completado</span>
+                  <span className="px-2 py-0.5 bg-secondary-container/20 text-on-secondary-container text-[10px] font-bold rounded uppercase">Completado</span>
                 </div>
               </div>
             ))}
@@ -89,55 +98,57 @@ export default function BilleteraPage() {
       {/* Columna Derecha: Ajustes de Perfil */}
       <aside className="lg:col-span-5 space-y-6">
         {/* Card de Identidad */}
-        <Card className="bg-white border border-outline-variant/30 rounded-[2.5rem] p-6 shadow-sm">
+        <Card className="bg-surface-container-lowest border border-outline-variant/30 rounded-3xl p-6 shadow-sm">
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-inner relative">
+            <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-inner relative border-2 border-primary-fixed">
               <Image 
-                src="https://picsum.photos/seed/alex/200/200" 
-                alt="Alex Thompson" 
+                src={currentUser.avatar} 
+                alt={currentUser.name} 
                 fill
                 className="object-cover"
               />
             </div>
             <div className="flex-1">
-              <h3 className="text-xl font-sora font-bold text-foreground">Alex Thompson</h3>
-              <p className="text-xs font-medium text-muted-foreground">Miembro desde Enero 2023</p>
+              <h3 className="text-xl font-sora font-bold text-on-surface">{currentUser.name}</h3>
+              <p className="text-xs font-medium text-on-surface-variant">Miembro desde {currentUser.memberSince}</p>
             </div>
-            <Button variant="ghost" size="icon" className="rounded-full bg-surface-container text-primary hover:bg-primary hover:text-white transition-all">
+            <Button variant="ghost" size="icon" className="rounded-full bg-surface-container text-primary hover:bg-primary-container hover:text-white transition-all">
               <Edit2 className="h-5 w-5" />
             </Button>
           </div>
           
           <div className="space-y-2">
-            <div className="flex items-center gap-3 p-3 rounded-2xl hover:bg-surface-container transition-colors cursor-pointer group">
-              <div className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
+            <div className="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-container transition-colors cursor-pointer group">
+              <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-on-surface-variant group-hover:text-primary transition-colors">
                 <Mail className="h-5 w-5" />
               </div>
-              <span className="text-sm font-medium text-foreground">alex.t@example.com</span>
+              <span className="text-sm font-medium text-on-surface">{currentUser.email}</span>
             </div>
-            <div className="flex items-center gap-3 p-3 rounded-2xl hover:bg-surface-container transition-colors cursor-pointer group">
-              <div className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
+            <div className="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-container transition-colors cursor-pointer group">
+              <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-on-surface-variant group-hover:text-primary transition-colors">
                 <Smartphone className="h-5 w-5" />
               </div>
-              <span className="text-sm font-medium text-foreground">+1 (555) 012-3456</span>
+              <span className="text-sm font-medium text-on-surface">{currentUser.phone}</span>
             </div>
           </div>
         </Card>
 
         {/* Grupos de Configuración */}
-        <Card className="bg-white border border-outline-variant/30 rounded-[2.5rem] overflow-hidden shadow-sm">
+        <Card className="bg-surface-container-lowest border border-outline-variant/30 rounded-3xl overflow-hidden shadow-sm">
           {/* Métodos de Pago */}
           <div className="p-6 border-b border-outline-variant/20">
-            <h4 className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-4">Métodos de Pago</h4>
+            <h4 className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-4">Métodos de Pago</h4>
             <div className="space-y-3">
-              <div className="flex items-center justify-between p-4 bg-surface border border-outline-variant/20 rounded-2xl">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-6 bg-foreground rounded flex items-center justify-center text-[8px] text-white font-bold tracking-tighter">VISA</div>
-                  <p className="text-sm font-bold text-foreground">•••• 4242</p>
+              {currentUser.paymentMethods.map(pm => (
+                <div key={pm.id} className="flex items-center justify-between p-4 bg-surface border border-outline-variant/20 rounded-xl">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-6 bg-inverse-surface rounded flex items-center justify-center text-[8px] text-white font-bold tracking-tighter">{pm.type}</div>
+                    <p className="text-sm font-bold text-on-surface">•••• {pm.last4}</p>
+                  </div>
+                  <span className="text-[10px] font-bold text-primary uppercase">Principal</span>
                 </div>
-                <span className="text-[10px] font-bold text-primary uppercase">Principal</span>
-              </div>
-              <Button variant="outline" className="w-full border-dashed border-2 rounded-2xl py-6 text-muted-foreground hover:text-primary hover:border-primary transition-all">
+              ))}
+              <Button variant="outline" className="w-full border-dashed border-2 rounded-xl py-6 text-on-surface-variant hover:text-primary hover:border-primary transition-all">
                 <span className="material-symbols-outlined mr-2">add</span>
                 Añadir nuevo método
               </Button>
@@ -146,19 +157,19 @@ export default function BilleteraPage() {
 
           {/* Seguridad */}
           <div className="p-6 border-b border-outline-variant/20">
-            <h4 className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-4">Seguridad</h4>
+            <h4 className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-4">Seguridad</h4>
             <nav className="space-y-1">
-              <button className="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-surface-container transition-colors group">
+              <button className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-surface-container transition-colors group">
                 <div className="flex items-center gap-3">
-                  <Lock className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                  <span className="text-sm font-medium">Cambiar Contraseña</span>
+                  <Lock className="h-5 w-5 text-on-surface-variant group-hover:text-primary transition-colors" />
+                  <span className="text-sm font-medium text-on-surface">Cambiar Contraseña</span>
                 </div>
                 <ChevronRight className="h-5 w-5 text-outline-variant" />
               </button>
-              <button className="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-surface-container transition-colors group">
+              <button className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-surface-container transition-colors group">
                 <div className="flex items-center gap-3">
-                  <Fingerprint className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                  <span className="text-sm font-medium">Login Biométrico</span>
+                  <Fingerprint className="h-5 w-5 text-on-surface-variant group-hover:text-primary transition-colors" />
+                  <span className="text-sm font-medium text-on-surface">Login Biométrico</span>
                 </div>
                 <div className="w-10 h-5 bg-primary rounded-full relative">
                   <div className="absolute right-1 top-1 w-3 h-3 bg-white rounded-full"></div>
@@ -170,14 +181,14 @@ export default function BilleteraPage() {
           {/* Soporte */}
           <div className="p-6">
             <nav className="space-y-1">
-              <button className="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-surface-container transition-colors group">
+              <button className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-surface-container transition-colors group">
                 <div className="flex items-center gap-3">
-                  <HelpCircle className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                  <span className="text-sm font-medium">Centro de Ayuda</span>
+                  <HelpCircle className="h-5 w-5 text-on-surface-variant group-hover:text-primary transition-colors" />
+                  <span className="text-sm font-medium text-on-surface">Centro de Ayuda</span>
                 </div>
                 <ExternalLink className="h-5 w-5 text-outline-variant" />
               </button>
-              <button className="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-surface-container transition-colors group text-destructive mt-2">
+              <button className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-surface-container transition-colors group text-error mt-2">
                 <div className="flex items-center gap-3">
                   <LogOut className="h-5 w-5" />
                   <span className="text-sm font-bold">Cerrar Sesión</span>

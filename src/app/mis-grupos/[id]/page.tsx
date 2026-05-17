@@ -5,7 +5,6 @@ import { use, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { 
   ArrowLeft, 
@@ -19,9 +18,10 @@ import {
   EyeOff, 
   Info,
   UserPlus,
-  BadgeCheck
+  BadgeCheck,
+  Verified
 } from "lucide-react";
-import { groups } from "@/lib/data";
+import { groups, currentUser } from "@/lib/data";
 import { notFound } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 
@@ -51,9 +51,9 @@ export default function GroupDetailPage({ params: paramsPromise }: { params: Pro
   ];
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 py-8 px-4">
-      {/* Header Navigation */}
-      <div className="flex items-center justify-between mb-2">
+    <div className="max-w-[1280px] mx-auto space-y-8 py-8 px-margin-mobile">
+      {/* TopAppBar */}
+      <header className="bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md sticky top-0 z-50 border-b border-outline-variant/30 flex justify-between items-center w-full h-16 -mx-margin-mobile px-margin-mobile">
         <div className="flex items-center gap-3">
           <Button asChild variant="ghost" size="icon" className="rounded-full hover:bg-surface-container active:scale-95 transition-all">
             <Link href="/mis-grupos">
@@ -66,27 +66,27 @@ export default function GroupDetailPage({ params: paramsPromise }: { params: Pro
           <Button variant="ghost" size="icon" className="rounded-full">
             <Bell className="h-5 w-5 text-primary" />
           </Button>
-          <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-fixed">
+          <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-primary/20">
             <Image 
-              src="https://picsum.photos/seed/user/100/100" 
+              src={currentUser.avatar} 
               alt="Profile" 
-              width={40} 
-              height={40} 
+              width={32} 
+              height={32} 
               className="object-cover"
             />
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Bento Header Section */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* Header Section: Bento Style */}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
         {/* Identity Card */}
         <div className="md:col-span-2 bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/30 shadow-sm flex flex-col md:flex-row items-center md:items-start gap-6">
           <div className="w-24 h-24 rounded-2xl bg-surface-container flex items-center justify-center p-4">
             <div className="relative w-full h-full">
               <Image 
-                src="https://picsum.photos/seed/spotify/200/200" 
-                alt="Service Logo" 
+                src={`https://picsum.photos/seed/${group.id}/200/200`} 
+                alt={group.service} 
                 fill 
                 className="object-contain"
               />
@@ -95,9 +95,9 @@ export default function GroupDetailPage({ params: paramsPromise }: { params: Pro
           <div className="flex-1 text-center md:text-left">
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-2">
               <h1 className="text-2xl md:text-3xl font-sora font-bold text-on-surface">{group.service}</h1>
-              <span className="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-xs font-bold border border-secondary/10">Activo</span>
+              <span className="bg-secondary-container/20 text-on-secondary-container px-3 py-1 rounded-full text-xs font-bold border border-on-secondary-container/10">Activo</span>
             </div>
-            <p className="text-on-surface-variant font-medium mb-6">Organizado por <span className="font-bold text-primary">Alex Chen</span></p>
+            <p className="text-on-surface-variant font-medium mb-6">Organizado por <span className="font-bold text-primary">{group.host}</span></p>
             <div className="flex flex-wrap justify-center md:justify-start gap-3">
               <Button className="bg-primary text-white rounded-full px-6 shadow-lg shadow-primary/20 hover:opacity-90">
                 <MessageCircle className="h-4 w-4 mr-2" />
@@ -128,7 +128,7 @@ export default function GroupDetailPage({ params: paramsPromise }: { params: Pro
                 style={{ width: `${(group.slots.filled / group.slots.total) * 100}%` }}
               ></div>
             </div>
-            <p className="text-[10px] font-bold opacity-80 text-right uppercase">Próximo Cobro: 12 Oct, 2023</p>
+            <p className="text-[10px] font-bold opacity-80 text-right uppercase">Próximo Cobro: {group.nextBill}</p>
           </div>
         </div>
       </section>
@@ -152,13 +152,13 @@ export default function GroupDetailPage({ params: paramsPromise }: { params: Pro
                   className="bg-transparent border-none focus:ring-0 w-full text-sm font-bold text-on-surface" 
                   readOnly 
                   type="text" 
-                  value="spotify-fam-share@gmail.com" 
+                  value={group.credentials.email} 
                 />
                 <Button 
                   variant="ghost" 
                   size="icon" 
                   className="h-8 w-8 text-primary hover:bg-primary/10"
-                  onClick={() => handleCopy("spotify-fam-share@gmail.com", "Email")}
+                  onClick={() => handleCopy(group.credentials.email, "Email")}
                 >
                   <Copy className="h-4 w-4" />
                 </Button>
@@ -172,7 +172,7 @@ export default function GroupDetailPage({ params: paramsPromise }: { params: Pro
                   className="bg-transparent border-none focus:ring-0 w-full text-sm font-bold text-on-surface tracking-wider" 
                   readOnly 
                   type={showPassword ? "text" : "password"} 
-                  value="SecurePass123!" 
+                  value={group.credentials.pass} 
                 />
                 <Button 
                   variant="ghost" 
@@ -186,7 +186,7 @@ export default function GroupDetailPage({ params: paramsPromise }: { params: Pro
                   variant="ghost" 
                   size="icon" 
                   className="h-8 w-8 text-primary hover:bg-primary/10"
-                  onClick={() => handleCopy("SecurePass123!", "Contraseña")}
+                  onClick={() => handleCopy(group.credentials.pass, "Contraseña")}
                 >
                   <Copy className="h-4 w-4" />
                 </Button>
@@ -205,10 +205,10 @@ export default function GroupDetailPage({ params: paramsPromise }: { params: Pro
         <div className="flex justify-between items-center px-1">
           <h3 className="text-xl font-sora font-bold text-on-surface">Miembros Activos</h3>
           <Button variant="link" className="text-primary font-bold">
-            Copiar Invitación
+            Invitar Amigo
           </Button>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pb-12">
           {members.map((member, i) => (
             <div key={i} className="bg-surface-container-lowest p-4 rounded-3xl border border-outline-variant/30 flex items-center gap-4 hover:shadow-md transition-shadow">
               <div className="relative">
@@ -216,8 +216,8 @@ export default function GroupDetailPage({ params: paramsPromise }: { params: Pro
                   <Image src={member.avatar} alt={member.name} width={48} height={48} className="object-cover" />
                 </div>
                 {member.role === "Admin" && (
-                  <div className="absolute -bottom-1 -right-1 bg-primary text-white p-0.5 rounded-full border-2 border-white">
-                    <BadgeCheck className="h-3 w-3 fill-white text-primary" />
+                  <div className="absolute -bottom-1 -right-1 bg-primary text-white p-0.5 rounded-full border-2 border-surface-container-lowest">
+                    <Verified className="h-3 w-3 fill-white text-primary" />
                   </div>
                 )}
               </div>
@@ -239,7 +239,7 @@ export default function GroupDetailPage({ params: paramsPromise }: { params: Pro
             </div>
             <div>
               <p className="text-sm font-bold text-on-surface-variant">Cupo Libre</p>
-              <p className="text-[10px] font-bold text-primary uppercase">Invitar Amigo</p>
+              <p className="text-[10px] font-bold text-primary uppercase">Invitar</p>
             </div>
           </div>
         </div>

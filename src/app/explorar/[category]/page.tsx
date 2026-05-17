@@ -1,12 +1,13 @@
 
 'use client';
 
+import { use } from "react";
 import { servicesByCategory } from "@/lib/data";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ChevronRight } from "lucide-react";
 import type { CategorySlug } from "@/lib/types";
-import { notFound, useParams } from "next/navigation";
+import { notFound } from "next/navigation";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import {
@@ -28,8 +29,8 @@ const categoryNames: Record<CategorySlug, string> = {
   software: "Software",
 };
 
-export default function CategoryPage() {
-  const params = useParams();
+export default function CategoryPage({ params: paramsPromise }: { params: Promise<{ category: string }> }) {
+  const params = use(paramsPromise);
   const category = params.category as CategorySlug;
 
   const services = servicesByCategory[category];
@@ -43,18 +44,18 @@ export default function CategoryPage() {
     <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between mb-10">
         <div className="flex-1">
-          <Button asChild variant="outline">
-            <Link href="/explorar">
+          <Button asChild variant="outline" className="rounded-full">
+            <Link href="/">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Regresar
             </Link>
           </Button>
         </div>
         <div className="flex-[2] text-center">
-          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+          <h1 className="text-3xl font-sora font-bold tracking-tight text-on-surface">
             Selecciona un servicio
           </h1>
-          <p className="mt-2 text-muted-foreground">
+          <p className="mt-2 text-on-surface-variant font-medium">
             Categoría: {categoryName}
           </p>
         </div>
@@ -65,24 +66,24 @@ export default function CategoryPage() {
           const logo = PlaceHolderImages.find((img) => img.id === service.logoId);
           return (
             <Link href={`/explorar/${category}/${service.id}`} key={service.id}>
-              <Card className="flex flex-col h-full justify-between p-4 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg cursor-pointer border-none shadow-sm bg-card">
+              <Card className="flex flex-col h-full justify-between p-6 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg cursor-pointer border-outline-variant/30 shadow-sm bg-surface-container-lowest rounded-3xl group">
                 <CardHeader className="flex-row items-center gap-4 p-0">
                   {logo && (
-                    <div className="relative w-12 h-12 overflow-hidden rounded-xl border">
+                    <div className="relative w-14 h-14 overflow-hidden rounded-2xl border border-outline-variant/20 bg-white">
                       <Image
                         src={logo.imageUrl}
                         alt={logo.description}
                         fill
-                        className="object-cover"
+                        className="object-cover group-hover:scale-110 transition-transform"
                         data-ai-hint={logo.imageHint}
                       />
                     </div>
                   )}
-                  <CardTitle className="font-sans text-lg font-semibold">
+                  <CardTitle className="font-sora text-lg font-bold text-on-surface">
                     {service.name}
                   </CardTitle>
                 </CardHeader>
-                <div className="flex items-center justify-end text-sm text-primary font-semibold pt-4">
+                <div className="flex items-center justify-end text-sm text-primary font-bold pt-6 group-hover:underline">
                   Ver grupos <ChevronRight className="h-4 w-4 ml-1" />
                 </div>
               </Card>
