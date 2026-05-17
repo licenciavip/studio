@@ -11,7 +11,7 @@ export default function Home() {
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
               <p className="text-sm font-medium opacity-90 mb-1">Saldo Disponible</p>
-              <h1 className="text-5xl font-headline font-bold tracking-tight">$142.50</h1>
+              <h1 className="text-5xl font-sora font-bold tracking-tight">$142.50</h1>
             </div>
             <Link 
               href="/billetera" 
@@ -48,7 +48,7 @@ export default function Home() {
       {/* Your Groups Section */}
       <section>
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-headline font-bold text-foreground">Tus Grupos</h2>
+          <h2 className="text-xl font-sora font-bold text-foreground">Tus Grupos</h2>
           <Link href="/mis-grupos" className="text-primary text-sm font-bold hover:underline">Ver todos</Link>
         </div>
         <div className="space-y-4">
@@ -97,7 +97,7 @@ export default function Home() {
 
       {/* Novedades Section */}
       <section>
-        <h2 className="text-xl font-headline font-bold text-foreground mb-4">Novedades</h2>
+        <h2 className="text-xl font-sora font-bold text-foreground mb-4">Novedades</h2>
         <div className="flex gap-4 overflow-x-auto pb-4 snap-x no-scrollbar">
           <div className="min-w-[280px] snap-start glass-card rounded-3xl overflow-hidden relative group">
             <div className="h-32 bg-surface-container-highest relative">

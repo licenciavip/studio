@@ -2,12 +2,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
 export default function Header() {
-  const pathname = usePathname();
-
   return (
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-outline-variant/30 flex justify-between items-center w-full px-4 h-16 md:px-20">
       <div className="flex items-center gap-3">
@@ -20,7 +17,7 @@ export default function Header() {
             className="w-full h-full object-cover"
           />
         </Link>
-        <span className="text-xl font-headline font-bold text-primary">Poolera</span>
+        <span className="text-xl font-sora font-bold text-primary">Poolera</span>
       </div>
       
       <Button variant="ghost" size="icon" className="rounded-full">

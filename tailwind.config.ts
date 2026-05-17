@@ -17,14 +17,15 @@ export default {
     },
     extend: {
       fontFamily: {
-        sora: ['Sora', 'sans-serif'],
-        inter: ['Inter', 'sans-serif'],
+        sora: ['var(--font-sora)', 'sans-serif'],
+        inter: ['var(--font-inter)', 'sans-serif'],
+        body: ['var(--font-inter)', 'sans-serif'],
       },
       colors: {
         background: '#faf8ff',
         foreground: '#131b2e',
         primary: {
-          DEFAULT: '#4343d5',
+          DEFAULT: '#5d5fef',
           container: '#5d5fef',
           fixed: '#e1e0ff',
           foreground: '#ffffff',
@@ -58,7 +59,7 @@ export default {
         },
         border: '#c7c4d7',
         input: '#eaedff',
-        ring: '#4343d5',
+        ring: '#5d5fef',
       },
       borderRadius: {
         lg: '1rem',
