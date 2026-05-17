@@ -1,124 +1,88 @@
-
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { 
-  Mail, 
-  Smartphone, 
-  Lock, 
-  Fingerprint, 
-  HelpCircle, 
-  LogOut, 
-  Edit2,
-  ChevronRight,
-  ExternalLink
-} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { ArrowLeft, MessageCircle, HelpCircle, FileText, ExternalLink } from "lucide-react";
+import Link from "next/link";
 
-export default function AyudaPerfilPage() {
+const FAQS = [
+  {
+    q: "¿Cómo funcionan los pagos manuales?",
+    a: "Debes realizar la transferencia a la cuenta BCP indicada y subir tu comprobante en la sección 'Billetera'. Nuestro equipo validará el pago en un máximo de 2 horas (dentro del horario operativo)."
+  },
+  {
+    q: "¿Qué pasa si el anfitrión cambia la clave?",
+    a: "Puedes abrir una disputa desde 'Mis Órdenes'. Nuestro sistema de IA analizará tu caso y, si se confirma el incumplimiento, recibirás un reembolso proporcional."
+  },
+  {
+    q: "¿Cuál es el horario de validación?",
+    a: "Validamos pagos de Lunes a Domingo de 9:00 AM a 7:00 PM (Hora Lima)."
+  }
+];
+
+export default function AyudaPage() {
   return (
-    <div className="max-w-2xl mx-auto space-y-6 py-8">
-      {/* Profile Identity Card */}
-      <div className="bg-white border border-outline-variant/30 rounded-[2.5rem] p-6 shadow-sm">
-        <div className="flex items-center gap-4 mb-6">
-          <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-inner relative border-2 border-primary/20">
-            <Image 
-              src="https://picsum.photos/seed/alex/200/200" 
-              alt="Alex Thompson" 
-              fill
-              className="object-cover"
-            />
-          </div>
-          <div className="flex-1">
-            <h1 className="text-3xl font-sora font-bold text-foreground">Alex Thompson</h1>
-            <p className="text-sm font-medium text-muted-foreground">Miembro desde Enero 2023</p>
-          </div>
-          <Button variant="ghost" size="icon" className="rounded-full bg-surface-container text-primary hover:bg-primary hover:text-white transition-all">
-            <Edit2 className="h-5 w-5" />
-          </Button>
-        </div>
+    <div className="max-w-3xl mx-auto space-y-8 py-8">
+      <div className="flex items-center gap-4">
+        <Button variant="ghost" size="icon" className="rounded-full" asChild>
+          <Link href="/perfil"><ArrowLeft className="h-6 w-6" /></Link>
+        </Button>
+        <h1 className="text-3xl font-sora font-bold">Centro de Ayuda</h1>
+      </div>
 
-        {/* Personal Information */}
-        <div className="space-y-2 border-t border-outline-variant/20 pt-6">
-          <h4 className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider px-3 mb-2">Información Personal</h4>
-          
-          <div className="flex items-center gap-3 p-3 rounded-2xl hover:bg-surface-container transition-colors cursor-pointer group">
-            <div className="w-12 h-12 rounded-xl bg-muted/50 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
-              <Mail className="h-5 w-5" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Card className="rounded-3xl border-outline-variant/30 hover:shadow-md transition-shadow">
+          <CardHeader>
+            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-2">
+              <MessageCircle className="h-6 w-6" />
             </div>
-            <div className="flex flex-col">
-              <span className="text-[10px] text-muted-foreground font-bold uppercase">Email</span>
-              <span className="text-sm font-medium text-foreground">alex.t@example.com</span>
-            </div>
-          </div>
+            <CardTitle>Soporte por Chat</CardTitle>
+            <CardDescription>Habla con un agente en vivo para resolver dudas urgentes.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button className="w-full rounded-xl">Iniciar Chat</Button>
+          </CardContent>
+        </Card>
 
-          <div className="flex items-center gap-3 p-3 rounded-2xl hover:bg-surface-container transition-colors cursor-pointer group">
-            <div className="w-12 h-12 rounded-xl bg-muted/50 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
-              <Smartphone className="h-5 w-5" />
+        <Card className="rounded-3xl border-outline-variant/30 hover:shadow-md transition-shadow">
+          <CardHeader>
+            <div className="w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary mb-2">
+              <FileText className="h-6 w-6" />
             </div>
-            <div className="flex flex-col">
-              <span className="text-[10px] text-muted-foreground font-bold uppercase">Teléfono</span>
-              <span className="text-sm font-medium text-foreground">+1 (555) 012-3456</span>
-            </div>
-          </div>
+            <CardTitle>Documentación</CardTitle>
+            <CardDescription>Guías detalladas sobre cómo compartir y unirse a grupos.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button variant="outline" className="w-full rounded-xl">Ver Guías</Button>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="space-y-4">
+        <h2 className="text-xl font-sora font-bold px-1">Preguntas Frecuentes</h2>
+        <div className="space-y-3">
+          {FAQS.map((faq, i) => (
+            <Card key={i} className="rounded-2xl border-outline-variant/20 shadow-none bg-surface-container-lowest">
+              <CardHeader className="p-4">
+                <CardTitle className="text-base font-bold flex items-start gap-3">
+                  <HelpCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                  {faq.q}
+                </CardTitle>
+                <CardDescription className="text-sm pt-2 leading-relaxed">
+                  {faq.a}
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          ))}
         </div>
       </div>
 
-      {/* Settings Groups */}
-      <div className="bg-white border border-outline-variant/30 rounded-[2.5rem] overflow-hidden shadow-sm">
-        {/* Security & Privacy */}
-        <div className="p-6 border-b border-outline-variant/20">
-          <h4 className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-4">Seguridad</h4>
-          <nav className="space-y-2">
-            <button className="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-surface-container transition-colors group">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
-                  <Lock className="h-5 w-5" />
-                </div>
-                <span className="text-sm font-medium text-foreground">Cambiar Contraseña</span>
-              </div>
-              <ChevronRight className="h-5 w-5 text-outline-variant" />
-            </button>
-
-            <button className="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-surface-container transition-colors group">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
-                  <Fingerprint className="h-5 w-5" />
-                </div>
-                <span className="text-sm font-medium text-foreground">Login Biométrico</span>
-              </div>
-              <div className="w-10 h-5 bg-primary rounded-full relative">
-                <div className="absolute right-1 top-1 w-3 h-3 bg-white rounded-full transition-all"></div>
-              </div>
-            </button>
-          </nav>
-        </div>
-
-        {/* Support & Logout */}
-        <div className="p-6">
-          <h4 className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-4">Ayuda y Soporte</h4>
-          <nav className="space-y-2">
-            <button className="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-surface-container transition-colors group">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
-                  <HelpCircle className="h-5 w-5" />
-                </div>
-                <span className="text-sm font-medium text-foreground">Centro de Ayuda</span>
-              </div>
-              <ExternalLink className="h-5 w-5 text-outline-variant" />
-            </button>
-
-            <button className="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-surface-container transition-colors group text-destructive mt-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-destructive/10 flex items-center justify-center">
-                  <LogOut className="h-5 w-5" />
-                </div>
-                <span className="text-sm font-bold">Cerrar Sesión</span>
-              </div>
-            </button>
-          </nav>
-        </div>
+      <div className="bg-primary/5 rounded-3xl p-8 text-center border border-primary/10">
+        <h3 className="font-sora font-bold text-lg mb-2">¿Todavía tienes dudas?</h3>
+        <p className="text-sm text-on-surface-variant mb-6">Estamos aquí para ayudarte a que tu experiencia sea increíble.</p>
+        <Button variant="link" className="font-bold text-primary" asChild>
+          <a href="mailto:soporte@subshare.com">Enviar un correo <ExternalLink className="h-4 w-4 ml-1" /></a>
+        </Button>
       </div>
     </div>
   );

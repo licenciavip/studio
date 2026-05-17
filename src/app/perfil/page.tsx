@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/firebase";
 import { 
@@ -33,7 +34,7 @@ export default function PerfilPage() {
             />
           </div>
           <div className="flex-1">
-            <h1 className="text-3xl font-sora font-bold text-on-surface">{user?.displayName || "Usuario de Poolera"}</h1>
+            <h1 className="text-3xl font-sora font-bold text-on-surface">{user?.displayName || "Usuario de SubShare"}</h1>
             <p className="text-sm font-medium text-on-surface-variant">Miembro desde Enero 2023</p>
           </div>
           <Button variant="ghost" size="icon" className="rounded-full bg-surface-container text-primary hover:bg-primary hover:text-white transition-all">
@@ -101,15 +102,17 @@ export default function PerfilPage() {
         <div className="p-6">
           <h4 className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-4">Ayuda y Soporte</h4>
           <nav className="space-y-2">
-            <button className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-surface-container transition-colors group">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-on-surface-variant group-hover:text-primary transition-colors">
-                  <HelpCircle className="h-5 w-5" />
+            <Button variant="ghost" className="w-full justify-between p-3 rounded-xl hover:bg-surface-container transition-colors group h-auto font-normal" asChild>
+              <Link href="/ayuda">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-on-surface-variant group-hover:text-primary transition-colors">
+                    <HelpCircle className="h-5 w-5" />
+                  </div>
+                  <span className="text-sm font-medium text-on-surface">Centro de Ayuda</span>
                 </div>
-                <span className="text-sm font-medium text-on-surface">Centro de Ayuda</span>
-              </div>
-              <ExternalLink className="h-5 w-5 text-outline-variant" />
-            </button>
+                <ChevronRight className="h-5 w-5 text-outline-variant" />
+              </Link>
+            </Button>
 
             <button className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-surface-container transition-colors group text-red-600 mt-4">
               <div className="flex items-center gap-3">

@@ -6,12 +6,13 @@ import { BottomNav } from "@/components/layout/bottom-nav";
 import { Toaster } from "@/components/ui/toaster";
 import { Inter, Sora } from 'next/font/google';
 import { FirebaseClientProvider } from "@/firebase";
+import { FirebaseErrorListener } from "@/components/FirebaseErrorListener";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const sora = Sora({ subsets: ['latin'], variable: '--font-sora' });
 
 export const metadata: Metadata = {
-  title: "Poolera",
+  title: "SubShare",
   description: "Gestión de suscripciones compartidas. Fintech Colaborativa.",
   icons: {
     icon: '/favicon.svg',
@@ -32,6 +33,7 @@ export default function RootLayout({
       </head>
       <body className={cn("min-h-screen bg-background text-foreground font-inter antialiased pb-24", inter.variable, sora.variable)}>
         <FirebaseClientProvider>
+          <FirebaseErrorListener />
           <div className="relative flex flex-col min-h-screen">
             <Header />
             <main className="flex-1 max-w-[1280px] mx-auto w-full px-4 md:px-margin-desktop py-6">
