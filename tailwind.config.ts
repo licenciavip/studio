@@ -17,8 +17,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        headline: ['Sora', 'sans-serif'],
-        body: ['Inter', 'sans-serif'],
+        sora: ['Sora', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
       },
       colors: {
         background: '#faf8ff',
