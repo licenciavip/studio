@@ -18,8 +18,9 @@ import {
   EyeOff, 
   Info,
   UserPlus,
-  BadgeCheck,
-  Verified
+  Verified,
+  Settings2,
+  AlertCircle
 } from "lucide-react";
 import { groups, currentUser } from "@/lib/data";
 import { notFound } from "next/navigation";
@@ -50,10 +51,12 @@ export default function GroupDetailPage({ params: paramsPromise }: { params: Pro
     { name: "Elena Rodriguez", role: "Member", joined: "Sep 2023", avatar: "https://picsum.photos/seed/elena/100/100" },
   ];
 
+  const isHost = group.userRole === 'Anfitrión';
+
   return (
-    <div className="max-w-[1280px] mx-auto space-y-8 py-8 px-margin-mobile">
+    <div className="max-w-[1280px] mx-auto space-y-8 py-8">
       {/* TopAppBar */}
-      <header className="bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md sticky top-0 z-50 border-b border-outline-variant/30 flex justify-between items-center w-full h-16 -mx-margin-mobile px-margin-mobile">
+      <header className="bg-surface/80 backdrop-blur-md sticky top-0 z-50 border-b border-outline-variant/30 flex justify-between items-center w-full h-16 -mx-4 px-4">
         <div className="flex items-center gap-3">
           <Button asChild variant="ghost" size="icon" className="rounded-full hover:bg-surface-container active:scale-95 transition-all">
             <Link href="/mis-grupos">
@@ -95,7 +98,12 @@ export default function GroupDetailPage({ params: paramsPromise }: { params: Pro
           <div className="flex-1 text-center md:text-left">
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-2">
               <h1 className="text-2xl md:text-3xl font-sora font-bold text-on-surface">{group.service}</h1>
-              <span className="bg-secondary-container/20 text-on-secondary-container px-3 py-1 rounded-full text-xs font-bold border border-on-secondary-container/10">Activo</span>
+              <span className={cn(
+                "px-3 py-1 rounded-full text-xs font-bold border",
+                isHost ? "bg-primary/10 text-primary border-primary/20" : "bg-secondary-container/20 text-on-secondary-container border-on-secondary-container/10"
+              )}>
+                {isHost ? 'Tu Grupo (Anfitrión)' : 'Activo'}
+              </span>
             </div>
             <p className="text-on-surface-variant font-medium mb-6">Organizado por <span className="font-bold text-primary">{group.host}</span></p>
             <div className="flex flex-wrap justify-center md:justify-start gap-3">
@@ -103,10 +111,17 @@ export default function GroupDetailPage({ params: paramsPromise }: { params: Pro
                 <MessageCircle className="h-4 w-4 mr-2" />
                 Chat Grupal
               </Button>
-              <Button variant="outline" className="border-2 border-error text-error rounded-full px-6 hover:bg-error/5">
-                <LogOut className="h-4 w-4 mr-2" />
-                Salir del Grupo
-              </Button>
+              {isHost ? (
+                <Button variant="outline" className="border-2 border-primary text-primary rounded-full px-6">
+                  <Settings2 className="h-4 w-4 mr-2" />
+                  Ajustes del Grupo
+                </Button>
+              ) : (
+                <Button variant="outline" className="border-2 border-error text-error rounded-full px-6 hover:bg-error/5">
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Salir del Grupo
+                </Button>
+              )}
             </div>
           </div>
         </div>
@@ -114,8 +129,8 @@ export default function GroupDetailPage({ params: paramsPromise }: { params: Pro
         {/* Stats Card */}
         <div className="bg-primary-container text-white p-6 rounded-3xl shadow-lg flex flex-col justify-between">
           <div>
-            <p className="text-sm font-medium opacity-80 mb-1">Tu Aporte</p>
-            <h2 className="text-5xl font-sora font-bold leading-none">${group.publicPrice.toFixed(2)}<span className="text-lg font-medium opacity-70">/mes</span></h2>
+            <p className="text-sm font-medium opacity-80 mb-1">{isHost ? 'Tus Ganancias' : 'Tu Aporte'}</p>
+            <h2 className="text-5xl font-sora font-bold leading-none">${(isHost ? group.netEarning : group.publicPrice).toFixed(2)}<span className="text-lg font-medium opacity-70">/mes</span></h2>
           </div>
           <div className="space-y-4 mt-6">
             <div className="flex justify-between items-end">
@@ -136,12 +151,12 @@ export default function GroupDetailPage({ params: paramsPromise }: { params: Pro
       {/* Credentials Section */}
       <section className="space-y-4">
         <h3 className="text-xl font-sora font-bold text-on-surface flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary">key</span>
+          <Key className="h-6 w-6 text-primary" />
           Credenciales de Acceso
         </h3>
         <div className="bg-white/50 backdrop-blur-md border border-primary/10 rounded-3xl p-6 shadow-xl relative overflow-hidden">
           <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
-            <span className="material-symbols-outlined text-[120px]">lock</span>
+            <Key className="h-[120px] w-[120px]" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
             <div className="space-y-2">
@@ -150,9 +165,9 @@ export default function GroupDetailPage({ params: paramsPromise }: { params: Pro
                 <Mail className="h-5 w-5 text-on-surface-variant group-focus-within:text-primary transition-colors" />
                 <input 
                   className="bg-transparent border-none focus:ring-0 w-full text-sm font-bold text-on-surface" 
-                  readOnly 
+                  readOnly={!isHost}
                   type="text" 
-                  value={group.credentials.email} 
+                  defaultValue={group.credentials.email} 
                 />
                 <Button 
                   variant="ghost" 
@@ -170,9 +185,9 @@ export default function GroupDetailPage({ params: paramsPromise }: { params: Pro
                 <Key className="h-5 w-5 text-on-surface-variant group-focus-within:text-primary transition-colors" />
                 <input 
                   className="bg-transparent border-none focus:ring-0 w-full text-sm font-bold text-on-surface tracking-wider" 
-                  readOnly 
+                  readOnly={!isHost}
                   type={showPassword ? "text" : "password"} 
-                  value={group.credentials.pass} 
+                  defaultValue={group.credentials.pass} 
                 />
                 <Button 
                   variant="ghost" 
@@ -193,10 +208,18 @@ export default function GroupDetailPage({ params: paramsPromise }: { params: Pro
               </div>
             </div>
           </div>
-          <div className="mt-6 flex items-center gap-3 p-4 bg-tertiary-fixed/10 rounded-2xl border border-tertiary-fixed/20">
-            <Info className="h-5 w-5 text-tertiary shrink-0" />
-            <p className="text-xs font-medium text-tertiary">No cambies la contraseña. Hacerlo resultará en la expulsión inmediata del grupo sin reembolso.</p>
-          </div>
+          {isHost && (
+            <div className="mt-6 flex items-center gap-3 p-4 bg-primary/10 rounded-2xl border border-primary/20">
+               <AlertCircle className="h-5 w-5 text-primary shrink-0" />
+               <p className="text-xs font-medium text-primary">Como anfitrión, eres responsable de mantener estas credenciales actualizadas. Si las cambias en el servicio, actualízalas aquí también.</p>
+            </div>
+          )}
+          {!isHost && (
+            <div className="mt-6 flex items-center gap-3 p-4 bg-tertiary-fixed/10 rounded-2xl border border-tertiary-fixed/20">
+              <Info className="h-5 w-5 text-tertiary shrink-0" />
+              <p className="text-xs font-medium text-tertiary">No cambies la contraseña en el servicio original. Hacerlo resultará en la expulsión inmediata del grupo sin reembolso.</p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -212,8 +235,8 @@ export default function GroupDetailPage({ params: paramsPromise }: { params: Pro
           {members.map((member, i) => (
             <div key={i} className="bg-surface-container-lowest p-4 rounded-3xl border border-outline-variant/30 flex items-center gap-4 hover:shadow-md transition-shadow">
               <div className="relative">
-                <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-surface-variant">
-                  <Image src={member.avatar} alt={member.name} width={48} height={48} className="object-cover" />
+                <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-surface-variant relative">
+                  <Image src={member.avatar} alt={member.name} fill className="object-cover" />
                 </div>
                 {member.role === "Admin" && (
                   <div className="absolute -bottom-1 -right-1 bg-primary text-white p-0.5 rounded-full border-2 border-surface-container-lowest">
@@ -225,7 +248,7 @@ export default function GroupDetailPage({ params: paramsPromise }: { params: Pro
                 <div className="flex items-center gap-2">
                   <p className="text-sm font-bold text-on-surface truncate">{member.name}</p>
                   {member.role === "Admin" && (
-                    <span className="bg-primary/10 text-primary px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-tighter shrink-0">Host</span>
+                    <span className="bg-primary/10 text-primary px-1.5 py-0.5 rounded text-[8px] font-black uppercase tracking-tighter shrink-0">Anfitrión</span>
                   )}
                 </div>
                 <p className="text-[10px] text-on-surface-variant font-medium">Desde {member.joined}</p>

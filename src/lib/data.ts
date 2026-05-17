@@ -122,10 +122,13 @@ export const subscriptions: Subscription[] = [
   },
 ];
 
+export type GroupRole = 'Anfitrión' | 'Miembro';
+
 export type Group = {
   id: string;
   service: string;
   host: string;
+  userRole: GroupRole;
   slots: {
     filled: number;
     total: number;
@@ -145,6 +148,7 @@ export const groups: Group[] = [
       id: '1', 
       service: 'Netflix Premium', 
       host: 'Alex Chen',
+      userRole: 'Anfitrión',
       slots: { filled: 3, total: 5 }, 
       publicPrice: 4.50, 
       netEarning: 4.05, 
@@ -156,6 +160,7 @@ export const groups: Group[] = [
       id: '2', 
       service: 'Spotify Family', 
       host: 'Sarah Miller',
+      userRole: 'Miembro',
       slots: { filled: 6, total: 6 }, 
       publicPrice: 3.20, 
       netEarning: 2.88, 
@@ -167,6 +172,7 @@ export const groups: Group[] = [
       id: '3', 
       service: 'Disney+ Yearly', 
       host: 'Jordan Lee',
+      userRole: 'Anfitrión',
       slots: { filled: 1, total: 4 }, 
       publicPrice: 2.99, 
       netEarning: 2.69, 

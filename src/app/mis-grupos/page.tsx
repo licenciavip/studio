@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { groups } from '@/lib/data';
+import { groups, currentUser } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import { ChevronRight, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -12,7 +12,6 @@ import { cn } from '@/lib/utils';
 export default function MisGruposPage() {
   const [activeTab, setActiveTab] = useState<'Active' | 'Pending'>('Active');
 
-  // Filtrar grupos (en este MVP usamos los datos estáticos)
   const displayGroups = activeTab === 'Active' 
     ? groups.filter(g => g.status === 'Activo') 
     : groups.filter(g => g.status === 'Incompleto');
@@ -22,7 +21,7 @@ export default function MisGruposPage() {
       {/* Screen Title */}
       <div className="mb-6 px-1">
         <h2 className="text-3xl font-sora font-bold text-on-surface">Mis Grupos</h2>
-        <p className="text-muted-foreground font-inter">Gestiona tus suscripciones activas y pendientes</p>
+        <p className="text-on-surface-variant font-medium">Gestiona tus suscripciones activas y pendientes</p>
       </div>
 
       {/* Tabs Navigation */}
@@ -33,7 +32,7 @@ export default function MisGruposPage() {
             "flex-1 py-2.5 text-sm font-bold rounded-xl transition-all duration-200",
             activeTab === 'Active' 
               ? "bg-white text-primary shadow-sm" 
-              : "text-muted-foreground hover:text-on-surface"
+              : "text-on-surface-variant hover:text-on-surface"
           )}
         >
           Activos
@@ -44,7 +43,7 @@ export default function MisGruposPage() {
             "flex-1 py-2.5 text-sm font-bold rounded-xl transition-all duration-200",
             activeTab === 'Pending' 
               ? "bg-white text-primary shadow-sm" 
-              : "text-muted-foreground hover:text-on-surface"
+              : "text-on-surface-variant hover:text-on-surface"
           )}
         >
           Pendientes
@@ -75,30 +74,30 @@ export default function MisGruposPage() {
                     <div className="flex items-center gap-2 mt-1">
                       <span className={cn(
                         "text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full border",
-                        group.id === '1' || group.id === '3' 
+                        group.userRole === 'Anfitrión'
                           ? "bg-primary/10 text-primary border-primary/20" 
                           : "bg-secondary/10 text-secondary border-secondary/20"
                       )}>
-                        {group.id === '1' || group.id === '3' ? 'Admin' : 'Miembro'}
+                        {group.userRole}
                       </span>
-                      <span className="text-[10px] font-bold text-muted-foreground uppercase">ID: #{group.id}00{group.id}</span>
+                      <span className="text-[10px] font-bold text-on-surface-variant uppercase">ID: #{group.id}00{group.id}</span>
                     </div>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase">Cobro</p>
-                  <p className="font-bold text-on-surface">24 Oct</p>
+                  <p className="text-[10px] font-bold text-on-surface-variant uppercase">Cobro</p>
+                  <p className="font-bold text-on-surface">{group.nextBill}</p>
                 </div>
               </div>
 
               <div className="space-y-3">
                 <div className="flex justify-between text-xs font-bold">
-                  <span className="text-muted-foreground">Capacidad</span>
+                  <span className="text-on-surface-variant">Capacidad</span>
                   <span className="text-primary">{group.slots.filled} / {group.slots.total} Cupos</span>
                 </div>
-                <div className="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+                <div className="w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
                   <div 
-                    className="bg-secondary-fixed h-full rounded-full transition-all duration-700" 
+                    className="bg-secondary-fixed h-full rounded-full transition-all duration-700 shadow-[0_0_8px_rgba(79,251,225,0.4)]" 
                     style={{ width: `${(group.slots.filled / group.slots.total) * 100}%` }}
                   ></div>
                 </div>
@@ -107,12 +106,12 @@ export default function MisGruposPage() {
               <div className="mt-6 pt-4 border-t border-outline-variant/20 flex justify-between items-center">
                 <div className="flex -space-x-2">
                   {[1, 2, 3].map((i) => (
-                    <div key={i} className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-muted">
+                    <div key={i} className="w-8 h-8 rounded-full border-2 border-white overflow-hidden bg-muted relative">
                       <Image 
                         src={`https://picsum.photos/seed/user${group.id}${i}/100/100`} 
                         alt="Member" 
-                        width={32} 
-                        height={32} 
+                        fill
+                        className="object-cover"
                       />
                     </div>
                   ))}
@@ -124,7 +123,7 @@ export default function MisGruposPage() {
                 </div>
                 <Button asChild variant="link" className="text-primary font-bold hover:no-underline p-0 flex items-center gap-1 group">
                   <Link href={`/mis-grupos/${group.id}`}>
-                    {group.id === '1' || group.id === '3' ? 'Gestionar' : 'Ver Detalles'}
+                    {group.userRole === 'Anfitrión' ? 'Gestionar' : 'Ver Detalles'}
                     <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </Link>
                 </Button>
@@ -133,15 +132,15 @@ export default function MisGruposPage() {
           ))
         ) : (
           <div className="text-center py-20 bg-surface-container/30 rounded-3xl border-2 border-dashed border-outline-variant/50">
-            <p className="text-muted-foreground">No tienes grupos {activeTab === 'Active' ? 'activos' : 'pendientes'}.</p>
+            <p className="text-on-surface-variant">No tienes grupos {activeTab === 'Active' ? 'activos' : 'pendientes'}.</p>
             <Button asChild variant="link" className="mt-2 text-primary font-bold">
-              <Link href="/explorar">¡Únete a uno ahora!</Link>
+              <Link href="/">¡Únete a uno ahora!</Link>
             </Button>
           </div>
         )}
       </div>
 
-      {/* FAB for adding groups */}
+      {/* FAB for adding groups (Only visible if user wants to share) */}
       <div className="fixed bottom-28 right-6 z-40">
         <Button asChild className="w-14 h-14 rounded-2xl shadow-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all p-0">
           <Link href="/compartir">
