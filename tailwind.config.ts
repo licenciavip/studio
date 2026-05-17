@@ -38,7 +38,6 @@ export default {
           DEFAULT: '#faf8ff',
           container: '#eaedff',
           variant: '#dae2fd',
-          bright: '#faf8ff',
           dim: '#d2d9f4',
         },
         outline: {
