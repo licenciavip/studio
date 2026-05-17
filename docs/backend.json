@@ -1,0 +1,60 @@
+{
+  "entities": {
+    "PaymentOrder": {
+      "title": "PaymentOrder",
+      "description": "Una orden de pago o recarga de saldo mediante transferencia manual.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "type": { "type": "string", "enum": ["wallet_recharge", "membership_payment"] },
+        "relatedRequestId": { "type": "string" },
+        "relatedGroupId": { "type": "string" },
+        "amountExpected": { "type": "number" },
+        "amountPaid": { "type": "number" },
+        "currency": { "type": "string", "default": "PEN" },
+        "paymentCode": { "type": "string" },
+        "bankDestination": { "type": "string", "default": "BCP" },
+        "destinationAccountNumber": { "type": "string" },
+        "operationNumber": { "type": "string" },
+        "bankOrigin": { "type": "string" },
+        "paidAt": { "type": "string", "format": "date-time" },
+        "payerName": { "type": "string" },
+        "proofImageUrl": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "uploaded", "under_review", "approved", "rejected", "expired", "cancelled"] },
+        "reviewStatus": { "type": "string", "enum": ["waiting_upload", "uploaded", "needs_manual_review", "approved", "rejected"] },
+        "rejectedReason": { "type": "string" },
+        "reviewedBy": { "type": "string" },
+        "reviewedAt": { "type": "string", "format": "date-time" },
+        "expiresAt": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "type", "amountExpected", "paymentCode", "status"]
+    },
+    "Wallet": {
+      "title": "Wallet",
+      "description": "Saldo virtual del usuario.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "balance": { "type": "number" },
+        "currency": { "type": "string", "default": "PEN" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "balance"]
+    }
+  },
+  "auth": {
+    "providers": ["google.com", "password"]
+  },
+  "firestore": {
+    "/paymentOrders/{paymentOrderId}": {
+      "schema": "#/backend/entities/PaymentOrder",
+      "description": "Colección de órdenes de pago pendientes y procesadas."
+    },
+    "/wallets/{userId}": {
+      "schema": "#/backend/entities/Wallet",
+      "description": "Saldo de cada usuario."
+    }
+  }
+}

@@ -1,7 +1,6 @@
-
 "use client";
 
-import { use, useState } from "react";
+import { use, useState, useEffect } from "react";
 import { getSubscriptionById } from "@/lib/data";
 import { notFound, useRouter } from "next/navigation";
 import Image from "next/image";
@@ -16,17 +15,30 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { CheckCircle, CreditCard, Landmark, Loader2, ArrowLeft } from "lucide-react";
+import { CheckCircle, Landmark, Loader2, ArrowLeft, Info, Copy, ExternalLink } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth, useFirestore } from "@/firebase";
+import { collection, doc, setDoc, serverTimestamp } from "firebase/firestore";
+
+const BCP_ACCOUNT = {
+  number: "191-987654321-0-12",
+  cci: "002-191-009876543210-12",
+  holder: "Poolera SAC",
+  bank: "BCP"
+};
 
 export default function CheckoutPage({ params: paramsPromise }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const params = use(paramsPromise);
-  const [paymentStatus, setPaymentStatus] = useState<
-    "idle" | "verifying" | "approved"
-  >("idle");
+  const { toast } = useToast();
+  const { authUser } = useAuth();
+  const firestore = useFirestore();
+
+  const [step, setState] = useState<"summary" | "instructions" | "register">("summary");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [paymentCode, setPaymentCode] = useState("");
   
   const subscription = getSubscriptionById(params.id);
 
@@ -36,43 +48,122 @@ export default function CheckoutPage({ params: paramsPromise }: { params: Promis
 
   const logo = PlaceHolderImages.find((img) => img.id === subscription.logoId);
 
-  const handlePeruSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setPaymentStatus("verifying");
-    setTimeout(() => {
-      setPaymentStatus("approved");
-    }, 2000);
-  };
-  
-  const handleLatAmSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setPaymentStatus("verifying");
-    setTimeout(() => {
-      setPaymentStatus("approved");
-    }, 2000);
+  const generateOrder = async () => {
+    if (!authUser || !firestore) {
+      toast({ title: "Error", description: "Debes iniciar sesión para continuar.", variant: "destructive" });
+      return;
+    }
+
+    setIsGenerating(true);
+    const code = `PAY-${Math.floor(1000 + Math.random() * 9000)}`;
+    const orderId = doc(collection(firestore, "paymentOrders")).id;
+
+    try {
+      const orderData = {
+        id: orderId,
+        userId: authUser.uid,
+        type: "membership_payment",
+        relatedGroupId: subscription.id,
+        amountExpected: subscription.price,
+        currency: "USD",
+        paymentCode: code,
+        bankDestination: "BCP",
+        destinationAccountNumber: BCP_ACCOUNT.number,
+        status: "pending",
+        reviewStatus: "waiting_upload",
+        expiresAt: new Date(Date.now() + 6 * 60 * 60 * 1000).toISOString(), // 6 horas
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      };
+
+      await setDoc(doc(firestore, "paymentOrders", orderId), orderData);
+      setPaymentCode(code);
+      setState("instructions");
+    } catch (e) {
+      console.error(e);
+      toast({ title: "Error", description: "No se pudo generar la orden de pago.", variant: "destructive" });
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
+  const copyToClipboard = (text: string, label: string) => {
+    navigator.clipboard.writeText(text);
+    toast({ title: "Copiado", description: `${label} copiado al portapapeles.` });
+  };
 
-  if (paymentStatus === "approved") {
+  if (step === "instructions") {
     return (
-       <div className="container mx-auto max-w-2xl py-12 px-4 text-center">
-            <Card className="rounded-3xl border-none shadow-lg">
-                <CardHeader>
-                    <div className="mx-auto bg-secondary/10 rounded-full p-6 w-fit">
-                        <CheckCircle className="h-16 w-16 text-secondary" />
-                    </div>
-                    <CardTitle className="font-sora text-3xl pt-4 text-on-surface">¡Pago Aprobado!</CardTitle>
-                    <CardDescription className="text-on-surface-variant">
-                        Felicidades, ya eres parte del grupo de {subscription.service}. Recibirás los detalles de acceso por correo y en tu sección de Grupos.
-                    </CardDescription>
-                </CardHeader>
-                <CardFooter>
-                  <Button asChild className="w-full rounded-xl py-6 font-bold">
-                    <a href="/mis-grupos">Ir a Mis Grupos</a>
+      <div className="container mx-auto max-w-2xl py-12 px-4">
+        <Card className="rounded-3xl border-outline-variant/30 shadow-xl overflow-hidden">
+          <CardHeader className="bg-primary text-white text-center py-8">
+            <div className="mx-auto bg-white/20 rounded-full p-4 w-fit mb-4">
+              <Landmark className="h-10 w-10 text-white" />
+            </div>
+            <CardTitle className="font-sora text-2xl">Instrucciones de Pago</CardTitle>
+            <CardDescription className="text-white/80">Transferencia Directa BCP a BCP</CardDescription>
+          </CardHeader>
+          <CardContent className="p-8 space-y-6">
+            <div className="bg-primary/5 p-6 rounded-2xl border border-primary/20 space-y-4">
+              <div className="flex justify-between items-center border-b border-primary/10 pb-3">
+                <span className="text-sm font-medium text-on-surface-variant">Monto a pagar:</span>
+                <span className="text-2xl font-bold text-primary">${subscription.price.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between items-center border-b border-primary/10 pb-3">
+                <span className="text-sm font-medium text-on-surface-variant">Código de pago:</span>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono font-bold text-primary">{paymentCode}</span>
+                  <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => copyToClipboard(paymentCode, "Código")}>
+                    <Copy className="h-3 w-3" />
                   </Button>
-                </CardFooter>
-            </Card>
-       </div>
+                </div>
+              </div>
+              <div className="space-y-1">
+                <span className="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Cuenta BCP soles:</span>
+                <div className="flex justify-between items-center bg-white p-3 rounded-xl border border-outline-variant">
+                  <span className="font-mono text-sm">{BCP_ACCOUNT.number}</span>
+                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => copyToClipboard(BCP_ACCOUNT.number, "Cuenta")}>
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h4 className="font-bold text-on-surface flex items-center gap-2">
+                <Info className="h-4 w-4 text-primary" />
+                Pasos a seguir:
+              </h4>
+              <ul className="space-y-3 text-sm text-on-surface-variant">
+                <li className="flex gap-3">
+                  <span className="bg-primary/10 text-primary w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0">1</span>
+                  Realiza la transferencia desde tu banca móvil por el monto **exacto**.
+                </li>
+                <li className="flex gap-3">
+                  <span className="bg-primary/10 text-primary w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0">2</span>
+                  Incluye el código **{paymentCode}** en la descripción si es posible.
+                </li>
+                <li className="flex gap-3">
+                  <span className="bg-primary/10 text-primary w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0">3</span>
+                  Toma una captura de pantalla clara del comprobante de éxito.
+                </li>
+              </ul>
+            </div>
+
+            <Alert className="bg-amber-50 border-amber-200 rounded-2xl">
+              <Info className="h-4 w-4 text-amber-600" />
+              <AlertDescription className="text-xs text-amber-800">
+                Los pagos se validan de 9:00 AM a 7:00 PM. Si pagas fuera de este horario, se procesará al día siguiente.
+              </AlertDescription>
+            </Alert>
+          </CardContent>
+          <CardFooter className="p-8 pt-0">
+            <Button className="w-full rounded-2xl py-6 font-bold shadow-lg" onClick={() => router.push('/billetera')}>
+              Ya realicé el pago
+            </Button>
+          </CardFooter>
+        </Card>
+      </div>
     );
   }
 
@@ -83,7 +174,7 @@ export default function CheckoutPage({ params: paramsPromise }: { params: Promis
             <ArrowLeft className="h-5 w-5" />
         </Button>
         <h1 className="text-3xl font-sora font-bold text-on-surface">
-          Completar tu Compra
+          Confirmar Suscripción
         </h1>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
@@ -116,70 +207,33 @@ export default function CheckoutPage({ params: paramsPromise }: { params: Promis
           </CardContent>
         </Card>
 
-        <Tabs defaultValue="peru" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-surface-container rounded-xl p-1 mb-6">
-            <TabsTrigger value="peru" className="rounded-lg font-bold data-[state=active]:bg-white data-[state=active]:text-primary">
-              <Landmark className="mr-2 h-4 w-4" /> Local
-            </TabsTrigger>
-            <TabsTrigger value="latam" className="rounded-lg font-bold data-[state=active]:bg-white data-[state=active]:text-primary">
-              <CreditCard className="mr-2 h-4 w-4" /> Tarjeta
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="peru">
-            <Card className="rounded-3xl border-outline-variant/30 shadow-sm">
-              <CardHeader>
-                <CardTitle className="font-sora">Depósito/Transferencia</CardTitle>
-                <CardDescription>
-                  Realiza el pago y pega el número de operación para verificar.
-                </CardDescription>
-              </CardHeader>
-              <form onSubmit={handlePeruSubmit}>
-                <CardContent className="space-y-4">
-                  <Alert variant="default" className="bg-primary/5 border-primary/20 rounded-2xl">
-                      <AlertDescription className="space-y-2 text-sm text-on-surface">
-                        <p><strong>Titular:</strong> Poolera SAC</p>
-                        <p><strong>RUC:</strong> 20123456789</p>
-                        <p><strong>Cuentas:</strong> Disponibles en la App</p>
-                      </AlertDescription>
-                  </Alert>
-                  <div className="space-y-2">
-                    <Label htmlFor="operation-number">Número de Operación</Label>
-                    <Input id="operation-number" required className="rounded-xl border-outline-variant" />
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <Button type="submit" className="w-full rounded-xl py-6 text-lg font-bold active:scale-95 transition-all" disabled={paymentStatus === "verifying"}>
-                    {paymentStatus === "verifying" ? (
-                        <> <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Verificando... </>
-                    ) : 'Verificar Pago'}
-                  </Button>
-                </CardFooter>
-              </form>
-            </Card>
-          </TabsContent>
-          <TabsContent value="latam">
-            <Card className="rounded-3xl border-outline-variant/30 shadow-sm">
-              <CardHeader>
-                <CardTitle className="font-sora">Pasarela de Pagos</CardTitle>
-                <CardDescription>
-                  Paga de forma segura con tarjeta de crédito o débito.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-on-surface-variant">
-                  Serás redirigido a la pasarela de pagos integrada para completar tu suscripción de forma segura.
-                </p>
-              </CardContent>
-              <CardFooter>
-                <Button className="w-full rounded-xl py-6 text-lg font-bold active:scale-95 transition-all" onClick={handleLatAmSubmit} disabled={paymentStatus === "verifying"}>
-                  {paymentStatus === "verifying" ? (
-                    <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Procesando...</>
-                  ) : 'Pagar con Pasarela'}
-                </Button>
-              </CardFooter>
-            </Card>
-          </TabsContent>
-        </Tabs>
+        <Card className="rounded-3xl border-outline-variant/30 shadow-sm">
+          <CardHeader>
+            <CardTitle className="font-sora">Método de Pago</CardTitle>
+            <CardDescription>Depósito o Transferencia BCP</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Alert variant="default" className="bg-primary/5 border-primary/20 rounded-2xl">
+                <AlertDescription className="space-y-2 text-sm text-on-surface">
+                  <p>Usaremos el sistema de validación manual de **Poolera**. Al continuar, verás los datos de la cuenta recaudadora.</p>
+                </AlertDescription>
+            </Alert>
+            <div className="p-4 bg-surface rounded-xl border border-outline-variant/30 flex items-center gap-3">
+              <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                <Landmark className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-bold">Transferencia BCP</p>
+                <p className="text-xs text-on-surface-variant">Manual (aprobación en 2h-12h)</p>
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button className="w-full rounded-xl py-6 text-lg font-bold shadow-lg" onClick={generateOrder} disabled={isGenerating}>
+              {isGenerating ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Generando...</> : "Obtener Datos de Pago"}
+            </Button>
+          </CardFooter>
+        </Card>
       </div>
     </div>
   );
