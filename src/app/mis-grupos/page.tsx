@@ -1,3 +1,5 @@
+
+import Link from 'next/link';
 import { groups } from '@/lib/data';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,9 +10,9 @@ import type { Group } from '@/lib/types';
 function StatusBadge({ status }: { status: Group['status'] }) {
   return (
     <Badge
-      className={cn({
-        'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300': status === 'Activo',
-        'bg-orange-100 text-orange-800 dark:bg-orange-900/50 dark:text-orange-300': status === 'Incompleto',
+      className={cn("rounded-full px-3", {
+        'bg-secondary/10 text-secondary border-secondary/20': status === 'Activo',
+        'bg-orange-100 text-orange-800 border-orange-200': status === 'Incompleto',
       })}
       variant="outline"
     >
@@ -21,40 +23,45 @@ function StatusBadge({ status }: { status: Group['status'] }) {
 
 export default function MisGruposPage() {
   return (
-    <div className="container mx-auto max-w-5xl py-12 px-4">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-headline font-bold">Mis Grupos</h1>
-        <p className="text-muted-foreground">
-          Gestiona tus grupos, mira tus ganancias y el estado de los cupos.
+    <div className="max-w-5xl mx-auto space-y-8 py-8">
+      <div className="text-center space-y-2">
+        <h1 className="text-3xl font-sora font-bold text-on-surface">Mis Grupos</h1>
+        <p className="text-on-surface-variant max-w-md mx-auto">
+          Gestiona tus suscripciones compartidas, mira tus ganancias y el estado de los cupos.
         </p>
       </div>
-      <Card>
+
+      <Card className="bg-surface-container-lowest border-outline-variant/30 rounded-3xl overflow-hidden shadow-sm">
         <CardHeader>
-          <CardTitle>Grupos Activos</CardTitle>
+          <CardTitle className="font-sora">Grupos Compartidos</CardTitle>
           <CardDescription>
-            Estos son los grupos que estás compartiendo actualmente.
+            Suscripciones que estás administrando actualmente.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Servicio</TableHead>
-                <TableHead>Cupos</TableHead>
-                <TableHead>Precio Público</TableHead>
-                <TableHead>Ganancia Neta</TableHead>
-                <TableHead className="text-right">Estado</TableHead>
+                <TableHead className="font-bold">Servicio</TableHead>
+                <TableHead className="font-bold">Cupos</TableHead>
+                <TableHead className="font-bold">Precio Público</TableHead>
+                <TableHead className="font-bold">Ganancia Neta</TableHead>
+                <TableHead className="text-right font-bold">Estado</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {groups.map((group) => (
-                <TableRow key={group.id}>
-                  <TableCell className="font-medium">{group.service}</TableCell>
-                  <TableCell>
+                <TableRow key={group.id} className="group cursor-pointer">
+                  <TableCell className="font-medium">
+                    <Link href={`/mis-grupos/${group.id}`} className="text-primary hover:underline font-bold">
+                      {group.service}
+                    </Link>
+                  </TableCell>
+                  <TableCell className="text-on-surface-variant font-medium">
                     {group.slots.filled} / {group.slots.total}
                   </TableCell>
-                  <TableCell>${group.publicPrice.toFixed(2)}</TableCell>
-                  <TableCell className="text-green-600 font-semibold">${group.netEarning.toFixed(2)}</TableCell>
+                  <TableCell className="text-on-surface-variant">${group.publicPrice.toFixed(2)}</TableCell>
+                  <TableCell className="text-secondary font-bold">${group.netEarning.toFixed(2)}</TableCell>
                   <TableCell className="text-right">
                     <StatusBadge status={group.status} />
                   </TableCell>

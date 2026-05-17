@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Mail, PhoneIphone, Lock, Fingerprint, HelpCircle, LogOut, ChevronRight, ExternalLink, Edit2 } from "lucide-react";
+import { Loader2, Mail, Smartphone, Lock, Fingerprint, HelpCircle, LogOut, ChevronRight, ExternalLink, Edit2 } from "lucide-react";
 
 export default function BilleteraPage() {
   const [isWithdrawing, setIsWithdrawing] = useState(false);
@@ -89,7 +89,7 @@ export default function BilleteraPage() {
       {/* Columna Derecha: Ajustes de Perfil */}
       <aside className="lg:col-span-5 space-y-6">
         {/* Card de Identidad */}
-        <Card className="bg-white border-outline-variant/30 rounded-[2.5rem] p-6 shadow-sm">
+        <Card className="bg-white border border-outline-variant/30 rounded-[2.5rem] p-6 shadow-sm">
           <div className="flex items-center gap-4 mb-6">
             <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-inner relative">
               <Image 
@@ -117,7 +117,7 @@ export default function BilleteraPage() {
             </div>
             <div className="flex items-center gap-3 p-3 rounded-2xl hover:bg-surface-container transition-colors cursor-pointer group">
               <div className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
-                <PhoneIphone className="h-5 w-5" />
+                <Smartphone className="h-5 w-5" />
               </div>
               <span className="text-sm font-medium text-foreground">+1 (555) 012-3456</span>
             </div>
@@ -125,7 +125,7 @@ export default function BilleteraPage() {
         </Card>
 
         {/* Grupos de Configuración */}
-        <Card className="bg-white border-outline-variant/30 rounded-[2.5rem] overflow-hidden shadow-sm">
+        <Card className="bg-white border border-outline-variant/30 rounded-[2.5rem] overflow-hidden shadow-sm">
           {/* Métodos de Pago */}
           <div className="p-6 border-b border-outline-variant/20">
             <h4 className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-4">Métodos de Pago</h4>
