@@ -28,13 +28,13 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..0&display=block" />
       </head>
-      <body className={cn("min-h-screen bg-background text-foreground font-body antialiased pb-24", inter.variable, sora.variable)}>
+      <body className={cn("min-h-screen bg-background text-foreground font-inter antialiased pb-24", inter.variable, sora.variable)}>
         <FirebaseClientProvider>
           <div className="relative flex flex-col min-h-screen">
             <Header />
-            <main className="flex-1 max-w-[1280px] mx-auto w-full px-4 md:px-20 py-6">
+            <main className="flex-1 max-w-[1280px] mx-auto w-full px-4 md:px-margin-desktop py-6">
               {children}
             </main>
             <BottomNav />

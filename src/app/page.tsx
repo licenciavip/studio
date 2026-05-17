@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from "react";
@@ -17,9 +16,11 @@ export default function Home() {
         {/* Search & Filter Section */}
         <section className="px-4 pt-6 space-y-4">
           <div className="relative flex items-center group">
-            <span className="material-symbols-outlined absolute left-4 text-outline group-focus-within:text-primary transition-colors">
-              search
-            </span>
+            <div className="absolute left-4 flex items-center justify-center pointer-events-none">
+              <span className="material-symbols-outlined text-outline group-focus-within:text-primary transition-colors">
+                search
+              </span>
+            </div>
             <Input 
               className="w-full pl-12 pr-4 py-6 bg-white border-outline-variant rounded-2xl focus-visible:ring-primary focus-visible:border-primary transition-all text-base placeholder:text-outline/60 shadow-sm" 
               placeholder="Buscar suscripciones o grupos..." 
@@ -31,9 +32,10 @@ export default function Home() {
               <Button 
                 key={cat}
                 variant={i === 0 ? "default" : "secondary"}
-                className={`rounded-full px-6 whitespace-nowrap active:scale-95 transition-transform ${
+                className={cn(
+                  "rounded-full px-6 whitespace-nowrap active:scale-95 transition-transform",
                   i === 0 ? "bg-primary text-white" : "bg-surface-container text-on-surface-variant hover:bg-surface-container-high"
-                }`}
+                )}
               >
                 {cat}
               </Button>
@@ -84,7 +86,7 @@ export default function Home() {
               <div key={sub.id} className="bg-white border border-outline-variant/30 rounded-3xl p-6 shadow-[0_4px_12px_rgba(67,67,213,0.06)] hover:shadow-xl transition-all duration-300 group">
                 <div className="flex justify-between items-start mb-6">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-surface-container flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                    <div className="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
                       <span className="material-symbols-outlined text-3xl">play_circle</span>
                     </div>
                     <div>
@@ -139,4 +141,8 @@ export default function Home() {
       </main>
     </div>
   );
+}
+
+function cn(...inputs: any[]) {
+  return inputs.filter(Boolean).join(" ");
 }
