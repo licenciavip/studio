@@ -1,6 +1,6 @@
 import type {Config} from 'tailwindcss';
 
-export default {
+const config: Config = {
   darkMode: ['class'],
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -19,7 +19,14 @@ export default {
       fontFamily: {
         sora: ['var(--font-sora)', 'sans-serif'],
         inter: ['var(--font-inter)', 'sans-serif'],
-        body: ['var(--font-inter)', 'sans-serif'],
+        'headline-lg-mobile': ['var(--font-sora)'],
+        'label-md': ['var(--font-inter)'],
+        'headline-md': ['var(--font-sora)'],
+        'label-sm': ['var(--font-inter)'],
+        'headline-xl': ['var(--font-sora)'],
+        'body-lg': ['var(--font-inter)'],
+        'body-md': ['var(--font-inter)'],
+        'headline-lg': ['var(--font-sora)'],
       },
       colors: {
         background: '#faf8ff',
@@ -61,10 +68,13 @@ export default {
         'on-primary-container': '#faf7ff',
         'on-secondary-container': '#006f62',
         'on-tertiary-container': '#fff6f3',
+        'inverse-surface': '#283044',
+        'inverse-on-surface': '#eef0ff',
         outline: {
           DEFAULT: '#767586',
           variant: '#c7c4d7',
         },
+        'outline-variant': '#c7c4d7',
         error: {
           DEFAULT: '#ba1a1a',
           container: '#ffdad6',
@@ -73,6 +83,16 @@ export default {
         border: '#c7c4d7',
         input: '#eaedff',
         ring: '#4343d5',
+      },
+      fontSize: {
+        'headline-lg-mobile': ['24px', { lineHeight: '32px', fontWeight: '600' }],
+        'label-md': ['14px', { lineHeight: '20px', letterSpacing: '0.05em', fontWeight: '600' }],
+        'headline-md': ['20px', { lineHeight: '28px', fontWeight: '600' }],
+        'label-sm': ['12px', { lineHeight: '16px', fontWeight: '500' }],
+        'headline-xl': ['48px', { lineHeight: '56px', letterSpacing: '-0.02em', fontWeight: '700' }],
+        'body-lg': ['18px', { lineHeight: '28px', fontWeight: '400' }],
+        'body-md': ['16px', { lineHeight: '24px', fontWeight: '400' }],
+        'headline-lg': ['32px', { lineHeight: '40px', letterSpacing: '-0.01em', fontWeight: '600' }],
       },
       borderRadius: {
         lg: '0.5rem',
@@ -95,4 +115,6 @@ export default {
     },
   },
   plugins: [require('tailwindcss-animate')],
-} satisfies Config;
+};
+
+export default config;
