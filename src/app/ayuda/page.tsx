@@ -1,11 +1,12 @@
+
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { 
   Mail, 
-  PhoneIphone, 
+  Smartphone, 
   Lock, 
   Fingerprint, 
   HelpCircle, 
@@ -15,13 +16,13 @@ import {
   ExternalLink
 } from "lucide-react";
 
-export default function PerfilPage() {
+export default function AyudaPerfilPage() {
   return (
     <div className="max-w-2xl mx-auto space-y-6 py-8">
-      {/* Card de Identidad del Perfil */}
-      <Card className="bg-white border-outline-variant/30 rounded-[2.5rem] p-6 shadow-sm overflow-hidden">
+      {/* Profile Identity Card */}
+      <div className="bg-white border border-outline-variant/30 rounded-[2.5rem] p-6 shadow-sm">
         <div className="flex items-center gap-4 mb-6">
-          <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-inner relative border-2 border-primary-fixed">
+          <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-inner relative border-2 border-primary/20">
             <Image 
               src="https://picsum.photos/seed/alex/200/200" 
               alt="Alex Thompson" 
@@ -38,7 +39,7 @@ export default function PerfilPage() {
           </Button>
         </div>
 
-        {/* Información Personal */}
+        {/* Personal Information */}
         <div className="space-y-2 border-t border-outline-variant/20 pt-6">
           <h4 className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider px-3 mb-2">Información Personal</h4>
           
@@ -54,7 +55,7 @@ export default function PerfilPage() {
 
           <div className="flex items-center gap-3 p-3 rounded-2xl hover:bg-surface-container transition-colors cursor-pointer group">
             <div className="w-12 h-12 rounded-xl bg-muted/50 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
-              <PhoneIphone className="h-5 w-5" />
+              <Smartphone className="h-5 w-5" />
             </div>
             <div className="flex flex-col">
               <span className="text-[10px] text-muted-foreground font-bold uppercase">Teléfono</span>
@@ -62,11 +63,11 @@ export default function PerfilPage() {
             </div>
           </div>
         </div>
-      </Card>
+      </div>
 
-      {/* Grupos de Ajustes */}
-      <Card className="bg-white border-outline-variant/30 rounded-[2.5rem] overflow-hidden shadow-sm">
-        {/* Seguridad y Privacidad */}
+      {/* Settings Groups */}
+      <div className="bg-white border border-outline-variant/30 rounded-[2.5rem] overflow-hidden shadow-sm">
+        {/* Security & Privacy */}
         <div className="p-6 border-b border-outline-variant/20">
           <h4 className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-4">Seguridad</h4>
           <nav className="space-y-2">
@@ -94,7 +95,7 @@ export default function PerfilPage() {
           </nav>
         </div>
 
-        {/* Soporte y Cerrar Sesión */}
+        {/* Support & Logout */}
         <div className="p-6">
           <h4 className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-4">Ayuda y Soporte</h4>
           <nav className="space-y-2">
@@ -118,7 +119,7 @@ export default function PerfilPage() {
             </button>
           </nav>
         </div>
-      </Card>
+      </div>
     </div>
   );
 }

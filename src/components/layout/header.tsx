@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -8,7 +9,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-outline-variant/30 flex justify-between items-center w-full px-4 h-16 md:px-20">
       <div className="flex items-center gap-3">
-        <Link href="/" className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-fixed block active:scale-95 transition-transform">
+        <Link href="/perfil" className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary block active:scale-95 transition-transform">
           <Image 
             src="https://picsum.photos/seed/user123/100/100" 
             alt="user profile" 
