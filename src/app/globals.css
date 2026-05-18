@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -74,10 +75,15 @@
   scrollbar-width: none;
 }
 
+/* Escala reducida para elementos */
 .rounded-3xl {
-  border-radius: 1.5rem;
+  border-radius: 1.25rem;
 }
 
 .rounded-2xl {
-  border-radius: 1rem;
+  border-radius: 0.85rem;
+}
+
+.rounded-xl {
+  border-radius: 0.75rem;
 }
