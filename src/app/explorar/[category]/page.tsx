@@ -1,6 +1,7 @@
+
 "use client";
 
-import { use } from "react";
+import { use, useMemo } from "react";
 import { servicesByCategory } from "@/lib/data";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,7 @@ import type { CategorySlug } from "@/lib/types";
 import { notFound } from "next/navigation";
 import { cn } from "@/lib/utils";
 
-const categoryNames: Record<CategorySlug, string> = {
+const categoryNames: Record<string, string> = {
   streaming: "Películas y Series",
   musica: "Música",
   educacion: "Educación",
@@ -20,21 +21,30 @@ const categoryNames: Record<CategorySlug, string> = {
   deportes: "Deportes",
   bienestar: "Bienestar",
   software: "Software",
+  all: "Todos los Servicios"
 };
 
 export default function CategoryPage({ params: paramsPromise }: { params: Promise<{ category: string }> }) {
   const params = use(paramsPromise);
-  const category = params.category as CategorySlug;
+  const category = params.category as string;
 
-  const services = servicesByCategory[category];
-  const categoryName = categoryNames[category];
+  const services = useMemo(() => {
+    if (category === 'all') {
+      let all: any[] = [];
+      Object.values(servicesByCategory).forEach(list => all = [...all, ...list]);
+      return all;
+    }
+    return servicesByCategory[category as CategorySlug] || [];
+  }, [category]);
 
-  if (!services) {
+  const categoryName = categoryNames[category] || "Servicios";
+
+  if (services.length === 0 && category !== 'all') {
     notFound();
   }
 
-  // Diseño de cuadrícula de colores para la categoría de streaming
-  const isStreaming = category === 'streaming';
+  // Diseño de cuadrícula de colores para la categoría de streaming o "all"
+  const isGridStyle = category === 'streaming' || category === 'all';
 
   return (
     <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
@@ -55,57 +65,41 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
 
       <div className={cn(
         "grid gap-4",
-        isStreaming ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+        isGridStyle ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
       )}>
         {services.map((service) => (
           <Link href={`/explorar/${category}/${service.id}`} key={service.id} className="block group">
             <div 
               className={cn(
                 "relative rounded-2xl p-4 aspect-square flex flex-col justify-between transition-transform active:scale-95 shadow-sm overflow-hidden",
-                !isStreaming ? "bg-surface-container-lowest border border-outline-variant/30" : "border border-white/10"
+                !isGridStyle ? "bg-surface-container-lowest border border-outline-variant/30" : "border border-white/10"
               )}
-              style={isStreaming ? { backgroundColor: service.color } : {}}
+              style={isGridStyle && service.color ? { backgroundColor: service.color } : { backgroundColor: '#4343d5' }}
             >
-              {/* Descuento visible en streaming */}
-              {isStreaming && service.discount && (
+              {service.discount && (
                 <div className="absolute top-2 right-2 bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-lg border border-white/20">
                   {service.discount}
                 </div>
               )}
 
               <div className="space-y-1">
-                <h3 className={cn(
-                  "font-sora font-black text-lg uppercase tracking-tighter leading-none",
-                  isStreaming ? "text-white" : "text-on-surface"
-                )}>
+                <h3 className="font-sora font-black text-lg uppercase tracking-tighter leading-none text-white">
                   {service.name}
                 </h3>
-                <p className={cn(
-                  "text-[10px] font-medium opacity-80",
-                  isStreaming ? "text-white" : "text-on-surface-variant"
-                )}>
+                <p className="text-[10px] font-medium opacity-80 text-white">
                   {service.planName || service.name}
                 </p>
               </div>
 
               <div className="space-y-0.5">
-                <p className={cn(
-                  "text-[10px] font-medium opacity-60",
-                  isStreaming ? "text-white" : "text-on-surface-variant"
-                )}>
+                <p className="text-[10px] font-medium opacity-60 text-white">
                   Planes desde
                 </p>
                 <div className="flex items-baseline gap-1">
-                  <span className={cn(
-                    "text-xl font-sora font-bold",
-                    isStreaming ? "text-white" : "text-primary"
-                  )}>
-                    S/ {service.pricePerMonth || "0.00"}
+                  <span className="text-xl font-sora font-bold text-white">
+                    S/ {service.pricePerMonth || "15.90"}
                   </span>
-                  <span className={cn(
-                    "text-[10px] font-medium opacity-50",
-                    isStreaming ? "text-white" : "text-on-surface-variant"
-                  )}>
+                  <span className="text-[10px] font-medium opacity-50 text-white">
                     /mes
                   </span>
                 </div>

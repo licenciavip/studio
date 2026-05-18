@@ -1,3 +1,4 @@
+
 import type { CategorySlug, Subscription, OrderStatus, Service, Group, Order } from "@/lib/types";
 
 export const servicesByCategory: Record<CategorySlug, Service[]> = {
@@ -16,44 +17,44 @@ export const servicesByCategory: Record<CategorySlug, Service[]> = {
     { id: "wow", name: "WOW", logoId: "wow-logo", color: "#ff0099", discount: "-21%", pricePerMonth: "9.90", planName: "WOW Premium" },
   ],
   musica: [
-    { id: "spotify", name: "Spotify", logoId: "spotify-logo" },
-    { id: "apple-music", name: "Apple Music", logoId: "apple-music-logo" },
-    { id: "tidal", name: "Tidal", logoId: "tidal-logo" },
-    { id: "youtube-music", name: "YouTube Music", logoId: "youtube-music-logo" },
+    { id: "spotify", name: "Spotify", logoId: "spotify-logo", color: "#1DB954", pricePerMonth: "18.90", planName: "Premium Familiar" },
+    { id: "apple-music", name: "Apple Music", logoId: "apple-music-logo", color: "#000000", pricePerMonth: "18.90" },
+    { id: "tidal", name: "Tidal", logoId: "tidal-logo", color: "#000000", pricePerMonth: "16.90" },
+    { id: "youtube-music", name: "YouTube Music", logoId: "youtube-music-logo", color: "#ff0000", pricePerMonth: "13.90" },
   ],
   gaming: [
-    { id: "ps-plus", name: "PS Plus", logoId: "ps-plus-logo" },
-    { id: "xbox-game-pass", name: "Xbox Game Pass", logoId: "xbox-game-pass-logo" },
-    { id: "nintendo-switch-online", name: "Nintendo Switch Online", logoId: "nintendo-switch-online-logo" },
+    { id: "ps-plus", name: "PS Plus", logoId: "ps-plus-logo", color: "#003791", pricePerMonth: "39.90" },
+    { id: "xbox-game-pass", name: "Xbox Game Pass", logoId: "xbox-game-pass-logo", color: "#107c10", pricePerMonth: "29.90" },
+    { id: "nintendo-switch-online", name: "Nintendo Switch Online", logoId: "nintendo-switch-online-logo", color: "#e60012", pricePerMonth: "15.00" },
   ],
    diseno: [
-    { id: "canva", name: "Canva Pro", logoId: "canva-logo" },
-    { id: "adobe-cc", name: "Adobe Creative Cloud", logoId: "adobe-cc-logo" },
+    { id: "canva", name: "Canva Pro", logoId: "canva-logo", color: "#00c4cc", pricePerMonth: "12.90" },
+    { id: "adobe-cc", name: "Adobe Creative Cloud", logoId: "adobe-cc-logo", color: "#ff0000", pricePerMonth: "89.90" },
   ],
   seguridad: [
-      { id: "nordvpn", name: "NordVPN", logoId: "nordvpn-logo" },
-      { id: "expressvpn", name: "ExpressVPN", logoId: "expressvpn-logo" },
+      { id: "nordvpn", name: "NordVPN", logoId: "nordvpn-logo", color: "#003566", pricePerMonth: "14.90" },
+      { id: "expressvpn", name: "ExpressVPN", logoId: "expressvpn-logo", color: "#ff1e1e", pricePerMonth: "15.90" },
   ],
   ia: [
-    { id: "chatgpt-plus", name: "ChatGPT Plus", logoId: "chatgpt-logo" },
-    { id: "midjourney", name: "Midjourney", logoId: "midjourney-logo" },
+    { id: "chatgpt-plus", name: "ChatGPT Plus", logoId: "chatgpt-logo", color: "#10a37f", pricePerMonth: "20.00" },
+    { id: "midjourney", name: "Midjourney", logoId: "midjourney-logo", color: "#000000", pricePerMonth: "10.00" },
   ],
   educacion: [
-    { id: "duolingo", name: "Duolingo", logoId: "duolingo-logo" },
-    { id: "coursera", name: "Coursera", logoId: "coursera-logo" },
-    { id: "platzi", name: "Platzi", logoId: "platzi-logo" },
+    { id: "duolingo", name: "Duolingo", logoId: "duolingo-logo", color: "#58cc02", pricePerMonth: "9.90" },
+    { id: "coursera", name: "Coursera", logoId: "coursera-logo", color: "#0056d2", pricePerMonth: "19.90" },
+    { id: "platzi", name: "Platzi", logoId: "platzi-logo", color: "#98ca3f", pricePerMonth: "15.90" },
   ],
   software: [
-      { id: "microsoft-365", name: "Microsoft 365", logoId: "microsoft-365-logo" },
-      { id: "setapp", name: "Setapp", logoId: "setapp-logo" },
+      { id: "microsoft-365", name: "Microsoft 365", logoId: "microsoft-365-logo", color: "#d83b01", pricePerMonth: "12.90" },
+      { id: "setapp", name: "Setapp", logoId: "setapp-logo", color: "#000000", pricePerMonth: "9.99" },
   ],
   deportes: [
-      { id: "nba-league-pass", name: "NBA League Pass", logoId: "nba-league-pass-logo" },
-      { id: "star-plus-deportes", name: "Star+ (Deportes)", logoId: "star-plus-deportes-logo" },
+      { id: "nba-league-pass", name: "NBA League Pass", logoId: "nba-league-pass-logo", color: "#17408b", pricePerMonth: "25.90" },
+      { id: "star-plus-deportes", name: "Star+ (Deportes)", logoId: "star-plus-deportes-logo", color: "#1a364e", pricePerMonth: "22.90" },
   ],
   bienestar: [
-      { id: "calm", name: "Calm", logoId: "calm-logo" },
-      { id: "headspace", name: "Headspace", logoId: "headspace-logo" },
+      { id: "calm", name: "Calm", logoId: "calm-logo", color: "#45b1e8", pricePerMonth: "5.90" },
+      { id: "headspace", name: "Headspace", logoId: "headspace-logo", color: "#ff8c00", pricePerMonth: "5.90" },
   ],
 };
 
@@ -78,7 +79,7 @@ export const walletTransactions = [
 export const subscriptions: Subscription[] = [
   {
     id: "1",
-    service: "Disney+",
+    service: "Disney+ Premium",
     host: "Juanca10",
     price: 2.99,
     currency: "$",
@@ -91,7 +92,7 @@ export const subscriptions: Subscription[] = [
   },
   {
     id: "2",
-    service: "Netflix",
+    service: "Netflix 4K HDR",
     host: "SeriesFan",
     price: 4.50,
     currency: "$",
@@ -104,7 +105,7 @@ export const subscriptions: Subscription[] = [
   },
   {
     id: "3",
-    service: "Spotify",
+    service: "Spotify Family",
     host: "MusicLover",
     price: 3.20,
     currency: "$",
@@ -114,6 +115,32 @@ export const subscriptions: Subscription[] = [
     logoId: "spotify-logo",
     country: "Global",
     avatarUrl: "https://picsum.photos/seed/avatar4/100/100"
+  },
+  {
+    id: "4",
+    service: "ChatGPT Plus",
+    host: "TechGuru",
+    price: 5.00,
+    currency: "$",
+    rating: 4.9,
+    availableSlots: 2,
+    totalSlots: 5,
+    logoId: "chatgpt-logo",
+    country: "Global",
+    avatarUrl: "https://picsum.photos/seed/avatar5/100/100"
+  },
+  {
+    id: "5",
+    service: "Canva Pro Team",
+    host: "DesignerMax",
+    price: 3.50,
+    currency: "$",
+    rating: 4.6,
+    availableSlots: 4,
+    totalSlots: 5,
+    logoId: "canva-logo",
+    country: "Global",
+    avatarUrl: "https://picsum.photos/seed/avatar6/100/100"
   },
 ];
 
