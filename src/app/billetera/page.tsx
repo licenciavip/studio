@@ -15,17 +15,13 @@ import {
   Smartphone, 
   HelpCircle, 
   ChevronRight, 
-  ExternalLink, 
   Edit2,
   Clock,
   CheckCircle2,
   AlertCircle,
   Upload,
   Plus,
-  ArrowUpRight,
-  Copy,
-  Landmark,
-  Info
+  ArrowUpRight
 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -139,180 +135,122 @@ export default function BilleteraPage() {
       .finally(() => setIsRegistering(false));
   };
 
-  const copyToClipboard = (text: string, label: string) => {
-    navigator.clipboard.writeText(text);
-    toast({ title: "Copiado", description: `${label} copiado al portapapeles.` });
-  };
-
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'pending': return <span className="bg-amber-100 text-amber-700 px-2 py-0.5 rounded text-[10px] font-bold uppercase flex items-center gap-1"><Clock className="h-3 w-3" /> Pendiente</span>;
-      case 'uploaded': return <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-[10px] font-bold uppercase flex items-center gap-1"><Upload className="h-3 w-3" /> En Revisión</span>;
-      case 'approved': return <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded text-[10px] font-bold uppercase flex items-center gap-1"><CheckCircle2 className="h-3 w-3" /> Aprobado</span>;
-      case 'rejected': return <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded text-[10px] font-bold uppercase flex items-center gap-1"><AlertCircle className="h-3 w-3" /> Rechazado</span>;
+      case 'pending': return <span className="bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase flex items-center gap-1"><Clock className="h-2.5 w-2.5" /> Pendiente</span>;
+      case 'uploaded': return <span className="bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase flex items-center gap-1"><Upload className="h-2.5 w-2.5" /> Revisión</span>;
+      case 'approved': return <span className="bg-green-50 text-green-600 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase flex items-center gap-1"><CheckCircle2 className="h-2.5 w-2.5" /> OK</span>;
+      case 'rejected': return <span className="bg-red-50 text-red-600 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase flex items-center gap-1"><AlertCircle className="h-2.5 w-2.5" /> No</span>;
       default: return null;
     }
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 py-8">
-      <section className="lg:col-span-7 space-y-8">
-        <div className="relative overflow-hidden bg-primary-container p-8 rounded-3xl text-on-primary-container shadow-lg shadow-primary/20">
-          <div className="relative z-10">
-            <p className="text-sm font-medium opacity-80 mb-2">Saldo Disponible</p>
-            <h1 className="text-5xl font-sora font-bold mb-8 tracking-tight">
-              ${wallet?.balance.toFixed(2) || "0.00"}
-            </h1>
-            <div className="flex flex-wrap gap-4">
-              <Button onClick={() => setShowRechargeDialog(true)} className="bg-surface-container-lowest text-primary rounded-xl px-6 py-3 h-auto font-bold flex items-center gap-2 hover:bg-white transition-all shadow-sm">
-                <Plus className="h-5 w-5" />
-                Cargar Saldo
-              </Button>
-              <Button variant="outline" className="bg-primary/20 border-on-primary-container/30 text-on-primary-container rounded-xl px-6 py-3 h-auto font-bold flex items-center gap-2 hover:bg-primary/30 transition-all">
-                <ArrowUpRight className="h-5 w-5" />
-                Retirar
-              </Button>
-            </div>
-          </div>
-          <div className="absolute -right-12 -bottom-12 w-48 h-48 bg-white/10 rounded-full blur-3xl"></div>
-        </div>
-
-        <div className="space-y-4">
-          <div className="flex justify-between items-end mb-2">
-            <h2 className="text-2xl font-sora font-bold text-on-surface">Actividad Reciente</h2>
-            <Button variant="link" className="text-primary font-bold">Ver Todo</Button>
-          </div>
-          
-          <div className="space-y-3">
-            {loadingOrders && <p className="text-center text-muted-foreground py-4">Cargando pagos...</p>}
-            {orders?.map((order) => (
-              <div key={order.id} className="flex items-center justify-between p-4 bg-surface-container-lowest border border-outline-variant/30 rounded-2xl shadow-sm hover:shadow-md transition-all">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-surface-container text-primary">
-                    {order.type === 'wallet_recharge' ? <Plus className="h-6 w-6" /> : <Clock className="h-6 w-6" />}
-                  </div>
-                  <div>
-                    <p className="font-bold text-on-surface">
-                      {order.type === 'wallet_recharge' ? 'Recarga de Saldo' : 'Pago de Cupo'}
-                    </p>
-                    <p className="text-xs text-on-surface-variant">ID: {order.paymentCode}</p>
-                  </div>
-                </div>
-                <div className="text-right flex flex-col items-end gap-1">
-                  <p className={`font-bold ${order.status === 'approved' ? 'text-green-600' : 'text-on-surface'}`}>
-                    ${order.amountExpected.toFixed(2)}
-                  </p>
-                  {getStatusBadge(order.status)}
-                  {order.status === 'pending' && (
-                    <Button size="sm" variant="link" className="h-auto p-0 text-primary font-bold" onClick={() => setSelectedOrder(order)}>
-                      Subir Comprobante
-                    </Button>
-                  )}
-                </div>
-              </div>
-            ))}
-            {!loadingOrders && orders?.length === 0 && (
-              <div className="text-center py-8 border-2 border-dashed rounded-2xl">
-                <p className="text-muted-foreground">No hay actividad registrada.</p>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
-      <aside className="lg:col-span-5 space-y-6">
-        <Card className="bg-surface-container-lowest border border-outline-variant/30 rounded-3xl p-6 shadow-sm">
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-inner relative border-2 border-primary-fixed">
-              <Image src={authUser?.photoURL || "https://picsum.photos/seed/user/200/200"} alt="Profile" fill className="object-cover" />
-            </div>
-            <div className="flex-1">
-              <h3 className="text-xl font-sora font-bold text-on-surface">{authUser?.displayName || "Usuario"}</h3>
-              <p className="text-xs font-medium text-on-surface-variant">Miembro desde 2023</p>
-            </div>
-            <Button variant="ghost" size="icon" className="rounded-full bg-surface-container text-primary">
-              <Edit2 className="h-5 w-5" />
+    <div className="max-w-4xl mx-auto space-y-6 py-4">
+      <div className="relative overflow-hidden bg-primary p-6 rounded-2xl text-white shadow-md">
+        <div className="relative z-10">
+          <p className="text-[10px] font-medium opacity-80 mb-1 uppercase tracking-wider">Saldo Disponible</p>
+          <h1 className="text-3xl font-sora font-bold mb-6 tracking-tight">
+            ${wallet?.balance.toFixed(2) || "0.00"}
+          </h1>
+          <div className="flex gap-3">
+            <Button onClick={() => setShowRechargeDialog(true)} size="sm" className="bg-white text-primary rounded-lg px-4 h-9 font-bold flex items-center gap-1.5 hover:bg-white/90">
+              <Plus className="h-4 w-4" />
+              Recargar
+            </Button>
+            <Button variant="outline" size="sm" className="bg-white/10 border-white/20 text-white rounded-lg px-4 h-9 font-bold flex items-center gap-1.5">
+              <ArrowUpRight className="h-4 w-4" />
+              Retirar
             </Button>
           </div>
-          <div className="space-y-2">
-            <div className="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-container transition-colors group">
-              <Mail className="h-5 w-5 text-on-surface-variant group-hover:text-primary" />
-              <span className="text-sm font-medium text-on-surface">{authUser?.email}</span>
-            </div>
-            <div className="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-container transition-colors group">
-              <Smartphone className="h-5 w-5 text-on-surface-variant group-hover:text-primary" />
-              <span className="text-sm font-medium text-on-surface">+1 (555) 012-3456</span>
-            </div>
-          </div>
-        </Card>
+        </div>
+      </div>
 
-        <Card className="bg-surface-container-lowest border border-outline-variant/30 rounded-3xl overflow-hidden shadow-sm">
-          <div className="p-6">
-            <nav className="space-y-1">
-              <Button variant="ghost" className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-surface-container h-auto font-normal" asChild>
-                <a href="/ayuda">
-                  <div className="flex items-center gap-3">
-                    <HelpCircle className="h-5 w-5 text-on-surface-variant" />
-                    <span className="text-sm font-medium text-on-surface">Centro de Ayuda</span>
-                  </div>
-                  <ChevronRight className="h-5 w-5 text-outline-variant" />
-                </a>
-              </Button>
-            </nav>
-          </div>
-        </Card>
-      </aside>
+      <div className="space-y-3">
+        <h2 className="text-sm font-sora font-bold text-on-surface uppercase tracking-widest px-1">Actividad Reciente</h2>
+        <div className="space-y-2">
+          {loadingOrders && <p className="text-center text-muted-foreground py-2 text-xs">Cargando...</p>}
+          {orders?.map((order) => (
+            <div key={order.id} className="flex items-center justify-between p-3 bg-white border border-outline-variant/20 rounded-xl shadow-sm">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 flex items-center justify-center rounded-lg bg-surface-container text-primary">
+                  {order.type === 'wallet_recharge' ? <Plus className="h-5 w-5" /> : <Clock className="h-5 w-5" />}
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-on-surface">
+                    {order.type === 'wallet_recharge' ? 'Recarga' : 'Pago Cupo'}
+                  </p>
+                  <p className="text-[10px] text-on-surface-variant font-mono">{order.paymentCode}</p>
+                </div>
+              </div>
+              <div className="text-right flex flex-col items-end gap-1">
+                <p className={`text-sm font-bold ${order.status === 'approved' ? 'text-green-600' : 'text-on-surface'}`}>
+                  ${order.amountExpected.toFixed(2)}
+                </p>
+                {getStatusBadge(order.status)}
+                {order.status === 'pending' && (
+                  <Button size="sm" variant="link" className="h-auto p-0 text-primary font-bold text-[10px]" onClick={() => setSelectedOrder(order)}>
+                    Subir Ticket
+                  </Button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
-      {/* DIALOGS */}
+      {/* DIALOGS REDUCIDOS */}
       <Dialog open={showRechargeDialog} onOpenChange={setShowRechargeDialog}>
-        <DialogContent className="rounded-3xl max-w-md">
-          <DialogHeader><DialogTitle>Recargar Billetera</DialogTitle><DialogDescription>Ingresa el monto a cargar.</DialogDescription></DialogHeader>
-          <div className="py-4 space-y-4">
-            <Label>Monto a recargar (USD)</Label>
-            <Input type="number" placeholder="Mínimo $5.00" value={rechargeAmount} onChange={(e) => setRechargeAmount(e.target.value)} className="text-lg font-bold py-6 rounded-xl" />
+        <DialogContent className="rounded-2xl max-w-sm p-5">
+          <DialogHeader><DialogTitle className="text-lg">Recargar Saldo</DialogTitle></DialogHeader>
+          <div className="py-2 space-y-3">
+            <Label className="text-xs">Monto (USD)</Label>
+            <Input type="number" placeholder="Mínimo $5.00" value={rechargeAmount} onChange={(e) => setRechargeAmount(e.target.value)} className="text-xl font-bold py-5 rounded-xl h-11" />
           </div>
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setShowRechargeDialog(false)}>Cancelar</Button>
-            <Button onClick={handleCreateRechargeOrder} disabled={isCreatingOrder || !rechargeAmount || parseFloat(rechargeAmount) < 5}>
-              {isCreatingOrder ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Generar Orden"}
+          <DialogFooter className="gap-2">
+            <Button variant="ghost" size="sm" onClick={() => setShowRechargeDialog(false)}>Cancelar</Button>
+            <Button size="sm" onClick={handleCreateRechargeOrder} disabled={isCreatingOrder || !rechargeAmount || parseFloat(rechargeAmount) < 5}>
+              Generar Orden
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
       <Dialog open={!!newOrderInstructions} onOpenChange={() => setNewOrderInstructions(null)}>
-        <DialogContent className="rounded-3xl max-w-md p-0 border-none overflow-hidden">
-          <div className="bg-primary p-8 text-white text-center">
-            <h2 className="text-2xl font-sora font-bold">Instrucciones</h2>
-            <p className="text-white/80">Transferencia BCP</p>
+        <DialogContent className="rounded-2xl max-w-sm p-0 overflow-hidden border-none">
+          <div className="bg-primary p-6 text-white text-center">
+            <h2 className="text-xl font-sora font-bold">Transferencia BCP</h2>
+            <p className="text-white/70 text-xs">Instrucciones</p>
           </div>
-          <div className="p-6 space-y-4">
-            <div className="bg-primary/5 p-4 rounded-2xl border border-primary/10">
-              <div className="flex justify-between items-center mb-2"><span>Monto:</span><span className="font-bold text-primary">${newOrderInstructions?.amountExpected.toFixed(2)}</span></div>
-              <div className="flex justify-between items-center mb-2"><span>Código:</span><span className="font-mono font-bold text-primary">{newOrderInstructions?.paymentCode}</span></div>
-              <div><span className="text-[10px] uppercase font-bold text-muted-foreground">Cuenta:</span><div className="flex justify-between items-center bg-white p-2 border rounded-xl">{BCP_ACCOUNT.number}</div></div>
+          <div className="p-5 space-y-4">
+            <div className="bg-primary/5 p-4 rounded-xl border border-primary/10 text-sm space-y-2">
+              <div className="flex justify-between items-center"><span>Monto:</span><span className="font-bold text-primary">${newOrderInstructions?.amountExpected.toFixed(2)}</span></div>
+              <div className="flex justify-between items-center"><span>Código:</span><span className="font-mono font-bold text-primary">{newOrderInstructions?.paymentCode}</span></div>
+              <div className="pt-2">
+                <span className="text-[10px] uppercase font-bold text-muted-foreground">Número de Cuenta:</span>
+                <div className="bg-white p-2 border rounded-lg text-xs font-mono mt-1 text-center">{BCP_ACCOUNT.number}</div>
+              </div>
             </div>
-            <Button className="w-full rounded-2xl py-6 font-bold" onClick={() => setNewOrderInstructions(null)}>Entendido</Button>
+            <Button size="sm" className="w-full rounded-lg h-10 font-bold" onClick={() => setNewOrderInstructions(null)}>Entendido</Button>
           </div>
         </DialogContent>
       </Dialog>
 
       <Dialog open={!!selectedOrder} onOpenChange={() => setSelectedOrder(null)}>
-        <DialogContent className="rounded-3xl max-w-md">
-          <DialogHeader><DialogTitle>Registrar Pago</DialogTitle></DialogHeader>
-          <div className="space-y-4 py-4">
-            <Input placeholder="Número de Operación" value={formData.operationNumber} onChange={(e) => setFormData({...formData, operationNumber: e.target.value})} />
+        <DialogContent className="rounded-2xl max-w-sm p-5">
+          <DialogHeader><DialogTitle className="text-lg">Registrar Pago</DialogTitle></DialogHeader>
+          <div className="space-y-3 py-2">
+            <Input placeholder="Número de Operación" className="h-10 text-sm" value={formData.operationNumber} onChange={(e) => setFormData({...formData, operationNumber: e.target.value})} />
             <Select onValueChange={(val) => setFormData({...formData, bankOrigin: val})}>
-              <SelectTrigger><SelectValue placeholder="Banco de Origen" /></SelectTrigger>
+              <SelectTrigger className="h-10 text-sm"><SelectValue placeholder="Banco Origen" /></SelectTrigger>
               <SelectContent><SelectItem value="BCP">BCP</SelectItem><SelectItem value="Yape">Yape</SelectItem><SelectItem value="Otros">Otros</SelectItem></SelectContent>
             </Select>
-            <Input type="number" placeholder="Monto Pagado" value={formData.amountPaid} onChange={(e) => setFormData({...formData, amountPaid: e.target.value})} />
-            <Input placeholder="Nombre del Titular" value={formData.payerName} onChange={(e) => setFormData({...formData, payerName: e.target.value})} />
+            <Input type="number" placeholder="Monto Pagado" className="h-10 text-sm" value={formData.amountPaid} onChange={(e) => setFormData({...formData, amountPaid: e.target.value})} />
           </div>
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setSelectedOrder(null)}>Cancelar</Button>
-            <Button onClick={handleRegisterPayment} disabled={isRegistering || !formData.operationNumber || !formData.amountPaid}>
-              {isRegistering ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Enviar"}
+          <DialogFooter className="gap-2">
+            <Button variant="ghost" size="sm" onClick={() => setSelectedOrder(null)}>Cancelar</Button>
+            <Button size="sm" onClick={handleRegisterPayment} disabled={isRegistering || !formData.operationNumber || !formData.amountPaid}>
+              Enviar Ticket
             </Button>
           </DialogFooter>
         </DialogContent>

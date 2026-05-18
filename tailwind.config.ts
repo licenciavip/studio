@@ -10,9 +10,9 @@ const config: Config = {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: "1.5rem",
       screens: {
-        "2xl": "1400px",
+        "2xl": "1280px",
       },
     },
     extend: {
@@ -79,20 +79,20 @@ const config: Config = {
       borderRadius: {
         lg: '0.5rem',
         xl: '0.75rem',
-        '2xl': '2rem',
-        '3xl': '2.5rem',
+        '2xl': '1rem',
+        '3xl': '1.5rem',
         full: '9999px',
       },
       spacing: {
-        'margin-mobile': '16px',
-        'margin-desktop': '80px',
-        base: '8px',
-        xs: '4px',
-        sm: '12px',
-        md: '24px',
-        lg: '40px',
-        xl: '64px',
-        gutter: '16px',
+        'margin-mobile': '12px',
+        'margin-desktop': '60px',
+        base: '6px',
+        xs: '3px',
+        sm: '10px',
+        md: '20px',
+        lg: '32px',
+        xl: '48px',
+        gutter: '12px',
       },
     },
   },
