@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useMemo } from "react";
@@ -14,8 +13,10 @@ const categories = [
   { label: "Streaming", slug: "streaming" },
   { label: "Música", slug: "musica" },
   { label: "Software", slug: "software" },
-  { label: "Gaming", slug: "gaming" },
+  { label: "Deportes", slug: "deportes" },
   { label: "Educación", slug: "educacion" },
+  { label: "Diseño", slug: "diseno" },
+  { label: "Gaming", slug: "gaming" },
   { label: "IA", slug: "ia" }
 ];
 
@@ -36,13 +37,11 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Estructura de datos para renderizar: { categoryId: Service[] }
   const groupedServices = useMemo(() => {
     const result: Record<string, Service[]> = {};
     const query = searchQuery.toLowerCase();
 
     if (selectedCategory === "all") {
-      // Agrupar todos los servicios que coincidan con la búsqueda
       Object.entries(servicesByCategory).forEach(([slug, services]) => {
         const filtered = services.filter(s => s.name.toLowerCase().includes(query));
         if (filtered.length > 0) {
@@ -50,7 +49,6 @@ export default function Home() {
         }
       });
     } else {
-      // Mostrar solo la categoría seleccionada
       const services = servicesByCategory[selectedCategory as CategorySlug] || [];
       const filtered = services.filter(s => s.name.toLowerCase().includes(query));
       if (filtered.length > 0) {
@@ -108,16 +106,16 @@ export default function Home() {
                   <h2 className="text-sm font-sora font-black uppercase tracking-wider text-on-surface/80">
                     {categoryLabels[slug] || slug}
                   </h2>
-                  <Link href={`/explorar/${slug}`} className="text-[10px] font-bold text-primary hover:underline">
-                    Ver más
-                  </Link>
                 </div>
                 
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                   {services.map((service) => (
                     <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
                       <div 
-                        className="relative rounded-xl p-3 aspect-square flex flex-col justify-between transition-transform active:scale-95 shadow-sm overflow-hidden border border-white/10"
+                        className={cn(
+                          "relative rounded-xl p-3 aspect-square flex flex-col justify-between transition-transform active:scale-95 shadow-sm overflow-hidden border",
+                          service.color === "#ffffff" ? "border-outline-variant/30" : "border-white/10"
+                        )}
                         style={{ backgroundColor: service.color || '#4343d5' }}
                       >
                         {service.discount && (
@@ -127,23 +125,38 @@ export default function Home() {
                         )}
 
                         <div className="space-y-0.5">
-                          <h3 className="font-sora font-black text-sm uppercase tracking-tighter leading-none text-white truncate">
+                          <h3 className={cn(
+                            "font-sora font-black text-sm uppercase tracking-tighter leading-none truncate",
+                            service.color === "#ffffff" ? "text-primary" : "text-white"
+                          )}>
                             {service.name}
                           </h3>
-                          <p className="text-[9px] font-medium opacity-80 text-white truncate">
+                          <p className={cn(
+                            "text-[9px] font-medium opacity-80 truncate",
+                            service.color === "#ffffff" ? "text-on-surface-variant" : "text-white"
+                          )}>
                             {service.planName || service.name}
                           </p>
                         </div>
 
                         <div className="space-y-0.5">
-                          <p className="text-[8px] font-medium opacity-60 text-white">
+                          <p className={cn(
+                            "text-[8px] font-medium opacity-60",
+                            service.color === "#ffffff" ? "text-on-surface-variant" : "text-white"
+                          )}>
                             Desde
                           </p>
                           <div className="flex items-baseline gap-0.5">
-                            <span className="text-base font-sora font-bold text-white">
+                            <span className={cn(
+                              "text-base font-sora font-bold",
+                              service.color === "#ffffff" ? "text-primary" : "text-white"
+                            )}>
                               S/ {service.pricePerMonth || "15.90"}
                             </span>
-                            <span className="text-[8px] font-medium opacity-50 text-white">
+                            <span className={cn(
+                              "text-[8px] font-medium opacity-50",
+                              service.color === "#ffffff" ? "text-on-surface-variant" : "text-white"
+                            )}>
                               /mes
                             </span>
                           </div>
