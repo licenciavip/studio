@@ -5,10 +5,10 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { href: "/", label: "Explore", icon: "explore" },
-  { href: "/mis-grupos", label: "Groups", icon: "group" },
-  { href: "/billetera", label: "Wallet", icon: "account_balance_wallet" },
-  { href: "/perfil", label: "Profile", icon: "person" },
+  { href: "/", label: "Inicio", icon: "explore" },
+  { href: "/mis-grupos", label: "Grupos", icon: "group" },
+  { href: "/billetera", label: "Billetera", icon: "account_balance_wallet" },
+  { href: "/perfil", label: "Perfil", icon: "person" },
 ];
 
 export function BottomNav() {
