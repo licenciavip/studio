@@ -12,12 +12,13 @@ const categories = [
   { label: "Todo", slug: "all" },
   { label: "Streaming", slug: "streaming" },
   { label: "Música", slug: "musica" },
+  { label: "IA", slug: "ia" },
+  { label: "VPN", slug: "seguridad" },
+  { label: "Diseño", slug: "diseno" },
   { label: "Software", slug: "software" },
   { label: "Deportes", slug: "deportes" },
   { label: "Educación", slug: "educacion" },
-  { label: "Diseño", slug: "diseno" },
-  { label: "Gaming", slug: "gaming" },
-  { label: "IA", slug: "ia" }
+  { label: "Gaming", slug: "gaming" }
 ];
 
 const categoryLabels: Record<string, string> = {
@@ -27,7 +28,7 @@ const categoryLabels: Record<string, string> = {
   gaming: "Gaming",
   educacion: "Educación",
   diseno: "Diseño",
-  seguridad: "Seguridad",
+  seguridad: "VPN",
   deportes: "Deportes",
   bienestar: "Bienestar",
   software: "Software",
@@ -103,7 +104,7 @@ export default function Home() {
             Object.entries(groupedServices).map(([slug, services]) => (
               <div key={slug} className="space-y-3">
                 <div className="flex justify-between items-center px-1">
-                  <h2 className="text-sm font-sora font-black uppercase tracking-wider text-on-surface/80">
+                  <h2 className="text-base font-sora font-black uppercase tracking-tight text-on-surface">
                     {categoryLabels[slug] || slug}
                   </h2>
                 </div>
@@ -127,13 +128,13 @@ export default function Home() {
                         <div className="space-y-0.5">
                           <h3 className={cn(
                             "font-sora font-black text-sm uppercase tracking-tighter leading-none truncate",
-                            service.color === "#ffffff" ? "text-primary" : "text-white"
+                            service.color === "#ffffff" || service.color === "#ffea00" || service.color === "#ffcc00" ? "text-on-surface" : "text-white"
                           )}>
                             {service.name}
                           </h3>
                           <p className={cn(
                             "text-[9px] font-medium opacity-80 truncate",
-                            service.color === "#ffffff" ? "text-on-surface-variant" : "text-white"
+                            service.color === "#ffffff" || service.color === "#ffea00" || service.color === "#ffcc00" ? "text-on-surface-variant" : "text-white"
                           )}>
                             {service.planName || service.name}
                           </p>
@@ -142,20 +143,20 @@ export default function Home() {
                         <div className="space-y-0.5">
                           <p className={cn(
                             "text-[8px] font-medium opacity-60",
-                            service.color === "#ffffff" ? "text-on-surface-variant" : "text-white"
+                            service.color === "#ffffff" || service.color === "#ffea00" || service.color === "#ffcc00" ? "text-on-surface-variant" : "text-white"
                           )}>
                             Desde
                           </p>
                           <div className="flex items-baseline gap-0.5">
                             <span className={cn(
                               "text-base font-sora font-bold",
-                              service.color === "#ffffff" ? "text-primary" : "text-white"
+                              service.color === "#ffffff" || service.color === "#ffea00" || service.color === "#ffcc00" ? "text-on-surface" : "text-white"
                             )}>
                               S/ {service.pricePerMonth || "15.90"}
                             </span>
                             <span className={cn(
                               "text-[8px] font-medium opacity-50",
-                              service.color === "#ffffff" ? "text-on-surface-variant" : "text-white"
+                              service.color === "#ffffff" || service.color === "#ffea00" || service.color === "#ffcc00" ? "text-on-surface-variant" : "text-white"
                             )}>
                               /mes
                             </span>
@@ -172,6 +173,24 @@ export default function Home() {
               No se encontraron servicios que coincidan con tu búsqueda.
             </div>
           )}
+        </section>
+
+        {/* Sección de Contacto al final */}
+        <section className="mt-16 px-4 py-8 text-center space-y-6">
+          <div className="space-y-2">
+            <h2 className="text-2xl font-sora font-black text-on-surface leading-tight">
+              ¿No encontraste lo que buscabas?
+            </h2>
+            <p className="text-sm text-on-surface-variant font-medium">
+              Cuéntanos que servicio necesitas y lo conseguimos para ti
+            </p>
+          </div>
+          <div className="max-w-md mx-auto">
+            <Input 
+              className="w-full bg-white border-outline-variant rounded-xl h-11 text-sm shadow-sm" 
+              placeholder="Nombre del servicio (ej: Canva Pro, Link...)"
+            />
+          </div>
         </section>
       </main>
     </div>

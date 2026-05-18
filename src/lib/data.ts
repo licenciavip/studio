@@ -56,7 +56,11 @@ export const servicesByCategory: Record<CategorySlug, Service[]> = {
     { id: "nintendo-switch-online", name: "Nintendo Switch Online", logoId: "nintendo-switch-online-logo", color: "#e60012", pricePerMonth: "15.00" },
   ],
   seguridad: [
-    { id: "nordvpn", name: "NordVPN", logoId: "nordvpn-logo", color: "#003566", pricePerMonth: "14.90" },
+    { id: "cyberghost", name: "CyberGhost", logoId: "nordvpn-logo", color: "#ffea00", discount: "-61%", pricePerMonth: "16.90", planName: "CyberGhost" },
+    { id: "expressvpn", name: "ExpressVPN", logoId: "nordvpn-logo", color: "#e10600", discount: "-71%", pricePerMonth: "21.90", planName: "ExpressVPN" },
+    { id: "nordvpn", name: "NordVPN", logoId: "nordvpn-logo", color: "#4682b4", discount: "-64%", pricePerMonth: "18.90", planName: "NordVPN" },
+    { id: "protonvpn", name: "Proton VPN", logoId: "nordvpn-logo", color: "#1a1b2e", discount: "-62%", pricePerMonth: "13.90", planName: "ProtonVPN" },
+    { id: "tunnelbear", name: "TunnelBear", logoId: "nordvpn-logo", color: "#ffcc00", discount: "-48%", pricePerMonth: "7.90", planName: "TunnelBear" },
   ],
   bienestar: [
     { id: "calm", name: "Calm", logoId: "calm-logo", color: "#45b1e8", pricePerMonth: "5.90" },
