@@ -1,8 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import { useAuth } from "@/firebase";
 
 export default function Header() {
@@ -21,7 +19,7 @@ export default function Header() {
       </div>
       
       <Link href="/perfil" className="w-10 h-10 flex items-center justify-center text-on-surface hover:bg-surface-container rounded-full transition-colors active:scale-95">
-        <span className="material-symbols-outlined text-[28px]">person</span>
+        <span className="material-symbols-outlined text-[28px]">account_circle</span>
       </Link>
     </header>
   );

@@ -6,10 +6,9 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/", label: "Inicio", icon: "home" },
-  { href: "/compartir", label: "Compartir", icon: "person_add" },
-  { href: "/notificaciones", label: "Notificaciones", icon: "notifications" },
-  { href: "/mis-grupos", label: "Mis Grupos", icon: "person" },
-  { href: "/ajustes", label: "Más", icon: "more_horiz" },
+  { href: "/billetera", label: "Billetera", icon: "account_balance_wallet" },
+  { href: "/mis-grupos", label: "Mis Grupos", icon: "group" },
+  { href: "/perfil", label: "Perfil", icon: "person" },
 ];
 
 export function BottomNav() {

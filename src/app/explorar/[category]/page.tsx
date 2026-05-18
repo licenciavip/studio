@@ -4,7 +4,7 @@ import { use } from "react";
 import { servicesByCategory } from "@/lib/data";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import type { CategorySlug } from "@/lib/types";
 import { notFound } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -33,7 +33,7 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
     notFound();
   }
 
-  // Si es la categoría de streaming, aplicamos el diseño estilo Kotango (cuadrícula de colores)
+  // Diseño de cuadrícula de colores para la categoría de streaming
   const isStreaming = category === 'streaming';
 
   return (
@@ -62,11 +62,11 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
             <div 
               className={cn(
                 "relative rounded-2xl p-4 aspect-square flex flex-col justify-between transition-transform active:scale-95 shadow-sm overflow-hidden",
-                !isStreaming && "bg-surface-container-lowest border border-outline-variant/30"
+                !isStreaming ? "bg-surface-container-lowest border border-outline-variant/30" : "border border-white/10"
               )}
               style={isStreaming ? { backgroundColor: service.color } : {}}
             >
-              {/* Discount Badge */}
+              {/* Descuento visible en streaming */}
               {isStreaming && service.discount && (
                 <div className="absolute top-2 right-2 bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-lg border border-white/20">
                   {service.discount}
