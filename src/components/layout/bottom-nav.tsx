@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -9,8 +8,8 @@ const navItems = [
   { href: "/", label: "Inicio", icon: "home" },
   { href: "/compartir", label: "Compartir", icon: "person_add" },
   { href: "/notificaciones", label: "Notificaciones", icon: "notifications" },
-  { href: "/mis-grupos", label: "Mi Kotango", icon: "person" },
-  { href: "/ajustes", label: "Mas", icon: "more_horiz" },
+  { href: "/mis-grupos", label: "Mis Grupos", icon: "person" },
+  { href: "/ajustes", label: "Más", icon: "more_horiz" },
 ];
 
 export function BottomNav() {
@@ -34,7 +33,7 @@ export function BottomNav() {
           >
             <div className={cn(
               "p-1 rounded-xl transition-colors mb-1 flex items-center justify-center",
-              isActive ? "bg-primary/5" : "bg-transparent"
+              isActive ? "bg-primary/10" : "bg-transparent"
             )}>
               <span 
                 className="material-symbols-outlined text-[24px]" 

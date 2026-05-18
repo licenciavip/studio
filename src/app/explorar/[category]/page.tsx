@@ -1,5 +1,4 @@
-
-'use client';
+"use client";
 
 import { use } from "react";
 import { servicesByCategory } from "@/lib/data";
@@ -34,7 +33,7 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
     notFound();
   }
 
-  // Si es la categoría de streaming, aplicamos el diseño estilo Kotango
+  // Si es la categoría de streaming, aplicamos el diseño estilo Kotango (cuadrícula de colores)
   const isStreaming = category === 'streaming';
 
   return (
@@ -69,7 +68,7 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
             >
               {/* Discount Badge */}
               {isStreaming && service.discount && (
-                <div className="absolute top-2 right-2 bg-green-500/20 text-green-400 text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur-sm border border-green-500/30">
+                <div className="absolute top-2 right-2 bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-lg border border-white/20">
                   {service.discount}
                 </div>
               )}
@@ -98,7 +97,7 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
                 </p>
                 <div className="flex items-baseline gap-1">
                   <span className={cn(
-                    "text-lg font-sora font-bold",
+                    "text-xl font-sora font-bold",
                     isStreaming ? "text-white" : "text-primary"
                   )}>
                     S/ {service.pricePerMonth || "0.00"}
