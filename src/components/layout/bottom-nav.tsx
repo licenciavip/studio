@@ -6,8 +6,8 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/", label: "Inicio", icon: "home" },
-  { href: "/billetera", label: "Billetera", icon: "account_balance_wallet" },
   { href: "/mis-grupos", label: "Mis Grupos", icon: "group" },
+  { href: "/billetera", label: "Billetera", icon: "account_balance_wallet" },
   { href: "/perfil", label: "Perfil", icon: "person" },
 ];
 
