@@ -21,10 +21,13 @@ export const servicesByCategory: Record<CategorySlug, Service[]> = {
     { id: "wow", name: "WOW", logoId: "wow-logo", color: "#ff0099", discount: "-21%", pricePerMonth: "9.90", planName: "WOW Presents Plus" },
   ],
   musica: [
-    { id: "spotify", name: "Spotify", logoId: "spotify-logo", color: "#1DB954", pricePerMonth: "18.90", planName: "Premium Familiar" },
-    { id: "apple-music", name: "Apple Music", logoId: "apple-music-logo", color: "#000000", pricePerMonth: "18.90" },
-    { id: "tidal", name: "Tidal", logoId: "tidal-logo", color: "#000000", pricePerMonth: "16.90" },
-    { id: "youtube-music", name: "YouTube Music", logoId: "youtube-music-logo", color: "#ff0000", pricePerMonth: "13.90" },
+    { id: "spotify", name: "Spotify", logoId: "spotify-logo", color: "#121212", discount: "-67%", pricePerMonth: "13.90", planName: "Spotify Premium" },
+    { id: "amazon-music", name: "Amazon Mus", logoId: "prime-video-logo", color: "#25d1da", discount: "-53%", pricePerMonth: "10.90", planName: "Amazon Music" },
+    { id: "apple-music", name: "Apple Music", logoId: "apple-music-logo", color: "#fb233b", discount: "-70%", pricePerMonth: "13.90", planName: "Apple Music" },
+    { id: "apple-one", name: "Apple One", logoId: "apple-tv-plus-logo", color: "#000000", discount: "-81%", pricePerMonth: "18.90", planName: "Apple One" },
+    { id: "deezer", name: "Deezer", logoId: "viki-logo", color: "#121212", discount: "-74%", pricePerMonth: "10.90", planName: "Deezer Premium" },
+    { id: "tidal", name: "TIDAL", logoId: "tidal-logo", color: "#000000", discount: "-70%", pricePerMonth: "11.90", planName: "Tidal HiFi" },
+    { id: "youtube-music", name: "YT Music", logoId: "youtube-music-logo", color: "#ff0000", discount: "-78%", pricePerMonth: "9.90", planName: "YouTube Music" },
   ],
   gaming: [
     { id: "ps-plus", name: "PS Plus", logoId: "ps-plus-logo", color: "#003791", pricePerMonth: "39.90" },
