@@ -10,7 +10,11 @@ export const servicesByCategory: Record<CategorySlug, Service[]> = {
     { id: "paramount-plus", name: "Paramount+", logoId: "paramount-plus-logo", color: "#0064ff", discount: "-23%", pricePerMonth: "14.90", planName: "Paramount+" },
     { id: "crunchyroll", name: "crunchyroll", logoId: "crunchyroll-logo", color: "#f47521", discount: "-40%", pricePerMonth: "11.90", planName: "Crunchyroll" },
     { id: "apple-tv-plus", name: "Apple TV+", logoId: "apple-tv-plus-logo", color: "#000000", discount: "-64%", pricePerMonth: "13.90", planName: "Apple TV+" },
-    { id: "vix", name: "ViX", logoId: "vix-logo", color: "#f58220", discount: "-65%", pricePerMonth: "11.90", planName: "ViX Premium" },
+    { id: "universal-plus", name: "UNIVERSAL+", logoId: "hbo-logo", color: "#000000", discount: "-45%", pricePerMonth: "11.90", planName: "Universal+ Premium" },
+    { id: "viki", name: "VIKI", logoId: "viki-logo", color: "#25d1da", discount: "-35%", pricePerMonth: "12.90", planName: "VIKI Pass" },
+    { id: "vix", name: "VIX", logoId: "vix-logo", color: "#ff6600", discount: "-65%", pricePerMonth: "11.90", planName: "VIX Premium" },
+    { id: "wow", name: "WOW", logoId: "hbo-logo", color: "#ff0080", discount: "-21%", pricePerMonth: "11.90", planName: "WOW Presents Plus" },
+    { id: "mubi", name: "MUBI", logoId: "hbo-logo", color: "#000000", discount: "-50%", pricePerMonth: "14.90", planName: "MUBI" },
   ],
   musica: [
     { id: "spotify", name: "Spotify", logoId: "spotify-logo", color: "#121212", discount: "-67%", pricePerMonth: "13.90", planName: "Spotify Premium" },
@@ -21,15 +25,21 @@ export const servicesByCategory: Record<CategorySlug, Service[]> = {
     { id: "tidal", name: "TIDAL", logoId: "tidal-logo", color: "#000000", discount: "-70%", pricePerMonth: "11.90", planName: "Tidal HiFi" },
     { id: "youtube-music", name: "YT Music", logoId: "youtube-music-logo", color: "#ff0000", discount: "-78%", pricePerMonth: "9.90", planName: "YouTube Music" },
   ],
+  ia: [
+    { id: "chatgpt", name: "ChatGPT", logoId: "chatgpt-logo", color: "#10a37f", discount: "-58%", pricePerMonth: "26.90", planName: "ChatGPT Plus" },
+    { id: "claude", name: "Claude", logoId: "chatgpt-logo", color: "#d97757", discount: "-46%", pricePerMonth: "47.90", planName: "Claude Pro" },
+    { id: "gemini", name: "Gemini", logoId: "chatgpt-logo", color: "#ffffff", discount: "-65%", pricePerMonth: "16.90", planName: "Gemini AI" },
+    { id: "perplexity", name: "Perplexity", logoId: "chatgpt-logo", color: "#005a5a", discount: "-46%", pricePerMonth: "47.90", planName: "Perplexity Pro" },
+  ],
   software: [
-    { id: "dropbox", name: "Dropbox", logoId: "setapp-logo", color: "#0061ff", discount: "-52%", pricePerMonth: "16.90", planName: "Dropbox Plus" },
     { id: "google-one", name: "Google One", logoId: "chatgpt-logo", color: "#ffffff", discount: "-67%", pricePerMonth: "11.90", planName: "Google One 2TB" },
     { id: "microsoft-365", name: "Microsoft", logoId: "microsoft-365-logo", color: "#f25022", discount: "-74%", pricePerMonth: "11.90", planName: "Microsoft 365" },
+    { id: "dropbox", name: "Dropbox", logoId: "setapp-logo", color: "#0061ff", discount: "-52%", pricePerMonth: "16.90", planName: "Dropbox Plus" },
   ],
   deportes: [
-    { id: "dazn", name: "DAZN", logoId: "vix-logo", color: "#000000", discount: "-11%", pricePerMonth: "23.90", planName: "DAZN Estándar" },
     { id: "f1-tv", name: "F1 TV", logoId: "paramount-plus-logo", color: "#e10600", discount: "-67%", pricePerMonth: "13.90", planName: "F1 TV Pro" },
     { id: "nba", name: "NBA", logoId: "nba-league-pass-logo", color: "#17408b", discount: "-37%", pricePerMonth: "28.90", planName: "NBA League Pass" },
+    { id: "dazn", name: "DAZN", logoId: "vix-logo", color: "#000000", discount: "-11%", pricePerMonth: "23.90", planName: "DAZN Estándar" },
   ],
   educacion: [
     { id: "duolingo", name: "Duolingo", logoId: "duolingo-logo", color: "#58cc02", discount: "-76%", pricePerMonth: "18.90", planName: "Duolingo Plus" },
@@ -44,10 +54,6 @@ export const servicesByCategory: Record<CategorySlug, Service[]> = {
     { id: "ps-plus", name: "PS Plus", logoId: "ps-plus-logo", color: "#003791", pricePerMonth: "39.90" },
     { id: "xbox-game-pass", name: "Xbox Game Pass", logoId: "xbox-game-pass-logo", color: "#107c10", pricePerMonth: "29.90" },
     { id: "nintendo-switch-online", name: "Nintendo Switch Online", logoId: "nintendo-switch-online-logo", color: "#e60012", pricePerMonth: "15.00" },
-  ],
-  ia: [
-    { id: "chatgpt-plus", name: "ChatGPT Plus", logoId: "chatgpt-logo", color: "#10a37f", pricePerMonth: "20.00" },
-    { id: "midjourney", name: "Midjourney", logoId: "midjourney-logo", color: "#000000", pricePerMonth: "10.00" },
   ],
   seguridad: [
     { id: "nordvpn", name: "NordVPN", logoId: "nordvpn-logo", color: "#003566", pricePerMonth: "14.90" },
