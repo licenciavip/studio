@@ -1,24 +1,19 @@
-
-// Archivo de datos centralizado para Poolera
-import type { CategorySlug, Subscription, OrderStatus } from "@/lib/types";
-
-export type Service = {
-  id: string;
-  name: string;
-  logoId: string;
-};
+import type { CategorySlug, Subscription, OrderStatus, Service, Group, Order } from "@/lib/types";
 
 export const servicesByCategory: Record<CategorySlug, Service[]> = {
   streaming: [
-    { id: "apple-tv-plus", name: "AppleTV+", logoId: "apple-tv-plus-logo" },
-    { id: "directv-go", name: "DirecTVGO", logoId: "directv-go-logo" },
-    { id: "disney-plus", name: "Disney+", logoId: "disney-plus-logo" },
-    { id: "hbo-max", name: "HBO Max", logoId: "hbo-logo" },
-    { id: "netflix", name: "Netflix", logoId: "netflix-logo" },
-    { id: "prime-video", name: "PrimeVideo", logoId: "prime-video-logo" },
-    { id: "paramount-plus", name: "Paramount+", logoId: "paramount-plus-logo" },
-    { id: "crunchyroll", name: "Crunchyroll", logoId: "crunchyroll-logo" },
-    { id: "youtube-premium", name: "YouTube Premium", logoId: "youtube-premium-logo" },
+    { id: "netflix", name: "NETFLIX", logoId: "netflix-logo", color: "#e50914", discount: "-58%", pricePerMonth: "23.90", planName: "Netflix Premium" },
+    { id: "disney-plus", name: "Disney+", logoId: "disney-plus-logo", color: "#1a364e", discount: "-57%", pricePerMonth: "22.90", planName: "Disney+ Premium" },
+    { id: "hbo-max", name: "HBO Max", logoId: "hbo-logo", color: "#000000", discount: "-63%", pricePerMonth: "20.90", planName: "HBO Max Platino" },
+    { id: "youtube", name: "YouTube", logoId: "youtube-premium-logo", color: "#ff0000", discount: "-66%", pricePerMonth: "13.90", planName: "YouTube Premium" },
+    { id: "prime-video", name: "prime video", logoId: "prime-video-logo", color: "#1e4a7a", discount: "-47%", pricePerMonth: "11.90", planName: "Prime Video" },
+    { id: "paramount-plus", name: "Paramount+", logoId: "paramount-plus-logo", color: "#0064ff", discount: "-23%", pricePerMonth: "14.90", planName: "Paramount+" },
+    { id: "crunchyroll", name: "crunchyroll", logoId: "crunchyroll-logo", color: "#f47521", discount: "-40%", pricePerMonth: "11.90", planName: "Crunchyroll" },
+    { id: "apple-tv-plus", name: "Apple TV+", logoId: "apple-tv-plus-logo", color: "#000000", discount: "-64%", pricePerMonth: "13.90", planName: "Apple TV+" },
+    { id: "atresplayer", name: "atresplayer", logoId: "atresplayer-logo", color: "#111111", discount: "-44%", pricePerMonth: "10.90", planName: "AtresPlayer" },
+    { id: "viki", name: "VIKI", logoId: "viki-logo", color: "#1da1f2", discount: "-44%", pricePerMonth: "12.90", planName: "VIKI Pass" },
+    { id: "vix", name: "ViX", logoId: "vix-logo", color: "#f58220", discount: "-65%", pricePerMonth: "11.90", planName: "ViX Premium" },
+    { id: "wow", name: "WOW", logoId: "wow-logo", color: "#ff0099", discount: "-21%", pricePerMonth: "9.90", planName: "WOW Premium" },
   ],
   musica: [
     { id: "spotify", name: "Spotify", logoId: "spotify-logo" },
@@ -124,25 +119,6 @@ export const subscriptions: Subscription[] = [
 
 export type GroupRole = 'Anfitrión' | 'Miembro';
 
-export type Group = {
-  id: string;
-  service: string;
-  host: string;
-  userRole: GroupRole;
-  slots: {
-    filled: number;
-    total: number;
-  };
-  publicPrice: number;
-  netEarning: number;
-  status: 'Activo' | 'Incompleto';
-  credentials: {
-    email: string;
-    pass: string;
-  };
-  nextBill: string;
-};
-
 export const groups: Group[] = [
     { 
       id: '1', 
@@ -181,15 +157,6 @@ export const groups: Group[] = [
       nextBill: "15 Dic"
     },
 ];
-
-export type Order = {
-  id: string;
-  service: string;
-  host: string;
-  price: number;
-  status: OrderStatus;
-  expires: string;
-};
 
 export const orders: Order[] = [
     { id: 'order-1', service: 'Netflix Premium', host: 'Juanca10', price: 4.50, status: 'Activo', expires: '2024-08-15' },

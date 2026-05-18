@@ -62,3 +62,13 @@ export interface Wallet {
   currency: string;
   updatedAt: any;
 }
+
+export type Service = {
+  id: string;
+  name: string;
+  logoId: string;
+  color?: string;
+  discount?: string;
+  pricePerMonth?: string;
+  planName?: string;
+};

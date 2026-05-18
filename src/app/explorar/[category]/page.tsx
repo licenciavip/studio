@@ -8,13 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, ChevronRight } from "lucide-react";
 import type { CategorySlug } from "@/lib/types";
 import { notFound } from "next/navigation";
-import Image from "next/image";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 const categoryNames: Record<CategorySlug, string> = {
   streaming: "Películas y Series",
@@ -40,56 +34,86 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
     notFound();
   }
 
+  // Si es la categoría de streaming, aplicamos el diseño estilo Kotango
+  const isStreaming = category === 'streaming';
+
   return (
     <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
-      <div className="flex items-center justify-between mb-10">
+      <div className="flex items-center justify-between mb-8">
         <div className="flex-1">
-          <Button asChild variant="outline" className="rounded-full">
+          <Button asChild variant="ghost" className="rounded-full h-12 w-12 p-0">
             <Link href="/">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Regresar
+              <ArrowLeft className="h-6 w-6 text-on-surface" />
             </Link>
           </Button>
         </div>
-        <div className="flex-[2] text-center">
-          <h1 className="text-3xl font-sora font-bold tracking-tight text-on-surface">
-            Selecciona un servicio
+        <div className="flex-[4] text-left">
+          <h1 className="text-2xl font-sora font-bold tracking-tight text-on-surface">
+            {categoryName}
           </h1>
-          <p className="mt-2 text-on-surface-variant font-medium">
-            Categoría: {categoryName}
-          </p>
         </div>
-        <div className="flex-1"></div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {services.map((service) => {
-          const logo = PlaceHolderImages.find((img) => img.id === service.logoId);
-          return (
-            <Link href={`/explorar/${category}/${service.id}`} key={service.id}>
-              <Card className="flex flex-col h-full justify-between p-6 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg cursor-pointer border-outline-variant/30 shadow-sm bg-surface-container-lowest rounded-3xl group">
-                <CardHeader className="flex-row items-center gap-4 p-0">
-                  {logo && (
-                    <div className="relative w-14 h-14 overflow-hidden rounded-2xl border border-outline-variant/20 bg-white">
-                      <Image
-                        src={logo.imageUrl}
-                        alt={logo.description}
-                        fill
-                        className="object-cover group-hover:scale-110 transition-transform"
-                        data-ai-hint={logo.imageHint}
-                      />
-                    </div>
-                  )}
-                  <CardTitle className="font-sora text-lg font-bold text-on-surface">
-                    {service.name}
-                  </CardTitle>
-                </CardHeader>
-                <div className="flex items-center justify-end text-sm text-primary font-bold pt-6 group-hover:underline">
-                  Ver grupos <ChevronRight className="h-4 w-4 ml-1" />
+
+      <div className={cn(
+        "grid gap-4",
+        isStreaming ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+      )}>
+        {services.map((service) => (
+          <Link href={`/explorar/${category}/${service.id}`} key={service.id} className="block group">
+            <div 
+              className={cn(
+                "relative rounded-2xl p-4 aspect-square flex flex-col justify-between transition-transform active:scale-95 shadow-sm overflow-hidden",
+                !isStreaming && "bg-surface-container-lowest border border-outline-variant/30"
+              )}
+              style={isStreaming ? { backgroundColor: service.color } : {}}
+            >
+              {/* Discount Badge */}
+              {isStreaming && service.discount && (
+                <div className="absolute top-2 right-2 bg-green-500/20 text-green-400 text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur-sm border border-green-500/30">
+                  {service.discount}
                 </div>
-              </Card>
-            </Link>
-          );
-        })}
+              )}
+
+              <div className="space-y-1">
+                <h3 className={cn(
+                  "font-sora font-black text-lg uppercase tracking-tighter leading-none",
+                  isStreaming ? "text-white" : "text-on-surface"
+                )}>
+                  {service.name}
+                </h3>
+                <p className={cn(
+                  "text-[10px] font-medium opacity-80",
+                  isStreaming ? "text-white" : "text-on-surface-variant"
+                )}>
+                  {service.planName || service.name}
+                </p>
+              </div>
+
+              <div className="space-y-0.5">
+                <p className={cn(
+                  "text-[10px] font-medium opacity-60",
+                  isStreaming ? "text-white" : "text-on-surface-variant"
+                )}>
+                  Planes desde
+                </p>
+                <div className="flex items-baseline gap-1">
+                  <span className={cn(
+                    "text-lg font-sora font-bold",
+                    isStreaming ? "text-white" : "text-primary"
+                  )}>
+                    S/ {service.pricePerMonth || "0.00"}
+                  </span>
+                  <span className={cn(
+                    "text-[10px] font-medium opacity-50",
+                    isStreaming ? "text-white" : "text-on-surface-variant"
+                  )}>
+                    /mes
+                  </span>
+                </div>
+              </div>
+            </div>
+          </Link>
+        ))}
       </div>
     </div>
   );
