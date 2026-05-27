@@ -34,7 +34,7 @@ export default function CompartirCategoryPage() {
             </Link>
           </Button>
           <div className="flex-1 text-left">
-            <h1 className="text-[9px] font-black tracking-[0.3em] text-on-surface-variant/20 uppercase font-inter">
+            <h1 className="text-[10px] font-medium uppercase tracking-[0.3em] text-on-surface-variant/40 font-sans">
               {categoryName}
             </h1>
           </div>
@@ -57,7 +57,7 @@ export default function CompartirCategoryPage() {
                   {/* Top part */}
                   <div className="space-y-0.5">
                     <h3 className={cn(
-                      "font-sora font-black text-[0.95rem] uppercase tracking-tighter leading-none",
+                      "font-sans font-black text-[0.95rem] uppercase tracking-tighter leading-none",
                       textColor
                     )}>
                       {service.name}
@@ -80,7 +80,7 @@ export default function CompartirCategoryPage() {
                     </p>
                     <div className="flex items-baseline gap-1">
                       <span className={cn(
-                        "text-[0.95rem] font-sora font-black tracking-tighter",
+                        "text-[0.95rem] font-sans font-black tracking-tighter",
                         textColor
                       )}>
                         RECIBE >
