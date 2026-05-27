@@ -55,7 +55,6 @@ export default function Home() {
         });
         setRecommendation("");
       } catch (error) {
-        console.error("Error al enviar recomendación:", error);
         toast({
           title: "Error",
           description: "No pudimos guardar tu sugerencia.",
@@ -69,77 +68,57 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen pt-12">
-      <main className="flex-grow w-full max-w-xl mx-auto pb-24 px-4 space-y-5">
+      <main className="flex-grow w-full max-w-xl mx-auto pb-24 px-4 space-y-4">
         
-        {/* SALUDO Y BOTÓN PRINCIPAL */}
-        <section className="space-y-3">
+        {/* SALUDO COMPACTO */}
+        <section className="space-y-2.5">
           <div className="px-1">
-            <h1 className="text-[10px] font-black text-on-surface/40 uppercase tracking-[0.15em] mb-0.5">
-              Bienvenido de nuevo
+            <h1 className="text-[9px] font-black text-on-surface/30 uppercase tracking-[0.2em] mb-0.5">
+              Bienvenido
             </h1>
-            <h2 className="text-xl font-extrabold text-on-surface tracking-tight">
+            <h2 className="text-xl font-extrabold text-on-surface tracking-tighter">
               Hola, {user?.displayName?.split(' ')[0] || 'Deyvid'} 👋
             </h2>
           </div>
           
           <Link href="/compartir" className="block group">
-            <div className="relative overflow-hidden w-full h-12 bg-gradient-to-br from-[#5d5fef] to-[#ff6b6b] rounded-2xl flex items-center justify-center gap-2 shadow-lg hover:scale-[1.01] active:scale-[0.98] transition-all">
+            <div className="relative overflow-hidden w-full h-11 bg-gradient-to-r from-primary via-primary/90 to-primary/80 rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-primary/10 hover:scale-[1.01] active:scale-[0.98] transition-all">
               <PlusCircle className="h-4 w-4 text-white" />
-              <span className="text-white font-bold text-sm tracking-tight">Compartir una suscripción</span>
+              <span className="text-white font-bold text-xs tracking-tight">Compartir suscripción</span>
             </div>
           </Link>
         </section>
 
-        {/* NOVEDADES */}
-        <section className="space-y-1.5">
-          <div className="flex items-center gap-1.5 px-2">
-            <Sparkles className="h-3 w-3 text-primary/60" />
-            <h2 className="text-[10px] font-bold text-on-surface/40 tracking-tight uppercase">Novedades</h2>
-          </div>
-          <div className="glass-card rounded-2xl p-3 flex items-center justify-between group cursor-pointer">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center overflow-hidden border border-white/40 shadow-sm">
-                <Image src="https://picsum.photos/seed/novedades/200/200" alt="Novedad" width={36} height={36} className="object-cover" />
-              </div>
-              <div>
-                <h3 className="text-xs font-bold text-on-surface tracking-tight">SubShare Mundial 2026</h3>
-                <p className="text-[9px] text-on-surface-variant/50 font-medium">Vive la emoción del fútbol pro</p>
-              </div>
-            </div>
-            <ChevronRight className="h-4 w-4 text-on-surface-variant/30 group-hover:translate-x-1 transition-all" />
-          </div>
-        </section>
-
-        {/* MIS GRUPOS */}
+        {/* MIS GRUPOS COMPACTOS */}
         <section className="space-y-1.5">
           <div className="flex justify-between items-center px-2">
-            <h2 className="text-[10px] font-bold text-on-surface/40 tracking-tight uppercase">Mis Grupos</h2>
-            <Link href="/mis-grupos" className="text-[8px] font-black text-primary/60 uppercase tracking-widest">VER TODO</Link>
+            <h2 className="text-[9px] font-bold text-on-surface/30 tracking-tight uppercase">Mis Grupos</h2>
+            <Link href="/mis-grupos" className="text-[8px] font-black text-primary/40 uppercase tracking-widest">VER TODO</Link>
           </div>
           {groups.slice(0, 1).map((group) => (
             <Link href={`/mis-grupos/${group.id}`} key={group.id} className="block group">
-              <div className="glass-card rounded-2xl p-3 flex items-center justify-between">
+              <div className="glass-card rounded-2xl p-2.5 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center border border-white/40 shadow-sm">
-                    <Image src={`https://picsum.photos/seed/${group.id}/100/100`} alt={group.service} width={24} height={24} className="object-contain" />
+                  <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center border border-white/20 shadow-sm">
+                    <Image src={`https://picsum.photos/seed/${group.id}/100/100`} alt={group.service} width={20} height={20} className="object-contain" />
                   </div>
                   <div>
                     <h3 className="text-xs font-bold text-on-surface tracking-tight">{group.service}</h3>
-                    <p className="text-[9px] text-on-surface-variant/50 font-medium">{group.slots.filled} cupos vendidos</p>
+                    <p className="text-[9px] text-on-surface-variant/40 font-medium">{group.slots.filled}/{group.slots.total} vendidos</p>
                   </div>
                 </div>
-                <ChevronRight className="h-4 w-4 text-on-surface-variant/30 group-hover:translate-x-1 transition-all" />
+                <ChevronRight className="h-4 w-4 text-on-surface-variant/20 group-hover:translate-x-1 transition-all" />
               </div>
             </Link>
           ))}
         </section>
 
-        {/* IA & HERRAMIENTAS */}
+        {/* IA & HERRAMIENTAS - GRID ALTA DENSIDAD */}
         <section className="space-y-4">
           {Object.entries(groupedServices).map(([slug, services]) => (
             <div key={slug} className="space-y-2">
               <div className="px-2">
-                <h2 className="text-sm font-bold tracking-tight text-on-surface">
+                <h2 className="text-xs font-bold tracking-tight text-on-surface">
                   {categoryLabels[slug] || slug}
                 </h2>
               </div>
@@ -153,8 +132,8 @@ export default function Home() {
                     <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
                       <div 
                         className={cn(
-                          "relative rounded-2xl p-3 aspect-[4/5] flex flex-col justify-between transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] overflow-hidden border border-white/10",
-                          isWhiteBg ? "glass-card" : "shadow-md"
+                          "relative rounded-2xl p-3 aspect-[4/5] flex flex-col justify-between transition-all duration-500 hover:scale-[1.03] active:scale-[0.98] overflow-hidden border border-white/5",
+                          isWhiteBg ? "glass-card" : "shadow-lg shadow-black/5"
                         )}
                         style={{ backgroundColor: !isWhiteBg ? (service.color || '#4343d5') : undefined }}
                       >
@@ -164,13 +143,13 @@ export default function Home() {
                           <h3 className={cn("text-[10px] font-bold tracking-tight leading-none", brandColor)}>
                             {service.name}
                           </h3>
-                          <p className={cn("text-[7px] font-medium opacity-60 uppercase", brandColor)}>
-                            {service.planName || "PREMIUM"}
+                          <p className={cn("text-[7px] font-medium opacity-50 uppercase", brandColor)}>
+                            {service.planName || "PRO"}
                           </p>
                         </div>
 
                         <div className="relative z-10">
-                          <p className={cn("text-[6px] font-black uppercase tracking-widest opacity-40", brandColor)}>
+                          <p className={cn("text-[6px] font-black uppercase tracking-widest opacity-30", brandColor)}>
                             DESDE
                           </p>
                           <span className={cn("text-xs font-extrabold tracking-tighter", brandColor)}>
@@ -186,22 +165,22 @@ export default function Home() {
           ))}
         </section>
 
-        {/* SUGERENCIAS */}
-        <section className="glass-card rounded-[2rem] p-5 text-center space-y-3">
+        {/* SUGERENCIAS COMPACTAS */}
+        <section className="glass-card rounded-[2rem] p-4 text-center space-y-2">
           <div className="space-y-0.5">
-            <h2 className="text-[8px] font-black text-on-surface/30 uppercase tracking-[0.25em]">¿BUSCAS ALGO MÁS?</h2>
-            <p className="text-[11px] text-on-surface-variant/80 font-medium">Dinos qué IA necesitas y la traeremos.</p>
+            <h2 className="text-[8px] font-black text-on-surface/20 uppercase tracking-[0.3em]">¿BUSCAS ALGO MÁS?</h2>
+            <p className="text-[10px] text-on-surface-variant/60 font-medium">Dinos qué IA necesitas.</p>
           </div>
-          <div className="max-w-[200px] mx-auto space-y-2">
+          <div className="max-w-[180px] mx-auto space-y-2">
             <input 
-              className="glass-input w-full text-xs font-bold text-center h-10" 
+              className="glass-input w-full text-xs font-bold text-center h-9" 
               placeholder="EJ: MIDJOURNEY..."
               value={recommendation}
               onChange={(e) => setRecommendation(e.target.value)}
               onKeyDown={handleRecommendSubmit}
               disabled={isSubmittingRecLocal}
             />
-            <p className="text-[7px] text-on-surface-variant/30 font-black uppercase tracking-widest">PRESIONA ENTER</p>
+            <p className="text-[7px] text-on-surface-variant/20 font-black uppercase tracking-widest">PRESIONA ENTER</p>
           </div>
         </section>
       </main>
