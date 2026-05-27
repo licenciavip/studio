@@ -47,7 +47,7 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
         </h1>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
         {services.map((service) => {
           const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
           const textColor = isWhiteBg ? "text-[#000839]" : "text-white";
@@ -56,7 +56,7 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
             <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
               <div 
                 className={cn(
-                  "relative rounded-[2.5rem] p-6 aspect-[4/5] flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95 shadow-lg overflow-hidden border-none",
+                  "relative rounded-[2rem] p-4 aspect-square flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95 shadow-lg overflow-hidden border-none",
                   isWhiteBg && "shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
                 )}
                 style={{ backgroundColor: service.color || '#4343d5' }}
@@ -64,13 +64,13 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
                 {/* Top part */}
                 <div className="space-y-0.5">
                   <h3 className={cn(
-                    "font-sora font-black text-[1.15rem] uppercase tracking-tighter leading-[1]",
+                    "font-sora font-black text-[0.9rem] uppercase tracking-tighter leading-none",
                     textColor
                   )}>
                     {service.name}
                   </h3>
                   <p className={cn(
-                    "text-[7px] font-black uppercase tracking-tighter opacity-70",
+                    "text-[6px] font-black uppercase tracking-tighter opacity-70",
                     textColor
                   )}>
                     {service.planName || "PREMIUM"}
@@ -80,20 +80,20 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
                 {/* Bottom part */}
                 <div className="space-y-0">
                   <p className={cn(
-                    "text-[7px] font-black uppercase tracking-widest opacity-60",
+                    "text-[6px] font-black uppercase tracking-widest opacity-60",
                     textColor
                   )}>
                     DESDE
                   </p>
                   <div className="flex items-baseline gap-0.5">
                     <span className={cn(
-                      "text-[1.05rem] font-sora font-black tracking-tighter",
+                      "text-[0.85rem] font-sora font-black tracking-tighter",
                       textColor
                     )}>
                       S/{service.pricePerMonth || "15.90"}
                     </span>
                     <span className={cn(
-                      "text-[7px] font-black uppercase opacity-40",
+                      "text-[6px] font-black uppercase opacity-40",
                       textColor
                     )}>
                       /MES
