@@ -11,8 +11,8 @@ import { notFound } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const categoryNames: Record<string, string> = {
-  ia: "Inteligencia Artificial",
-  all: "Todos los Servicios"
+  ia: "INTELIGENCIA ARTIFICIAL",
+  all: "TODOS LOS SERVICIOS"
 };
 
 export default function CategoryPage({ params: paramsPromise }: { params: Promise<{ category: string }> }) {
@@ -28,7 +28,7 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
     return servicesByCategory[category as CategorySlug] || [];
   }, [category]);
 
-  const categoryName = categoryNames[category] || "Servicios";
+  const categoryName = categoryNames[category] || "SERVICIOS";
 
   if (services.length === 0 && category !== 'all') {
     notFound();
@@ -42,7 +42,7 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
             <ArrowLeft className="h-6 w-6 text-on-surface" />
           </Link>
         </Button>
-        <h1 className="text-[9px] font-black tracking-[0.3em] text-on-surface-variant/30 uppercase">
+        <h1 className="text-[10px] font-black tracking-[0.3em] text-on-surface-variant/30 uppercase">
           {categoryName}
         </h1>
       </div>
@@ -87,7 +87,7 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
                   </p>
                   <div className="flex items-baseline gap-0.5">
                     <span className={cn(
-                      "text-[1rem] font-sora font-black tracking-tighter leading-none",
+                      "text-[1.1rem] font-sora font-black tracking-tighter leading-none",
                       textColor
                     )}>
                       S/{service.pricePerMonth || "15.90"}

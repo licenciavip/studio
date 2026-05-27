@@ -10,7 +10,7 @@ import { notFound, useParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const categoryNames: Record<string, string> = {
-  ia: "Inteligencia Artificial",
+  ia: "INTELIGENCIA ARTIFICIAL",
 };
 
 export default function CompartirCategoryPage() {
@@ -22,7 +22,7 @@ export default function CompartirCategoryPage() {
   }
 
   const services = servicesByCategory[category as CategorySlug];
-  const categoryName = categoryNames[category] || "Servicios";
+  const categoryName = categoryNames[category] || "SERVICIOS";
 
   return (
     <div className="min-h-screen bg-[#F5F5F9] -mx-4 -mt-6 pb-24">
@@ -34,7 +34,7 @@ export default function CompartirCategoryPage() {
             </Link>
           </Button>
           <div className="flex-1 text-left">
-            <h1 className="text-[9px] font-black tracking-[0.3em] text-on-surface-variant/30 uppercase">
+            <h1 className="text-[10px] font-black tracking-[0.3em] text-on-surface-variant/30 uppercase">
               {categoryName}
             </h1>
           </div>

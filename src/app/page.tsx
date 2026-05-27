@@ -105,7 +105,7 @@ export default function Home() {
             Object.entries(groupedServices).map(([slug, services]) => (
               <div key={slug} className="space-y-6">
                 <div className="px-2">
-                  <h2 className="text-[9px] font-black uppercase tracking-[0.3em] text-on-surface-variant/30">
+                  <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant/30">
                     {categoryLabels[slug] || slug.toUpperCase()}
                   </h2>
                 </div>
@@ -150,7 +150,7 @@ export default function Home() {
                             </p>
                             <div className="flex items-baseline gap-0.5">
                               <span className={cn(
-                                "text-[1rem] font-sora font-black tracking-tighter leading-none",
+                                "text-[1.1rem] font-sora font-black tracking-tighter leading-none",
                                 textColor
                               )}>
                                 S/{service.pricePerMonth || "15.90"}
@@ -180,7 +180,7 @@ export default function Home() {
         {/* Novedades y Mis Grupos */}
         <section className="mt-14 space-y-10">
           <div className="space-y-4">
-            <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/40 px-2">NOVEDADES</h2>
+            <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant/30 px-2">NOVEDADES</h2>
             <div className="relative overflow-hidden rounded-[2.2rem] border-none bg-white shadow-sm transition-transform active:scale-[0.98]">
               <div className="p-5 flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -202,7 +202,7 @@ export default function Home() {
 
           <div className="space-y-4">
             <div className="flex justify-between items-center px-2">
-              <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/40">MIS GRUPOS</h2>
+              <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant/30">MIS GRUPOS</h2>
               <Link href="/mis-grupos" className="text-[9px] font-black text-primary hover:opacity-70 transition-colors uppercase tracking-widest">VER TODO</Link>
             </div>
             {groups.slice(0, 1).map((group) => (
