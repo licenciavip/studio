@@ -7,9 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, ChevronRight } from "lucide-react";
 import type { CategorySlug } from "@/lib/types";
 import { notFound, useParams } from "next/navigation";
-import Image from "next/image";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 const categoryNames: Record<string, string> = {
   ia: "Inteligencia Artificial",
@@ -27,7 +25,7 @@ export default function CompartirCategoryPage() {
   const categoryName = categoryNames[category] || "Servicios";
 
   return (
-    <div className="min-h-screen bg-[#f8f9ff] -mx-4 -mt-6 pb-24">
+    <div className="min-h-screen bg-background -mx-4 -mt-6 pb-24">
       <div className="container mx-auto py-8 px-6 max-w-5xl">
         <div className="flex items-center mb-10">
           <Button asChild variant="ghost" size="icon" className="rounded-full mr-2 hover:bg-white/50">
@@ -35,40 +33,50 @@ export default function CompartirCategoryPage() {
               <ArrowLeft className="h-6 w-6 text-on-surface" />
             </Link>
           </Button>
-          <div className="flex-1 text-center pr-10">
-            <h1 className="text-[10px] font-black text-on-surface uppercase tracking-[0.2em] opacity-40">
+          <div className="flex-1 text-left">
+            <h1 className="text-2xl font-sora font-black text-on-surface uppercase tracking-tighter">
               {categoryName}
             </h1>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {services.map((service) => {
-            const logo = PlaceHolderImages.find((img) => img.id === service.logoId);
+            const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
             return (
-              <Link href={`/publicar?category=${category}&service=${service.id}`} key={service.id}>
-                <Card className="relative flex items-center h-40 p-6 bg-white rounded-[3.5rem] border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300 hover:shadow-[0_15px_45px_rgb(0,0,0,0.08)] hover:-translate-y-1 group cursor-pointer overflow-hidden">
-                  <div className="flex items-center gap-6 w-full">
-                    {logo && (
-                      <div className="relative w-20 h-20 overflow-hidden rounded-[1.8rem] shadow-sm shrink-0 border border-outline-variant/10">
-                        <Image
-                          src={logo.imageUrl}
-                          alt={logo.description}
-                          fill
-                          className="object-cover"
-                          data-ai-hint={logo.imageHint}
-                        />
-                      </div>
-                    )}
-                    <h2 className="font-sora text-2xl font-black text-[#131b2e] tracking-tighter">
+              <Link href={`/publicar?category=${category}&service=${service.id}`} key={service.id} className="block group">
+                <div 
+                  className={cn(
+                    "relative rounded-[2.2rem] p-5 aspect-[4/5] flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1 active:scale-95 shadow-[0_8px_30px_rgb(0,0,0,0.06)] overflow-hidden border",
+                    isWhiteBg ? "border-outline-variant/40" : "border-white/10"
+                  )}
+                  style={{ backgroundColor: service.color || '#4343d5' }}
+                >
+                  <div className="space-y-1">
+                    <h3 className={cn(
+                      "font-sora font-black text-2xl uppercase tracking-tighter leading-[0.9]",
+                      isWhiteBg ? "text-on-surface" : "text-white"
+                    )}>
                       {service.name}
-                    </h2>
+                    </h3>
+                    <p className={cn(
+                      "text-[9px] font-black uppercase tracking-wider opacity-70",
+                      isWhiteBg ? "text-on-surface-variant" : "text-white"
+                    )}>
+                      {service.planName || "PREMIUM"}
+                    </p>
                   </div>
-                  
-                  <div className="absolute bottom-6 right-10 flex items-center text-[10px] font-black text-primary tracking-[0.2em] uppercase transition-all group-hover:gap-1">
-                    Publicar <ChevronRight className="h-3 w-3 ml-0.5" />
+
+                  <div className="flex items-center justify-between">
+                    <p className={cn(
+                      "text-[9px] font-black uppercase tracking-[0.1em] opacity-80",
+                      isWhiteBg ? "text-primary" : "text-white"
+                    )}>
+                      PUBLICAR
+                    </p>
+                    <ChevronRight className={cn("h-4 w-4", isWhiteBg ? "text-primary" : "text-white")} />
                   </div>
-                </Card>
+                </div>
               </Link>
             );
           })}
