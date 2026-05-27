@@ -1,3 +1,4 @@
+
 import type { CategorySlug, Subscription, OrderStatus, Service, Group, Order } from "@/lib/types";
 
 export const servicesByCategory: Record<CategorySlug, Service[]> = {

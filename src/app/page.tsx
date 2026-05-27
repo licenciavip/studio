@@ -127,7 +127,7 @@ export default function Home() {
                             <div className="absolute top-3 right-3 bg-black/10 backdrop-blur-md px-2 py-0.5 rounded-full">
                               <span className={cn(
                                 "text-[9px] font-bold",
-                                isPerplexity ? "text-[#1adec5]" : "text-white"
+                                isPerplexity ? "text-[#1adec5]" : (isWhiteBg ? "text-secondary-fixed-dim" : "text-white")
                               )}>
                                 {service.discount}
                               </span>
