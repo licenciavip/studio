@@ -34,7 +34,7 @@ export default function CompartirCategoryPage() {
             </Link>
           </Button>
           <div className="flex-1 text-left">
-            <h1 className="text-[10px] font-bold tracking-[0.3em] text-on-surface-variant/40 uppercase">
+            <h1 className="text-[9px] font-black tracking-[0.3em] text-on-surface-variant/30 uppercase">
               {categoryName}
             </h1>
           </div>
@@ -43,45 +43,45 @@ export default function CompartirCategoryPage() {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {services.map((service) => {
             const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
-            const textColorClass = isWhiteBg ? "text-[#000839]" : "text-white";
+            const textColor = isWhiteBg ? "text-[#000839]" : "text-white";
             
             return (
               <Link href={`/publicar?category=${category}&service=${service.id}`} key={service.id} className="block group">
                 <div 
                   className={cn(
-                    "relative rounded-[2.8rem] p-7 aspect-[4/5] flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95 shadow-lg overflow-hidden",
+                    "relative rounded-[3rem] p-6 aspect-[4/5] flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95 shadow-lg overflow-hidden border-none",
                     isWhiteBg && "shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
                   )}
                   style={{ backgroundColor: service.color || '#4343d5' }}
                 >
-                  {/* Top part: Name and Plan */}
+                  {/* Top part */}
                   <div className="space-y-0.5">
                     <h3 className={cn(
-                      "font-sora font-black text-[1.6rem] uppercase tracking-tighter leading-[1]",
-                      textColorClass
+                      "font-sora font-black text-[1.15rem] uppercase tracking-tighter leading-[1]",
+                      textColor
                     )}>
                       {service.name}
                     </h3>
                     <p className={cn(
-                      "text-[9px] font-black uppercase tracking-tight opacity-70",
-                      textColorClass
+                      "text-[7px] font-black uppercase tracking-tighter opacity-70",
+                      textColor
                     )}>
                       {service.planName || "PREMIUM"}
                     </p>
                   </div>
 
-                  {/* Bottom part: Receive action */}
+                  {/* Bottom part: Action */}
                   <div className="space-y-0.5">
                     <p className={cn(
-                      "text-[9px] font-black uppercase tracking-widest opacity-60",
-                      textColorClass
+                      "text-[7px] font-black uppercase tracking-widest opacity-60",
+                      textColor
                     )}>
                       PUBLICAR
                     </p>
                     <div className="flex items-baseline gap-1">
                       <span className={cn(
-                        "text-[1.35rem] font-sora font-black tracking-tighter",
-                        textColorClass
+                        "text-[1rem] font-sora font-black tracking-tighter",
+                        textColor
                       )}>
                         RECIBE &gt;
                       </span>
