@@ -74,10 +74,10 @@ export default function Home() {
         {/* SALUDO Y BOTÓN PRINCIPAL */}
         <section className="space-y-6">
           <div className="px-2">
-            <h1 className="text-[10px] font-black text-on-surface/40 uppercase tracking-[0.3em] mb-1">
+            <h1 className="text-[10px] font-black text-on-surface/40 uppercase tracking-[0.2em] mb-1">
               Bienvenido de nuevo
             </h1>
-            <h2 className="text-3xl font-sora font-extrabold text-on-surface">
+            <h2 className="text-2xl font-bold text-on-surface tracking-tight">
               Hola, {user?.displayName?.split(' ')[0] || 'Deyvid'} 👋
             </h2>
           </div>
@@ -95,7 +95,7 @@ export default function Home() {
         <section className="space-y-4">
           <div className="flex items-center gap-2 px-2">
             <Sparkles className="h-4 w-4 text-primary" />
-            <h2 className="text-lg font-bold text-on-surface">Novedades</h2>
+            <h2 className="text-base font-bold text-on-surface tracking-tight">Novedades</h2>
           </div>
           <div className="glass-card rounded-[2.5rem] p-5 flex items-center justify-between transition-all hover:bg-white/60 group">
             <div className="flex items-center gap-4">
@@ -103,8 +103,8 @@ export default function Home() {
                 <Image src="https://picsum.photos/seed/novedades/200/200" alt="Novedad" width={40} height={40} className="object-cover" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-on-surface">SubShare Mundial 2026</h3>
-                <p className="text-[11px] text-on-surface-variant font-medium">Vive la emoción del fútbol pro</p>
+                <h3 className="text-sm font-bold text-on-surface tracking-tight">SubShare Mundial 2026</h3>
+                <p className="text-[11px] text-on-surface-variant font-medium tracking-tight">Vive la emoción del fútbol pro</p>
               </div>
             </div>
             <div className="w-8 h-8 rounded-full bg-white/50 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
@@ -116,8 +116,8 @@ export default function Home() {
         {/* MIS GRUPOS - COMPACT GLASS */}
         <section className="space-y-4">
           <div className="flex justify-between items-center px-2">
-            <h2 className="text-lg font-bold text-on-surface">Mis Grupos</h2>
-            <Link href="/mis-grupos" className="text-[10px] font-black text-primary hover:opacity-70 transition-colors uppercase tracking-[0.2em]">VER TODO</Link>
+            <h2 className="text-base font-bold text-on-surface tracking-tight">Mis Grupos</h2>
+            <Link href="/mis-grupos" className="text-[9px] font-black text-primary hover:opacity-70 transition-colors uppercase tracking-[0.15em]">VER TODO</Link>
           </div>
           {groups.slice(0, 1).map((group) => (
             <Link href={`/mis-grupos/${group.id}`} key={group.id} className="block group">
@@ -127,8 +127,8 @@ export default function Home() {
                     <Image src={`https://picsum.photos/seed/${group.id}/100/100`} alt={group.service} width={30} height={30} className="object-contain" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold text-on-surface leading-tight">{group.service}</h3>
-                    <p className="text-[11px] text-on-surface-variant font-medium">{group.slots.filled} cupos vendidos</p>
+                    <h3 className="text-sm font-bold text-on-surface leading-tight tracking-tight">{group.service}</h3>
+                    <p className="text-[11px] text-on-surface-variant font-medium tracking-tight">{group.slots.filled} cupos vendidos</p>
                   </div>
                 </div>
                 <div className="w-8 h-8 rounded-full bg-white/50 flex items-center justify-center group-hover:translate-x-1 transition-all">
@@ -144,7 +144,7 @@ export default function Home() {
           {Object.entries(groupedServices).map(([slug, services]) => (
             <div key={slug} className="space-y-5">
               <div className="px-2">
-                <h2 className="text-xl font-sora font-extrabold tracking-tight text-on-surface">
+                <h2 className="text-xl font-bold tracking-tight text-on-surface">
                   {categoryLabels[slug] || slug}
                 </h2>
               </div>
@@ -195,14 +195,14 @@ export default function Home() {
 
                         <div className="relative z-10 space-y-0.5">
                           <p className={cn(
-                            "text-[7px] font-black uppercase tracking-[0.1em]",
+                            "text-[7px] font-bold uppercase tracking-[0.1em]",
                             labelColor
                           )}>
                             DESDE
                           </p>
                           <div className="flex items-baseline gap-0.5">
                             <span className={cn(
-                              "text-sm font-sora font-extrabold tracking-tight",
+                              "text-sm font-bold tracking-tight",
                               brandColor
                             )}>
                               S/ {service.pricePerMonth}
@@ -221,16 +221,16 @@ export default function Home() {
         {/* SUGERENCIAS - LIQUID FORM */}
         <section className="glass-card rounded-[2.5rem] p-8 text-center space-y-6 border border-white/60">
           <div className="space-y-2">
-            <h2 className="text-[10px] font-black text-on-surface leading-tight uppercase tracking-[0.4em]">
+            <h2 className="text-[10px] font-black text-on-surface leading-tight uppercase tracking-[0.3em]">
               ¿BUSCAS ALGO MÁS?
             </h2>
-            <p className="text-[11px] text-on-surface-variant font-medium max-w-[220px] mx-auto leading-relaxed">
+            <p className="text-[11px] text-on-surface-variant font-medium max-w-[220px] mx-auto leading-relaxed tracking-tight">
               Dinos qué IA necesitas y la traeremos para ti de inmediato.
             </p>
           </div>
           <div className="max-w-[260px] mx-auto space-y-4">
             <input 
-              className="w-full bg-white/40 backdrop-blur-md border border-white/40 rounded-2xl h-12 text-sm font-bold shadow-inner focus-visible:ring-2 focus-visible:ring-primary/20 px-6 placeholder:opacity-40 text-center outline-none transition-all" 
+              className="w-full bg-white/40 backdrop-blur-md border border-white/40 rounded-2xl h-12 text-sm font-bold shadow-inner focus-visible:ring-2 focus-visible:ring-primary/20 px-6 placeholder:opacity-40 text-center outline-none transition-all tracking-tight" 
               placeholder="EJ: MIDJOURNEY..."
               value={recommendation}
               onChange={(e) => setRecommendation(e.target.value)}

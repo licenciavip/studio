@@ -134,10 +134,10 @@ export default function BilleteraPage() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'pending': return <span className="bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full text-[9px] font-black uppercase flex items-center gap-1 border border-amber-200">Pendiente</span>;
-      case 'uploaded': return <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full text-[9px] font-black uppercase flex items-center gap-1 border border-blue-200">En revisión</span>;
-      case 'approved': return <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded-full text-[9px] font-black uppercase flex items-center gap-1 border border-green-200">Aprobado</span>;
-      case 'rejected': return <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded-full text-[9px] font-black uppercase flex items-center gap-1 border border-red-200">Rechazado</span>;
+      case 'pending': return <span className="bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full text-[9px] font-black uppercase flex items-center gap-1 border border-amber-200 tracking-wider">Pendiente</span>;
+      case 'uploaded': return <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full text-[9px] font-black uppercase flex items-center gap-1 border border-blue-200 tracking-wider">En revisión</span>;
+      case 'approved': return <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded-full text-[9px] font-black uppercase flex items-center gap-1 border border-green-200 tracking-wider">Aprobado</span>;
+      case 'rejected': return <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded-full text-[9px] font-black uppercase flex items-center gap-1 border border-red-200 tracking-wider">Rechazado</span>;
       default: return null;
     }
   };
@@ -149,23 +149,23 @@ export default function BilleteraPage() {
         <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
           <TrendingUp className="h-[200px] w-[200px]" />
         </div>
-        <div className="relative z-10 space-y-8">
+        <div className="relative z-10 space-y-6">
           <div className="space-y-1">
-            <p className="text-[11px] font-black opacity-60 uppercase tracking-[0.2em]">Saldo Disponible</p>
-            <h1 className="text-5xl font-sora font-extrabold tracking-tighter">
+            <p className="text-[10px] font-bold opacity-60 uppercase tracking-[0.2em]">Saldo Disponible</p>
+            <h1 className="text-5xl font-bold tracking-tightest">
               ${wallet?.balance.toFixed(2) || "0.00"}
             </h1>
           </div>
           <div className="flex gap-4">
             <button 
               onClick={() => setShowRechargeDialog(true)} 
-              className="flex-1 glass-button bg-white text-primary rounded-2xl h-14 font-bold flex items-center justify-center gap-2 hover:bg-white/90"
+              className="flex-1 glass-button bg-white text-primary rounded-2xl h-14 text-sm font-bold flex items-center justify-center gap-2 hover:bg-white/90"
             >
-              <Plus className="h-5 w-5" />
+              <Plus className="h-4 w-4" />
               Recargar
             </button>
-            <button className="flex-1 glass-button bg-white/10 text-white rounded-2xl h-14 font-bold flex items-center justify-center gap-2 hover:bg-white/20">
-              <ArrowUpRight className="h-5 w-5" />
+            <button className="flex-1 glass-button bg-white/10 text-white rounded-2xl h-14 text-sm font-bold flex items-center justify-center gap-2 hover:bg-white/20">
+              <ArrowUpRight className="h-4 w-4" />
               Retirar
             </button>
           </div>
@@ -176,27 +176,27 @@ export default function BilleteraPage() {
       <div className="space-y-6">
         <div className="flex items-center gap-2 px-2">
           <History className="h-4 w-4 text-primary" />
-          <h2 className="text-lg font-bold text-on-surface">Actividad</h2>
+          <h2 className="text-base font-bold text-on-surface tracking-tight">Actividad</h2>
         </div>
         
         <div className="space-y-4">
-          {loadingOrders && <p className="text-center text-on-surface-variant/40 py-8 text-xs font-bold uppercase tracking-widest">Cargando transacciones...</p>}
+          {loadingOrders && <p className="text-center text-on-surface-variant/40 py-8 text-[10px] font-bold uppercase tracking-widest">Cargando transacciones...</p>}
           
           {orders?.map((order) => (
             <div key={order.id} className="glass-card p-4 rounded-3xl flex items-center justify-between hover:bg-white/60 transition-all group">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 flex items-center justify-center rounded-2xl bg-primary/5 text-primary border border-primary/10">
-                  {order.type === 'wallet_recharge' ? <Plus className="h-6 w-6" /> : <TrendingUp className="h-6 w-6" />}
+                <div className="w-11 h-11 flex items-center justify-center rounded-2xl bg-primary/5 text-primary border border-primary/10">
+                  {order.type === 'wallet_recharge' ? <Plus className="h-5 w-5" /> : <TrendingUp className="h-5 w-5" />}
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-on-surface">
+                  <p className="text-sm font-bold text-on-surface tracking-tight">
                     {order.type === 'wallet_recharge' ? 'Recarga de Saldo' : 'Pago de Servicio'}
                   </p>
-                  <p className="text-[10px] text-on-surface-variant/40 font-black tracking-widest uppercase">{order.paymentCode}</p>
+                  <p className="text-[9px] text-on-surface-variant/40 font-bold tracking-wider uppercase">{order.paymentCode}</p>
                 </div>
               </div>
               <div className="text-right space-y-1">
-                <p className={`text-base font-sora font-extrabold ${order.status === 'approved' ? 'text-green-600' : 'text-on-surface'}`}>
+                <p className={`text-base font-bold tracking-tight ${order.status === 'approved' ? 'text-green-600' : 'text-on-surface'}`}>
                   {order.type === 'wallet_recharge' ? '+' : '-'}${order.amountExpected.toFixed(2)}
                 </p>
                 <div className="flex justify-end">
@@ -204,7 +204,7 @@ export default function BilleteraPage() {
                 </div>
                 {order.status === 'pending' && (
                   <button 
-                    className="text-[10px] font-black text-primary hover:underline pt-1" 
+                    className="text-[9px] font-bold text-primary hover:underline pt-1 tracking-tight" 
                     onClick={() => setSelectedOrder(order)}
                   >
                     SUBIR COMPROBANTE
@@ -216,7 +216,7 @@ export default function BilleteraPage() {
           
           {!loadingOrders && orders?.length === 0 && (
             <div className="text-center py-20 glass-card rounded-[3rem] border-dashed border-primary/20 bg-white/20">
-               <p className="text-on-surface-variant/60 font-medium">No hay actividad reciente.</p>
+               <p className="text-on-surface-variant/60 text-sm font-medium tracking-tight">No hay actividad reciente.</p>
             </div>
           )}
         </div>
@@ -226,53 +226,32 @@ export default function BilleteraPage() {
       <Dialog open={showRechargeDialog} onOpenChange={setShowRechargeDialog}>
         <DialogContent className="glass-card rounded-[3rem] max-w-sm p-8 border-white/60">
           <DialogHeader className="space-y-2">
-            <DialogTitle className="text-2xl font-sora font-extrabold text-center">Recargar</DialogTitle>
-            <DialogDescription className="text-center font-medium">Ingresa el monto a recargar en USD</DialogDescription>
+            <DialogTitle className="text-xl font-bold text-center tracking-tight">Recargar</DialogTitle>
+            <DialogDescription className="text-center text-sm font-medium tracking-tight">Ingresa el monto a recargar en USD</DialogDescription>
           </DialogHeader>
           <div className="py-8 space-y-6">
             <div className="relative">
-              <span className="absolute left-6 top-1/2 -translate-y-1/2 font-sora font-extrabold text-3xl text-primary/40">$</span>
+              <span className="absolute left-6 top-1/2 -translate-y-1/2 font-bold text-2xl text-primary/40">$</span>
               <input 
                 type="number" 
                 placeholder="0.00" 
                 value={rechargeAmount} 
                 onChange={(e) => setRechargeAmount(e.target.value)} 
-                className="w-full bg-surface-container rounded-3xl h-20 text-4xl font-sora font-extrabold text-primary pl-12 pr-6 outline-none text-center shadow-inner"
+                className="w-full bg-surface-container rounded-3xl h-20 text-4xl font-bold text-primary pl-12 pr-6 outline-none text-center shadow-inner tracking-tighter"
               />
             </div>
-            <p className="text-[10px] text-center font-black text-on-surface-variant/40 uppercase tracking-widest">Mínimo $5.00</p>
+            <p className="text-[9px] text-center font-bold text-on-surface-variant/40 uppercase tracking-widest">Mínimo $5.00</p>
           </div>
           <DialogFooter className="flex-col gap-3">
             <Button 
-              className="w-full h-14 rounded-2xl text-base font-bold shadow-xl shadow-primary/20" 
+              className="w-full h-14 rounded-2xl text-sm font-bold shadow-xl shadow-primary/20 tracking-tight" 
               onClick={handleCreateRechargeOrder} 
               disabled={isCreatingOrder || !rechargeAmount || parseFloat(rechargeAmount) < 5}
             >
               Generar Orden de Pago
             </Button>
-            <Button variant="ghost" className="w-full rounded-2xl font-bold" onClick={() => setShowRechargeDialog(false)}>Cancelar</Button>
+            <Button variant="ghost" className="w-full rounded-2xl text-sm font-bold tracking-tight" onClick={() => setShowRechargeDialog(false)}>Cancelar</Button>
           </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* INSTRUCTIONS DIALOG */}
-      <Dialog open={!!newOrderInstructions} onOpenChange={() => setNewOrderInstructions(null)}>
-        <DialogContent className="glass-card rounded-[3rem] max-w-sm p-0 overflow-hidden border-none shadow-2xl">
-          <div className="bg-primary p-8 text-white text-center space-y-1">
-            <h2 className="text-2xl font-sora font-extrabold">Transferencia BCP</h2>
-            <p className="text-white/60 text-xs font-bold uppercase tracking-widest">Sigue estos pasos</p>
-          </div>
-          <div className="p-8 space-y-6">
-            <div className="bg-primary/5 p-6 rounded-[2rem] border border-primary/10 space-y-4">
-              <div className="flex justify-between items-center"><span className="text-xs font-bold text-on-surface-variant">Monto:</span><span className="font-sora font-extrabold text-xl text-primary">${newOrderInstructions?.amountExpected.toFixed(2)}</span></div>
-              <div className="flex justify-between items-center"><span className="text-xs font-bold text-on-surface-variant">Código:</span><span className="font-mono font-black text-primary">{newOrderInstructions?.paymentCode}</span></div>
-              <div className="pt-4 space-y-2">
-                <span className="text-[10px] uppercase font-black text-on-surface-variant/40 tracking-widest">Número de Cuenta:</span>
-                <div className="bg-white p-4 border border-primary/10 rounded-2xl text-sm font-mono font-bold text-center select-all">{BCP_ACCOUNT.number}</div>
-              </div>
-            </div>
-            <Button className="w-full rounded-2xl h-14 font-bold shadow-lg" onClick={() => setNewOrderInstructions(null)}>He copiado los datos</Button>
-          </div>
         </DialogContent>
       </Dialog>
     </div>

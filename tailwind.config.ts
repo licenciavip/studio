@@ -1,4 +1,3 @@
-
 import type {Config} from 'tailwindcss';
 
 const config: Config = {
@@ -18,7 +17,23 @@ const config: Config = {
     },
     extend: {
       fontFamily: {
-        sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Text"', '"SF Pro Display"', '"Helvetica Neue"', 'Arial', 'sans-serif'],
+        sans: [
+          '-apple-system', 
+          'BlinkMacSystemFont', 
+          '"SF Pro Display"', 
+          '"SF Pro Text"', 
+          '"Inter"', 
+          '"Geist"', 
+          '"Helvetica Neue"', 
+          'Arial', 
+          'sans-serif'
+        ],
+        sora: ['var(--font-sora)', 'sans-serif'],
+      },
+      letterSpacing: {
+        tightest: '-0.05em',
+        tighter: '-0.03em',
+        tight: '-0.015em',
       },
       colors: {
         background: '#faf8ff',
