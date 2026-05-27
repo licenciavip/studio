@@ -72,7 +72,7 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-[#F5F5F9]">
       <main className="flex-grow w-full max-w-[1280px] mx-auto pb-24 px-4">
-        {/* SALUDO Y BOTÓN LANKEAR */}
+        {/* SALUDO Y BOTÓN COMPARTIR */}
         <section className="pt-4 space-y-4">
           <div className="px-1">
             <h1 className="text-base font-medium text-on-surface">
@@ -83,7 +83,7 @@ export default function Home() {
           <Link href="/compartir" className="block">
             <div className="w-full h-14 bg-gradient-to-r from-[#4343d5] to-[#f4511e] rounded-xl flex items-center justify-center gap-3 shadow-lg active:scale-[0.98] transition-all">
               <PlusCircle className="h-6 w-6 text-white" />
-              <span className="text-white font-bold text-lg tracking-tight">Lankear una suscripción</span>
+              <span className="text-white font-bold text-lg tracking-tight">Compartir una suscripción</span>
             </div>
           </Link>
         </section>
