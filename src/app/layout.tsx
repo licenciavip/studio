@@ -9,7 +9,7 @@ import { FirebaseClientProvider } from "@/firebase";
 import { FirebaseErrorListener } from "@/components/FirebaseErrorListener";
 
 export const metadata: Metadata = {
-  title: "SubShare",
+  title: "Poolera",
   description: "Gestión de suscripciones compartidas. Fintech Colaborativa.",
   icons: {
     icon: '/favicon.svg',
@@ -28,12 +28,12 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..0&display=block" />
       </head>
-      <body className={cn("min-h-screen bg-background text-foreground font-sans antialiased pb-24")}>
+      <body className={cn("min-h-screen bg-background text-foreground font-sans antialiased pb-24")} suppressHydrationWarning>
         <FirebaseClientProvider>
           <FirebaseErrorListener />
           <div className="relative flex flex-col min-h-screen">
             <Header />
-            <main className="flex-1 max-w-[1280px] mx-auto w-full px-4 md:px-margin-desktop py-6">
+            <main className="flex-1 max-w-xl mx-auto w-full px-4 pt-16 pb-8">
               {children}
             </main>
             <BottomNav />
