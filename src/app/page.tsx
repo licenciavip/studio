@@ -115,7 +115,7 @@ export default function Home() {
 
         {/* Novedades Section */}
         <section className="mt-6 px-4 space-y-3">
-          <h2 className="text-sm font-sora font-bold text-on-surface">Novedades</h2>
+          <h2 className="text-[11px] font-black uppercase tracking-widest text-on-surface-variant px-1 opacity-70">Novedades</h2>
           <div className="relative overflow-hidden rounded-2xl border border-outline-variant/30 bg-white shadow-sm transition-transform active:scale-[0.98]">
             <div className="p-4 flex items-center justify-between">
               <div className="flex items-center gap-4">
@@ -137,9 +137,9 @@ export default function Home() {
 
         {/* Mis Grupos Section */}
         <section className="mt-6 px-4 space-y-3">
-          <div className="flex justify-between items-center">
-            <h2 className="text-sm font-sora font-bold text-on-surface">Mis grupos</h2>
-            <Link href="/mis-grupos" className="text-[10px] font-bold text-on-surface-variant hover:text-primary transition-colors uppercase">Ver más</Link>
+          <div className="flex justify-between items-center px-1">
+            <h2 className="text-[11px] font-black uppercase tracking-widest text-on-surface-variant opacity-70">Mis grupos</h2>
+            <Link href="/mis-grupos" className="text-[10px] font-bold text-on-surface-variant hover:text-primary transition-colors uppercase tracking-tight">Ver más</Link>
           </div>
           <div className="space-y-2">
             {groups.slice(0, 1).map((group) => (
@@ -161,20 +161,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Mis Suscripciones Section */}
-        <section className="mt-6 px-4 space-y-3">
-          <h2 className="text-sm font-sora font-bold text-on-surface">Mis suscripciones</h2>
-          <Link href="/mis-ordenes" className="block">
-            <div className="p-4 rounded-2xl border border-primary/20 bg-primary/5 flex items-center justify-between group active:scale-[0.98] transition-transform">
-              <div>
-                <h3 className="text-sm font-bold text-primary leading-tight">Todavía no tienes suscripciones activas</h3>
-                <p className="text-[10px] text-primary/70">¡Únete a un grupo y ahorra hasta 50%!</p>
-              </div>
-              <ChevronRight className="h-5 w-5 text-primary transition-transform group-hover:translate-x-1" />
-            </div>
-          </Link>
-        </section>
-
         {/* Galería de Servicios Agrupados */}
         <section className="mt-8 px-4 space-y-8">
           <div className="flex gap-1.5 overflow-x-auto no-scrollbar py-1">
@@ -185,7 +171,7 @@ export default function Home() {
                 size="sm"
                 onClick={() => setSelectedCategory(cat.slug)}
                 className={cn(
-                  "rounded-full px-3 whitespace-nowrap active:scale-95 transition-transform h-7 text-[11px] font-bold shadow-sm",
+                  "rounded-full px-4 whitespace-nowrap active:scale-95 transition-transform h-8 text-[11px] font-black uppercase tracking-wider shadow-sm",
                   selectedCategory === cat.slug ? "bg-primary text-white" : "bg-white text-on-surface-variant border border-outline-variant/30"
                 )}
               >
@@ -196,62 +182,56 @@ export default function Home() {
 
           {hasResults ? (
             Object.entries(groupedServices).map(([slug, services]) => (
-              <div key={slug} className="space-y-4">
+              <div key={slug} className="space-y-5">
                 <div className="flex justify-between items-center px-1">
-                  <h2 className="text-xs font-sora font-black uppercase tracking-widest text-on-surface-variant">
+                  <h2 className="text-[11px] font-black uppercase tracking-[0.15em] text-on-surface-variant">
                     {categoryLabels[slug] || slug}
                   </h2>
                 </div>
                 
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                   {services.map((service) => {
                     const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
                     return (
                       <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
                         <div 
                           className={cn(
-                            "relative rounded-3xl p-4 aspect-square flex flex-col justify-between transition-transform active:scale-95 shadow-sm overflow-hidden border",
+                            "relative rounded-[2rem] p-5 aspect-[4/5] flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1 active:scale-95 shadow-md overflow-hidden border",
                             isWhiteBg ? "border-outline-variant/30" : "border-white/10"
                           )}
                           style={{ backgroundColor: service.color || '#4343d5' }}
                         >
-                          {service.discount && (
-                            <div className="absolute top-3 right-3 bg-[#10a37f] text-white text-[8px] font-black px-1.5 py-0.5 rounded-md shadow-lg border border-white/20">
-                              {service.discount}
-                            </div>
-                          )}
-
-                          <div className="space-y-0.5">
+                          <div className="space-y-1">
                             <h3 className={cn(
-                              "font-sora font-black text-lg uppercase tracking-tighter leading-none truncate",
+                              "font-sora font-black text-2xl uppercase tracking-tighter leading-[0.9] truncate",
                               isWhiteBg ? "text-on-surface" : "text-white"
                             )}>
                               {service.name}
                             </h3>
                             <p className={cn(
-                              "text-[10px] font-medium opacity-80 truncate",
+                              "text-[10px] font-bold opacity-80 truncate uppercase tracking-tight",
                               isWhiteBg ? "text-on-surface-variant" : "text-white"
                             )}>
                               {service.planName || service.name}
                             </p>
                           </div>
 
-                          <div className="space-y-0.5">
+                          <div className="space-y-1">
                             <p className={cn(
-                              "text-[10px] font-medium opacity-70",
+                              "text-[10px] font-black uppercase opacity-60 tracking-wider",
                               isWhiteBg ? "text-on-surface-variant" : "text-white"
                             )}>
                               Desde
                             </p>
                             <div className="flex items-baseline gap-0.5">
                               <span className={cn(
-                                "text-lg font-sora font-black",
+                                "text-xl font-sora font-black tracking-tighter",
                                 isWhiteBg ? "text-on-surface" : "text-white"
                               )}>
                                 S/ {service.pricePerMonth || "15.90"}
                               </span>
                               <span className={cn(
-                                "text-[10px] font-medium opacity-50",
+                                "text-[10px] font-bold opacity-50",
                                 isWhiteBg ? "text-on-surface-variant" : "text-white"
                               )}>
                                 /mes
@@ -266,32 +246,32 @@ export default function Home() {
               </div>
             ))
           ) : (
-            <div className="py-12 text-center text-muted-foreground text-[10px] italic border border-dashed rounded-xl border-outline-variant/50">
+            <div className="py-12 text-center text-muted-foreground text-[10px] italic border border-dashed rounded-[2rem] border-outline-variant/50">
               No se encontraron servicios de IA que coincidan con tu búsqueda.
             </div>
           )}
         </section>
 
         {/* Sección de Recomendaciones */}
-        <section className="mt-16 px-4 py-8 text-center space-y-4 bg-surface-container/30 rounded-[2rem] mx-4 border border-outline-variant/10">
+        <section className="mt-16 px-4 py-10 text-center space-y-4 bg-surface-container/30 rounded-[2.5rem] mx-4 border border-outline-variant/10">
           <div className="space-y-1">
-            <h2 className="text-lg font-sora font-black text-on-surface leading-tight">
+            <h2 className="text-xl font-sora font-black text-on-surface leading-tight uppercase tracking-tighter">
               ¿Buscas otra IA?
             </h2>
-            <p className="text-[10px] text-on-surface-variant font-medium max-w-[200px] mx-auto">
+            <p className="text-[10px] text-on-surface-variant font-bold uppercase tracking-wide max-w-[200px] mx-auto opacity-70">
               Cuéntanos qué herramienta necesitas y la conseguiremos para ti.
             </p>
           </div>
           <div className="max-w-xs mx-auto">
             <Input 
-              className="w-full bg-white border-outline-variant rounded-2xl h-10 text-[10px] shadow-sm focus-visible:ring-primary px-5" 
+              className="w-full bg-white border-outline-variant rounded-2xl h-11 text-[11px] font-bold shadow-sm focus-visible:ring-primary px-6 placeholder:font-medium" 
               placeholder="Ej: Midjourney, Adobe Firefly..."
               value={recommendation}
               onChange={(e) => setRecommendation(e.target.value)}
               onKeyDown={handleRecommendSubmit}
               disabled={isSubmittingRec}
             />
-            <p className="mt-2 text-[9px] text-muted-foreground font-medium italic">Presiona Enter para enviar</p>
+            <p className="mt-3 text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">Presiona Enter para enviar</p>
           </div>
         </section>
       </main>
