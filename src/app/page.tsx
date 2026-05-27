@@ -11,16 +11,16 @@ import { cn } from "@/lib/utils";
 import { useAuth, useFirestore } from "@/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useToast } from "@/hooks/use-toast";
-import { ChevronRight, Plus, Info } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import type { CategorySlug, Service } from "@/lib/types";
 
 const categories = [
-  { label: "Todo", slug: "all" },
+  { label: "TODO", slug: "all" },
   { label: "IA", slug: "ia" },
 ];
 
 const categoryLabels: Record<string, string> = {
-  ia: "Inteligencia Artificial",
+  ia: "INTELIGENCIA ARTIFICIAL",
 };
 
 export default function Home() {
@@ -115,22 +115,22 @@ export default function Home() {
 
         {/* Novedades Section */}
         <section className="mt-6 px-4 space-y-3">
-          <h2 className="text-[11px] font-black uppercase tracking-widest text-on-surface-variant px-1 opacity-70">Novedades</h2>
-          <div className="relative overflow-hidden rounded-2xl border border-outline-variant/30 bg-white shadow-sm transition-transform active:scale-[0.98]">
+          <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant px-1 opacity-60">NOVEDADES</h2>
+          <div className="relative overflow-hidden rounded-[1.5rem] border border-outline-variant/30 bg-white shadow-sm transition-transform active:scale-[0.98]">
             <div className="p-4 flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center">
-                   <Image src="https://picsum.photos/seed/novedades/100/100" alt="Lank Mundial" width={32} height={32} className="rounded-md" />
+                <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center">
+                   <Image src="https://picsum.photos/seed/novedades/100/100" alt="Novedad" width={32} height={32} className="rounded-md" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-on-surface leading-tight">Lank Mundial 2026</h3>
-                  <p className="text-[10px] text-on-surface-variant">Prode, resultados, trivia y más</p>
+                  <h3 className="text-sm font-black text-on-surface leading-tight uppercase">Lank Mundial 2026</h3>
+                  <p className="text-[10px] font-medium text-on-surface-variant">Prode, resultados y más</p>
                 </div>
               </div>
               <ChevronRight className="h-4 w-4 text-outline-variant" />
             </div>
-            <div className="bg-[#ff4d00] py-1.5 px-4">
-              <p className="text-[9px] font-black text-white uppercase tracking-wider">El mejor lugar para vivir el mundial</p>
+            <div className="bg-[#ff4d00] py-1 px-4">
+              <p className="text-[8px] font-black text-white uppercase tracking-widest">El mejor lugar para vivir el mundial</p>
             </div>
           </div>
         </section>
@@ -138,20 +138,20 @@ export default function Home() {
         {/* Mis Grupos Section */}
         <section className="mt-6 px-4 space-y-3">
           <div className="flex justify-between items-center px-1">
-            <h2 className="text-[11px] font-black uppercase tracking-widest text-on-surface-variant opacity-70">Mis grupos</h2>
-            <Link href="/mis-grupos" className="text-[10px] font-bold text-on-surface-variant hover:text-primary transition-colors uppercase tracking-tight">Ver más</Link>
+            <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant opacity-60">MIS GRUPOS</h2>
+            <Link href="/mis-grupos" className="text-[9px] font-black text-primary hover:opacity-70 transition-colors uppercase tracking-widest">VER TODO</Link>
           </div>
           <div className="space-y-2">
             {groups.slice(0, 1).map((group) => (
               <Link href={`/mis-grupos/${group.id}`} key={group.id} className="block">
-                <div className="p-4 flex items-center justify-between rounded-2xl border border-outline-variant/30 bg-white shadow-sm active:scale-[0.98] transition-transform">
+                <div className="p-4 flex items-center justify-between rounded-[1.5rem] border border-outline-variant/30 bg-white shadow-sm active:scale-[0.98] transition-transform">
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center">
                       <Image src={`https://picsum.photos/seed/${group.id}/100/100`} alt={group.service} width={24} height={24} className="object-contain" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-bold text-on-surface leading-tight">{group.service}</h3>
-                      <p className="text-[10px] text-on-surface-variant">{group.slots.filled} cupos compartidos</p>
+                      <h3 className="text-sm font-black text-on-surface leading-tight uppercase">{group.service}</h3>
+                      <p className="text-[10px] font-medium text-on-surface-variant">{group.slots.filled} cupos compartidos</p>
                     </div>
                   </div>
                   <ChevronRight className="h-4 w-4 text-outline-variant" />
@@ -161,9 +161,9 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Galería de Servicios Agrupados */}
+        {/* Galería de Servicios IA */}
         <section className="mt-8 px-4 space-y-8">
-          <div className="flex gap-1.5 overflow-x-auto no-scrollbar py-1">
+          <div className="flex gap-2 overflow-x-auto no-scrollbar py-1">
             {categories.map((cat) => (
               <Button 
                 key={cat.slug}
@@ -171,7 +171,7 @@ export default function Home() {
                 size="sm"
                 onClick={() => setSelectedCategory(cat.slug)}
                 className={cn(
-                  "rounded-full px-4 whitespace-nowrap active:scale-95 transition-transform h-8 text-[11px] font-black uppercase tracking-wider shadow-sm",
+                  "rounded-full px-5 whitespace-nowrap active:scale-95 transition-transform h-8 text-[10px] font-black uppercase tracking-widest shadow-sm",
                   selectedCategory === cat.slug ? "bg-primary text-white" : "bg-white text-on-surface-variant border border-outline-variant/30"
                 )}
               >
@@ -182,59 +182,59 @@ export default function Home() {
 
           {hasResults ? (
             Object.entries(groupedServices).map(([slug, services]) => (
-              <div key={slug} className="space-y-5">
+              <div key={slug} className="space-y-4">
                 <div className="flex justify-between items-center px-1">
-                  <h2 className="text-[11px] font-black uppercase tracking-[0.15em] text-on-surface-variant">
-                    {categoryLabels[slug] || slug}
+                  <h2 className="text-[10px] font-black uppercase tracking-[0.25em] text-on-surface-variant opacity-50">
+                    {categoryLabels[slug] || slug.toUpperCase()}
                   </h2>
                 </div>
                 
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5">
                   {services.map((service) => {
                     const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
                     return (
                       <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
                         <div 
                           className={cn(
-                            "relative rounded-[2rem] p-5 aspect-[4/5] flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1 active:scale-95 shadow-md overflow-hidden border",
-                            isWhiteBg ? "border-outline-variant/30" : "border-white/10"
+                            "relative rounded-[2.2rem] p-5 aspect-[4/5] flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1 active:scale-95 shadow-[0_8px_30px_rgb(0,0,0,0.06)] overflow-hidden border",
+                            isWhiteBg ? "border-outline-variant/40" : "border-white/10"
                           )}
                           style={{ backgroundColor: service.color || '#4343d5' }}
                         >
                           <div className="space-y-1">
                             <h3 className={cn(
-                              "font-sora font-black text-2xl uppercase tracking-tighter leading-[0.9] truncate",
+                              "font-sora font-black text-2xl uppercase tracking-tighter leading-[0.9]",
                               isWhiteBg ? "text-on-surface" : "text-white"
                             )}>
                               {service.name}
                             </h3>
                             <p className={cn(
-                              "text-[10px] font-bold opacity-80 truncate uppercase tracking-tight",
+                              "text-[9px] font-black uppercase tracking-wider opacity-70",
                               isWhiteBg ? "text-on-surface-variant" : "text-white"
                             )}>
-                              {service.planName || service.name}
+                              {service.planName || "PREMIUM"}
                             </p>
                           </div>
 
-                          <div className="space-y-1">
+                          <div className="space-y-0.5">
                             <p className={cn(
-                              "text-[10px] font-black uppercase opacity-60 tracking-wider",
+                              "text-[9px] font-black uppercase tracking-[0.1em] opacity-60",
                               isWhiteBg ? "text-on-surface-variant" : "text-white"
                             )}>
-                              Desde
+                              DESDE
                             </p>
                             <div className="flex items-baseline gap-0.5">
                               <span className={cn(
-                                "text-xl font-sora font-black tracking-tighter",
+                                "text-[1.35rem] font-sora font-black tracking-tighter",
                                 isWhiteBg ? "text-on-surface" : "text-white"
                               )}>
                                 S/ {service.pricePerMonth || "15.90"}
                               </span>
                               <span className={cn(
-                                "text-[10px] font-bold opacity-50",
+                                "text-[9px] font-black opacity-40",
                                 isWhiteBg ? "text-on-surface-variant" : "text-white"
                               )}>
-                                /mes
+                                /MES
                               </span>
                             </div>
                           </div>
@@ -246,32 +246,32 @@ export default function Home() {
               </div>
             ))
           ) : (
-            <div className="py-12 text-center text-muted-foreground text-[10px] italic border border-dashed rounded-[2rem] border-outline-variant/50">
-              No se encontraron servicios de IA que coincidan con tu búsqueda.
+            <div className="py-12 text-center text-muted-foreground text-[10px] font-bold uppercase tracking-widest border-2 border-dashed rounded-[2rem] border-outline-variant/30">
+              SIN RESULTADOS
             </div>
           )}
         </section>
 
         {/* Sección de Recomendaciones */}
-        <section className="mt-16 px-4 py-10 text-center space-y-4 bg-surface-container/30 rounded-[2.5rem] mx-4 border border-outline-variant/10">
-          <div className="space-y-1">
+        <section className="mt-12 px-4 py-12 text-center space-y-6 bg-surface-container/30 rounded-[2.5rem] mx-4 border border-outline-variant/10 shadow-inner">
+          <div className="space-y-1.5">
             <h2 className="text-xl font-sora font-black text-on-surface leading-tight uppercase tracking-tighter">
-              ¿Buscas otra IA?
+              ¿BUSCAS OTRA Herramienta?
             </h2>
-            <p className="text-[10px] text-on-surface-variant font-bold uppercase tracking-wide max-w-[200px] mx-auto opacity-70">
-              Cuéntanos qué herramienta necesitas y la conseguiremos para ti.
+            <p className="text-[10px] text-on-surface-variant font-black uppercase tracking-widest max-w-[220px] mx-auto opacity-50">
+              Dinos qué IA necesitas y la traeremos para ti.
             </p>
           </div>
           <div className="max-w-xs mx-auto">
             <Input 
-              className="w-full bg-white border-outline-variant rounded-2xl h-11 text-[11px] font-bold shadow-sm focus-visible:ring-primary px-6 placeholder:font-medium" 
-              placeholder="Ej: Midjourney, Adobe Firefly..."
+              className="w-full bg-white border-outline-variant rounded-2xl h-11 text-[11px] font-bold shadow-sm focus-visible:ring-primary px-6 placeholder:font-black placeholder:opacity-20 text-center" 
+              placeholder="EJ: MIDJOURNEY, FIREFLY..."
               value={recommendation}
               onChange={(e) => setRecommendation(e.target.value)}
               onKeyDown={handleRecommendSubmit}
               disabled={isSubmittingRec}
             />
-            <p className="mt-3 text-[9px] text-muted-foreground font-black uppercase tracking-widest opacity-40">Presiona Enter para enviar</p>
+            <p className="mt-4 text-[8px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-30">PRESIONA ENTER PARA ENVIAR</p>
           </div>
         </section>
       </main>
