@@ -61,13 +61,13 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
               >
                 <div className="space-y-1">
                   <h3 className={cn(
-                    "font-sora font-black text-2xl uppercase tracking-tighter leading-[0.9]",
+                    "font-sora font-black text-xl uppercase tracking-tighter leading-[0.9]",
                     isWhiteBg ? "text-on-surface" : "text-white"
                   )}>
                     {service.name}
                   </h3>
                   <p className={cn(
-                    "text-[9px] font-black uppercase tracking-wider opacity-70",
+                    "text-[8px] font-black uppercase tracking-wider opacity-70",
                     isWhiteBg ? "text-on-surface-variant" : "text-white"
                   )}>
                     {service.planName || "PREMIUM"}
@@ -76,20 +76,20 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
 
                 <div className="space-y-0.5">
                   <p className={cn(
-                    "text-[9px] font-black uppercase tracking-[0.1em] opacity-60",
+                    "text-[8px] font-black uppercase tracking-[0.1em] opacity-60",
                     isWhiteBg ? "text-on-surface-variant" : "text-white"
                   )}>
                     DESDE
                   </p>
                   <div className="flex items-baseline gap-1">
                     <span className={cn(
-                      "text-[1.35rem] font-sora font-black tracking-tighter",
+                      "text-[1.25rem] font-sora font-black tracking-tighter",
                       isWhiteBg ? "text-on-surface" : "text-white"
                     )}>
                       S/ {service.pricePerMonth || "15.90"}
                     </span>
                     <span className={cn(
-                      "text-[9px] font-black opacity-40",
+                      "text-[8px] font-black opacity-40",
                       isWhiteBg ? "text-on-surface-variant" : "text-white"
                     )}>
                       /MES

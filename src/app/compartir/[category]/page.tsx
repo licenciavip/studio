@@ -54,13 +54,13 @@ export default function CompartirCategoryPage() {
                 >
                   <div className="space-y-1">
                     <h3 className={cn(
-                      "font-sora font-black text-2xl uppercase tracking-tighter leading-[0.9]",
+                      "font-sora font-black text-xl uppercase tracking-tighter leading-[0.9]",
                       isWhiteBg ? "text-on-surface" : "text-white"
                     )}>
                       {service.name}
                     </h3>
                     <p className={cn(
-                      "text-[9px] font-black uppercase tracking-wider opacity-70",
+                      "text-[8px] font-black uppercase tracking-wider opacity-70",
                       isWhiteBg ? "text-on-surface-variant" : "text-white"
                     )}>
                       {service.planName || "PREMIUM"}
@@ -69,7 +69,7 @@ export default function CompartirCategoryPage() {
 
                   <div className="space-y-0.5">
                     <p className={cn(
-                      "text-[10px] font-black uppercase tracking-[0.1em] text-right",
+                      "text-[8px] font-black uppercase tracking-[0.1em] text-right",
                       isWhiteBg ? "text-primary" : "text-white"
                     )}>
                       PUBLICAR &gt;
