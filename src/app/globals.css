@@ -29,13 +29,14 @@
 
 @layer base {
   * {
-    @apply border-border/40;
+    @apply border-border/20;
   }
   body {
-    @apply bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary;
-    background: radial-gradient(circle at 20% 0%, rgba(225, 224, 255, 0.4), transparent 600px),
-                radial-gradient(circle at 80% 0%, rgba(234, 237, 255, 0.5), transparent 600px),
-                linear-gradient(to bottom, #fcfbff, #f4f6ff);
+    @apply bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary overflow-x-hidden;
+    background: 
+      radial-gradient(circle at 10% 20%, rgba(225, 224, 255, 0.5), transparent 800px),
+      radial-gradient(circle at 90% 80%, rgba(234, 237, 255, 0.6), transparent 800px),
+      #fcfbff;
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Geist", "Helvetica Neue", sans-serif;
     letter-spacing: -0.015em;
     line-height: 1.4;
@@ -47,15 +48,18 @@
 }
 
 .glass-card {
-  @apply bg-white/40 backdrop-blur-3xl border border-white/30 shadow-[0_8px_32px_rgba(0,0,0,0.03)];
+  @apply bg-white/30 backdrop-blur-3xl border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.02)];
+  box-shadow: 
+    0 4px 24px -1px rgba(0, 0, 0, 0.02),
+    0 0 1px rgba(0, 0, 0, 0.05);
 }
 
 .glass-button {
-  @apply backdrop-blur-2xl border border-white/30 transition-all duration-200 hover:scale-[1.01] active:scale-[0.98] shadow-[0_4px_16px_rgba(0,0,0,0.04)];
+  @apply backdrop-blur-2xl border border-white/40 transition-all duration-300 hover:scale-[1.01] active:scale-[0.97] shadow-[0_4px_12px_rgba(0,0,0,0.03)];
 }
 
 .vision-dock {
-  @apply bg-white/30 backdrop-blur-3xl border border-white/40 shadow-[0_20px_50px_rgba(0,0,0,0.08)];
+  @apply bg-white/20 backdrop-blur-3xl border border-white/30 shadow-[0_20px_50px_rgba(0,0,0,0.05)];
 }
 
 .pb-safe {
@@ -68,4 +72,8 @@
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+input::placeholder {
+  @apply opacity-30 font-medium;
 }
