@@ -26,8 +26,11 @@ export default function Home() {
   const { toast } = useToast();
   const user = auth?.currentUser;
 
+  // Solo mostramos categorías que tengan al menos un servicio
   const groupedServices = useMemo(() => {
-    return servicesByCategory;
+    return Object.fromEntries(
+      Object.entries(servicesByCategory).filter(([_, services]) => services.length > 0)
+    ) as Record<CategorySlug, Service[]>;
   }, []);
 
   const handleRecommendSubmit = async (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -134,7 +137,7 @@ export default function Home() {
           ))}
         </section>
 
-        {/* IA & HERRAMIENTAS */}
+        {/* IA & HERRAMIENTAS - SOLO CATEGORÍAS CON CONTENIDO */}
         <section className="mt-10 space-y-6">
           {hasResults ? (
             Object.entries(groupedServices).map(([slug, services]) => (
@@ -210,11 +213,7 @@ export default function Home() {
                 </div>
               </div>
             ))
-          ) : (
-            <div className="py-12 text-center text-on-surface-variant/20 text-[8px] font-normal uppercase tracking-[0.3em] border-2 border-dashed rounded-3xl border-outline-variant/30">
-              SIN RESULTADOS
-            </div>
-          )}
+          ) : null}
         </section>
 
         {/* SUGERENCIAS */}
