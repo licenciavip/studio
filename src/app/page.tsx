@@ -14,17 +14,11 @@ import { useToast } from "@/hooks/use-toast";
 import { ChevronRight } from "lucide-react";
 import type { CategorySlug, Service } from "@/lib/types";
 
-const categories = [
-  { label: "TODO", slug: "all" },
-  { label: "IA", slug: "ia" },
-];
-
 const categoryLabels: Record<string, string> = {
   ia: "INTELIGENCIA ARTIFICIAL",
 };
 
 export default function Home() {
-  const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [recommendation, setRecommendation] = useState("");
   const [isSubmittingRecLocal, setIsSubmittingRecLocal] = useState(false);
@@ -37,22 +31,14 @@ export default function Home() {
     const result: Record<string, Service[]> = {};
     const query = searchQuery.toLowerCase();
 
-    if (selectedCategory === "all") {
-      Object.entries(servicesByCategory).forEach(([slug, services]) => {
-        const filtered = services.filter(s => s.name.toLowerCase().includes(query));
-        if (filtered.length > 0) {
-          result[slug] = filtered;
-        }
-      });
-    } else {
-      const services = servicesByCategory[selectedCategory as CategorySlug] || [];
+    Object.entries(servicesByCategory).forEach(([slug, services]) => {
       const filtered = services.filter(s => s.name.toLowerCase().includes(query));
       if (filtered.length > 0) {
-        result[selectedCategory] = filtered;
+        result[slug] = filtered;
       }
-    }
+    });
     return result;
-  }, [selectedCategory, searchQuery]);
+  }, [searchQuery]);
 
   const handleRecommendSubmit = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && recommendation.trim()) {
@@ -133,7 +119,7 @@ export default function Home() {
                       <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
                         <div 
                           className={cn(
-                            "relative rounded-[3rem] p-6 aspect-[4/5] flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95 shadow-lg overflow-hidden border-none",
+                            "relative rounded-[2.5rem] p-6 aspect-[4/5] flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95 shadow-lg overflow-hidden border-none",
                             isWhiteBg && "shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
                           )}
                           style={{ backgroundColor: service.color || '#4343d5' }}

@@ -56,7 +56,7 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
             <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
               <div 
                 className={cn(
-                  "relative rounded-[3rem] p-6 aspect-[4/5] flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95 shadow-lg overflow-hidden border-none",
+                  "relative rounded-[2.5rem] p-6 aspect-[4/5] flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95 shadow-lg overflow-hidden border-none",
                   isWhiteBg && "shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
                 )}
                 style={{ backgroundColor: service.color || '#4343d5' }}
