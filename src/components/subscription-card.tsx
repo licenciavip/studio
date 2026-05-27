@@ -1,53 +1,61 @@
 
+'use client';
+
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { Subscription } from "@/lib/types";
-import { Star } from "lucide-react";
+import { Star, ChevronRight, Zap } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type SubscriptionCardProps = {
   subscription: Subscription;
 };
 
 export default function SubscriptionCard({ subscription }: SubscriptionCardProps) {
-
   return (
-    <Card className="flex flex-col overflow-hidden transition-transform duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg">
-      <CardHeader className="flex-row items-center gap-4 p-4">
-        <Avatar className="h-12 w-12 border-2 border-primary">
-          <AvatarImage src={subscription.avatarUrl} alt={`Avatar de ${subscription.host}`} />
-          <AvatarFallback>{subscription.host.charAt(0)}</AvatarFallback>
-        </Avatar>
-        <div className="flex-1">
-          <CardTitle className="text-lg font-semibold">Grupo de {subscription.host}</CardTitle>
-          <div className="flex items-center gap-1 text-sm text-muted-foreground">
-            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-            <span>{subscription.rating.toFixed(1)} / 5</span>
+    <div className="glass-card rounded-[2rem] overflow-hidden p-4 flex flex-col justify-between group hover:bg-white/50 transition-all duration-500 active:scale-[0.98] border-white/40">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <Avatar className="h-9 w-9 rounded-xl border border-primary/10 shadow-sm">
+            <AvatarImage src={subscription.avatarUrl} alt={`Avatar de ${subscription.host}`} className="object-cover" />
+            <AvatarFallback className="bg-primary/5 text-primary text-[10px] font-black">{subscription.host.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <div className="space-y-0.5">
+            <h3 className="text-[12px] font-bold text-on-surface tracking-tight leading-none">
+              {subscription.host}
+            </h3>
+            <div className="flex items-center gap-1">
+              <Star className="h-2.5 w-2.5 fill-yellow-400 text-yellow-400" />
+              <span className="text-[9px] font-bold text-on-surface-variant/40">{subscription.rating.toFixed(1)}</span>
+            </div>
           </div>
         </div>
-      </CardHeader>
+        
+        <div className="bg-primary/5 rounded-full px-2 py-0.5 border border-primary/10">
+          <span className="text-[8px] font-black text-primary uppercase tracking-tighter">
+            {subscription.availableSlots} CUPOS
+          </span>
+        </div>
+      </div>
       
-      <CardContent className="flex-grow p-4 pt-0">
-          <div className="text-2xl font-bold">
-            {subscription.currency} {subscription.price.toFixed(2)}
-            <span className="text-sm font-normal text-muted-foreground"> / mes</span>
-          </div>
-      </CardContent>
+      <div className="mb-4 px-1">
+        <div className="flex items-baseline gap-1">
+          <span className="text-[10px] font-bold text-on-surface-variant/40">{subscription.currency}</span>
+          <span className="text-2xl font-black text-on-surface tracking-tighter">{subscription.price.toFixed(2)}</span>
+          <span className="text-[9px] font-bold text-on-surface-variant/30 uppercase tracking-widest ml-1">/ mes</span>
+        </div>
+        <p className="text-[8px] font-medium text-on-surface-variant/40 mt-1 uppercase tracking-tighter">
+          Validación BCP instantánea incluida
+        </p>
+      </div>
 
-      <CardFooter className="p-4 bg-muted/50">
-        <Button asChild className="w-full">
-          <Link href={`/checkout/${subscription.id}`}>Unirme</Link>
-        </Button>
-      </CardFooter>
-    </Card>
+      <Link href={`/checkout/${subscription.id}`} className="block">
+        <div className="w-full glass-button bg-primary text-white h-10 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-primary/10 flex items-center justify-center gap-2 group-hover:scale-[1.02] transition-all">
+          <Zap className="h-3 w-3" />
+          Unirme
+        </div>
+      </Link>
+    </div>
   );
 }
