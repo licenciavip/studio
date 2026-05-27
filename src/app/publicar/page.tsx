@@ -3,22 +3,14 @@
 
 import { useState, useMemo, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Info, Loader2, ArrowLeft, TrendingUp, Wallet } from "lucide-react";
+import { Info, Loader2, ArrowLeft, TrendingUp, Wallet, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { servicesByCategory } from "@/lib/data";
+import { cn } from "@/lib/utils";
 
 const PLATFORM_FEE = 0.1; // 10% de comisión de SubShare
 
@@ -69,88 +61,118 @@ function PublicarForm() {
   const serviceName = service ? service.name : 'tu Suscripción';
 
   return (
-    <div className="container mx-auto max-w-lg py-6 px-4">
-      <div className="flex items-center mb-6">
-        <Button asChild variant="ghost" size="icon" className="rounded-full mr-2">
+    <div className="max-w-md mx-auto pt-6 pb-24 px-4 space-y-4">
+      {/* Mini Header Compacto */}
+      <div className="flex items-center gap-3 px-1 mb-2">
+        <Button asChild variant="ghost" size="icon" className="h-8 w-8 rounded-full bg-white/40 hover:bg-white/60 active:scale-95 transition-all">
           <Link href={`/compartir/${categoryParam || ''}`}>
-              <ArrowLeft className="h-5 w-5" />
+            <ArrowLeft className="h-4 w-4 text-primary" />
           </Link>
         </Button>
-        <h1 className="text-xl font-sora font-black tracking-tighter">Comparte {serviceName}</h1>
+        <div className="space-y-0">
+          <h1 className="text-lg font-extrabold tracking-tight text-on-surface">Compartir</h1>
+          <p className="text-[9px] font-bold text-on-surface-variant/30 uppercase tracking-[0.2em]">{serviceName}</p>
+        </div>
       </div>
 
-      <form onSubmit={handleSubmit}>
-        <Card className="rounded-[2.5rem] border-none shadow-[0_10px_40px_-10px_rgb(0,0,0,0.06)] overflow-hidden bg-white">
-          <CardHeader className="bg-primary/5 border-b border-outline-variant/10 p-8">
-            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-4">
-              <Wallet className="h-6 w-6" />
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Main Configuration Card */}
+        <div className="glass-card rounded-[2.2rem] p-6 border-white/40 space-y-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/5 shadow-sm">
+              <Wallet className="h-5 w-5" />
             </div>
-            <CardTitle className="text-lg font-black tracking-tighter">Configura tu Ganancia</CardTitle>
-            <CardDescription className="text-xs font-medium">Define cuánto dinero quieres que entre a tu cuenta por cada cupo.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-8 p-8 pt-8">
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="net-earnings" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">¿Cuánto quieres recibir por cupo? (S/)</Label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 font-black text-primary text-xl">S/</span>
-                  <Input
-                    id="net-earnings"
-                    type="number"
-                    placeholder="15.00"
-                    step="0.01"
-                    min="1"
-                    required
-                    value={netoDeseado}
-                    onChange={(e) => setNetoDeseado(e.target.value)}
-                    className="rounded-2xl h-14 pl-12 text-xl font-black text-primary border-outline-variant/30 focus-visible:ring-primary shadow-sm"
-                  />
-                </div>
-              </div>
+            <div className="space-y-0.5">
+              <h3 className="text-sm font-bold text-on-surface tracking-tight">Tu Ganancia</h3>
+              <p className="text-[10px] text-on-surface-variant/40 font-medium uppercase tracking-tighter">Define lo que quieres recibir</p>
+            </div>
+          </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="slots" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Cupos disponibles para vender</Label>
-                <Input 
-                  id="slots" 
+          <div className="space-y-5">
+            <div className="space-y-2">
+              <Label className="text-[9px] font-black text-on-surface-variant/20 uppercase tracking-[0.25em] px-1">Monto por cupo (S/)</Label>
+              <div className="relative group">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-primary/40 text-sm">S/</span>
+                <input
+                  type="number"
+                  placeholder="0.00"
+                  step="0.01"
+                  min="1"
+                  required
+                  value={netoDeseado}
+                  onChange={(e) => setNetoDeseado(e.target.value)}
+                  className="glass-input w-full h-12 pl-10 text-lg font-extrabold text-primary tracking-tighter transition-all focus:ring-2 focus:ring-primary/20"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-[9px] font-black text-on-surface-variant/20 uppercase tracking-[0.25em] px-1">Cupos disponibles</Label>
+              <div className="flex items-center gap-2">
+                 <input 
                   type="number" 
                   value={slots} 
                   onChange={(e) => setSlots(e.target.value)}
                   min="1" 
                   max="10"
                   required 
-                  className="rounded-2xl h-12 text-sm font-bold border-outline-variant/30" 
+                  className="glass-input flex-1 h-10 text-sm font-bold text-center" 
                 />
-              </div>
-            </div>
-
-            <div className="bg-secondary/5 p-6 rounded-[2rem] border border-secondary/10 space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Precio Final al Público</span>
-                <span className="text-sm font-black text-on-surface">S/ {calculations.precioVenta.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between items-center border-t border-secondary/10 pt-4">
-                <div className="flex items-center gap-2">
-                   <TrendingUp className="h-4 w-4 text-secondary" />
-                   <span className="text-[11px] font-black text-on-surface uppercase tracking-tighter">Tus Ingresos Mensuales</span>
+                <div className="h-10 px-4 flex items-center justify-center bg-white/40 rounded-2xl border border-white/60 text-[10px] font-bold text-on-surface-variant/50 uppercase">
+                  Máx. 10
                 </div>
-                <span className="text-2xl font-sora font-black text-secondary">S/ {calculations.totalMes.toFixed(2)}</span>
               </div>
             </div>
+          </div>
+        </div>
 
-            <Alert className="bg-primary/5 border-none rounded-2xl py-4 px-5">
-              <Info className="h-4 w-4 text-primary" />
-              <AlertDescription className="text-[10px] font-bold text-primary/70 leading-relaxed">
-                SubShare gestiona el cobro a tus miembros y asegura que recibas tu dinero puntualmente cada mes.
-              </AlertDescription>
-            </Alert>
-          </CardContent>
-          <CardFooter className="p-8 pt-0">
-            <Button type="submit" className="w-full rounded-2xl h-14 text-sm font-black uppercase tracking-widest shadow-xl shadow-primary/20" disabled={isSubmitting}>
-              {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-              {isSubmitting ? "Publicando..." : "Lanzar mi Grupo"}
-            </Button>
-          </CardFooter>
-        </Card>
+        {/* Results / Financial Panel */}
+        <div className="glass-card rounded-[2.2rem] p-6 bg-gradient-to-br from-white/20 to-primary/5 border-white/40 space-y-4">
+          <div className="flex justify-between items-center px-1">
+            <span className="text-[10px] font-bold text-on-surface-variant/40 uppercase tracking-widest">Precio al Público</span>
+            <span className="text-sm font-bold text-on-surface">S/ {calculations.precioVenta.toFixed(2)}</span>
+          </div>
+          
+          <div className="h-px bg-on-surface/5 w-full" />
+          
+          <div className="flex justify-between items-center px-1">
+            <div className="flex items-center gap-2 text-secondary">
+               <TrendingUp className="h-4 w-4" />
+               <span className="text-[11px] font-black uppercase tracking-tighter">Tu ingreso mensual</span>
+            </div>
+            <div className="text-right">
+              <span className="text-2xl font-extrabold text-secondary tracking-tightest">S/ {calculations.totalMes.toFixed(2)}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Info Tip visionOS Style */}
+        <div className="glass-card p-4 rounded-3xl bg-primary/5 border-primary/5 flex items-start gap-3">
+          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+            <Sparkles className="h-4 w-4" />
+          </div>
+          <div className="space-y-1">
+            <p className="text-[10px] font-bold text-primary uppercase tracking-tight">Gestión Poolera</p>
+            <p className="text-[11px] font-medium text-on-surface-variant/70 leading-relaxed">
+              Nos encargamos del cobro y validación. Recibe tu dinero directamente en tu Wallet cada mes.
+            </p>
+          </div>
+        </div>
+
+        {/* Submit Button */}
+        <div className="pt-2">
+          <button 
+            type="submit" 
+            disabled={isSubmitting || !netoDeseado}
+            className={cn(
+              "w-full glass-button bg-primary text-white h-12 rounded-[1.5rem] text-[11px] font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 flex items-center justify-center gap-2",
+              (isSubmitting || !netoDeseado) && "opacity-50 grayscale pointer-events-none"
+            )}
+          >
+            {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+            {isSubmitting ? "Lanzando..." : "Lanzar mi Grupo"}
+          </button>
+        </div>
       </form>
     </div>
   );
@@ -158,7 +180,11 @@ function PublicarForm() {
 
 export default function PublicarPage() {
     return (
-        <Suspense fallback={<div className="flex h-screen items-center justify-center">Cargando...</div>}>
+        <Suspense fallback={
+          <div className="flex h-[50vh] items-center justify-center">
+            <Loader2 className="h-6 w-6 text-primary/20 animate-spin" />
+          </div>
+        }>
             <PublicarForm />
         </Suspense>
     )
