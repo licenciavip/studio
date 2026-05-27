@@ -15,8 +15,8 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <div className="fixed bottom-5 left-0 right-0 z-[200] px-8 pointer-events-none">
-      <nav className="max-w-[240px] mx-auto vision-dock flex justify-around items-center h-11 rounded-full px-1 pointer-events-auto">
+    <div className="fixed bottom-4 left-0 right-0 z-[200] px-8 pointer-events-none">
+      <nav className="max-w-[220px] mx-auto vision-dock flex justify-around items-center h-10 rounded-full px-1 pointer-events-auto">
         {navItems.map((item) => {
           const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
           
@@ -34,7 +34,7 @@ export function BottomNav() {
                 isActive ? "scale-105" : "scale-100"
               )}>
                 <span 
-                  className="material-symbols-outlined text-[18px]" 
+                  className="material-symbols-outlined text-[16px]" 
                   style={{ fontVariationSettings: isActive ? "'FILL' 1, 'wght' 400" : "'FILL' 0, 'wght' 300" }}
                 >
                   {item.icon}
@@ -42,7 +42,7 @@ export function BottomNav() {
               </div>
               
               {isActive && (
-                <div className="absolute -bottom-1.5 w-0.5 h-0.5 bg-primary rounded-full shadow-[0_0_8px_rgba(67,67,213,1)]" />
+                <div className="absolute -bottom-1 w-0.5 h-0.5 bg-primary rounded-full shadow-[0_0_8px_rgba(67,67,213,0.8)]" />
               )}
             </Link>
           );

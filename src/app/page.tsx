@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { useAuth, useFirestore } from "@/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useToast } from "@/hooks/use-toast";
-import { ChevronRight, PlusCircle, Sparkles } from "lucide-react";
+import { ChevronRight, PlusCircle } from "lucide-react";
 import type { CategorySlug, Service } from "@/lib/types";
 
 const categoryLabels: Record<string, string> = {
@@ -67,44 +67,44 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen pt-12">
+    <div className="flex flex-col min-h-screen pt-10">
       <main className="flex-grow w-full max-w-xl mx-auto pb-24 px-4 space-y-4">
         
         {/* SALUDO COMPACTO */}
-        <section className="space-y-2.5">
+        <section className="space-y-2">
           <div className="px-1">
-            <h1 className="text-[9px] font-black text-on-surface/30 uppercase tracking-[0.2em] mb-0.5">
+            <h1 className="text-[9px] font-black text-on-surface/20 uppercase tracking-[0.3em] mb-0.5">
               Bienvenido
             </h1>
-            <h2 className="text-xl font-extrabold text-on-surface tracking-tighter">
+            <h2 className="text-xl font-extrabold text-on-surface tracking-tightest">
               Hola, {user?.displayName?.split(' ')[0] || 'Deyvid'} 👋
             </h2>
           </div>
           
           <Link href="/compartir" className="block group">
-            <div className="relative overflow-hidden w-full h-11 bg-gradient-to-r from-primary via-primary/90 to-primary/80 rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-primary/10 hover:scale-[1.01] active:scale-[0.98] transition-all">
+            <div className="relative overflow-hidden w-full h-10 bg-primary rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-primary/20 hover:scale-[1.01] active:scale-[0.98] transition-all">
               <PlusCircle className="h-4 w-4 text-white" />
-              <span className="text-white font-bold text-xs tracking-tight">Compartir suscripción</span>
+              <span className="text-white font-bold text-[11px] tracking-tight">Compartir suscripción</span>
             </div>
           </Link>
         </section>
 
         {/* MIS GRUPOS COMPACTOS */}
-        <section className="space-y-1.5">
+        <section className="space-y-1">
           <div className="flex justify-between items-center px-2">
-            <h2 className="text-[9px] font-bold text-on-surface/30 tracking-tight uppercase">Mis Grupos</h2>
-            <Link href="/mis-grupos" className="text-[8px] font-black text-primary/40 uppercase tracking-widest">VER TODO</Link>
+            <h2 className="text-[9px] font-black text-on-surface/20 tracking-widest uppercase">Mis Grupos</h2>
+            <Link href="/mis-grupos" className="text-[8px] font-black text-primary/40 uppercase tracking-[0.2em]">VER TODO</Link>
           </div>
           {groups.slice(0, 1).map((group) => (
             <Link href={`/mis-grupos/${group.id}`} key={group.id} className="block group">
-              <div className="glass-card rounded-2xl p-2.5 flex items-center justify-between">
+              <div className="glass-card rounded-[1.8rem] p-2 flex items-center justify-between transition-all active:scale-[0.98]">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center border border-white/20 shadow-sm">
-                    <Image src={`https://picsum.photos/seed/${group.id}/100/100`} alt={group.service} width={20} height={20} className="object-contain" />
+                  <div className="w-8 h-8 rounded-xl bg-white/40 flex items-center justify-center border border-white/60 shadow-sm">
+                    <Image src={`https://picsum.photos/seed/${group.id}/100/100`} alt={group.service} width={18} height={18} className="object-contain" />
                   </div>
                   <div>
-                    <h3 className="text-xs font-bold text-on-surface tracking-tight">{group.service}</h3>
-                    <p className="text-[9px] text-on-surface-variant/40 font-medium">{group.slots.filled}/{group.slots.total} vendidos</p>
+                    <h3 className="text-[11px] font-bold text-on-surface tracking-tight leading-none">{group.service}</h3>
+                    <p className="text-[8px] text-on-surface-variant/30 font-bold uppercase tracking-tighter mt-0.5">{group.slots.filled}/{group.slots.total} vendidos</p>
                   </div>
                 </div>
                 <ChevronRight className="h-4 w-4 text-on-surface-variant/20 group-hover:translate-x-1 transition-all" />
@@ -114,11 +114,11 @@ export default function Home() {
         </section>
 
         {/* IA & HERRAMIENTAS - GRID ALTA DENSIDAD */}
-        <section className="space-y-4">
+        <section className="space-y-3">
           {Object.entries(groupedServices).map(([slug, services]) => (
             <div key={slug} className="space-y-2">
               <div className="px-2">
-                <h2 className="text-xs font-bold tracking-tight text-on-surface">
+                <h2 className="text-[10px] font-black text-on-surface tracking-widest uppercase opacity-20">
                   {categoryLabels[slug] || slug}
                 </h2>
               </div>
@@ -132,27 +132,27 @@ export default function Home() {
                     <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
                       <div 
                         className={cn(
-                          "relative rounded-2xl p-3 aspect-[4/5] flex flex-col justify-between transition-all duration-500 hover:scale-[1.03] active:scale-[0.98] overflow-hidden border border-white/5",
+                          "relative rounded-[2rem] p-3 aspect-[4/5] flex flex-col justify-between transition-all duration-500 hover:scale-[1.03] active:scale-[0.98] overflow-hidden border border-white/5",
                           isWhiteBg ? "glass-card" : "shadow-lg shadow-black/5"
                         )}
                         style={{ backgroundColor: !isWhiteBg ? (service.color || '#4343d5') : undefined }}
                       >
-                        {!isWhiteBg && <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />}
+                        {!isWhiteBg && <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />}
                         
                         <div className="relative z-10 space-y-0.5">
-                          <h3 className={cn("text-[10px] font-bold tracking-tight leading-none", brandColor)}>
+                          <h3 className={cn("text-[10px] font-extrabold tracking-tight leading-none truncate", brandColor)}>
                             {service.name}
                           </h3>
-                          <p className={cn("text-[7px] font-medium opacity-50 uppercase", brandColor)}>
+                          <p className={cn("text-[7px] font-black opacity-50 uppercase tracking-widest", brandColor)}>
                             {service.planName || "PRO"}
                           </p>
                         </div>
 
                         <div className="relative z-10">
-                          <p className={cn("text-[6px] font-black uppercase tracking-widest opacity-30", brandColor)}>
+                          <p className={cn("text-[6px] font-black uppercase tracking-[0.2em] opacity-30", brandColor)}>
                             DESDE
                           </p>
-                          <span className={cn("text-xs font-extrabold tracking-tighter", brandColor)}>
+                          <span className={cn("text-xs font-black tracking-tighter", brandColor)}>
                             S/ {service.pricePerMonth}
                           </span>
                         </div>
@@ -166,21 +166,20 @@ export default function Home() {
         </section>
 
         {/* SUGERENCIAS COMPACTAS */}
-        <section className="glass-card rounded-[2rem] p-4 text-center space-y-2">
+        <section className="glass-card rounded-[2.5rem] p-6 text-center space-y-3">
           <div className="space-y-0.5">
-            <h2 className="text-[8px] font-black text-on-surface/20 uppercase tracking-[0.3em]">¿BUSCAS ALGO MÁS?</h2>
-            <p className="text-[10px] text-on-surface-variant/60 font-medium">Dinos qué IA necesitas.</p>
+            <h2 className="text-[8px] font-black text-on-surface/10 uppercase tracking-[0.4em]">Propón una IA</h2>
+            <p className="text-[10px] text-on-surface-variant/40 font-bold tracking-tight">Dinos qué servicio premium necesitas.</p>
           </div>
           <div className="max-w-[180px] mx-auto space-y-2">
             <input 
-              className="glass-input w-full text-xs font-bold text-center h-9" 
+              className="glass-input w-full text-xs font-bold text-center h-9 placeholder:text-[9px]" 
               placeholder="EJ: MIDJOURNEY..."
               value={recommendation}
               onChange={(e) => setRecommendation(e.target.value)}
               onKeyDown={handleRecommendSubmit}
               disabled={isSubmittingRecLocal}
             />
-            <p className="text-[7px] text-on-surface-variant/20 font-black uppercase tracking-widest">PRESIONA ENTER</p>
           </div>
         </section>
       </main>

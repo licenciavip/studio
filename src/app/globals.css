@@ -23,7 +23,7 @@
     --border: 224 31.8% 81%;
     --input: 224 31.8% 91%;
     --ring: 240 65% 55%;
-    --radius: 1.5rem;
+    --radius: 2rem;
   }
 }
 
@@ -34,31 +34,31 @@
   body {
     @apply bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary overflow-x-hidden;
     background: 
-      radial-gradient(circle at 50% -20%, rgba(120, 119, 255, 0.15), transparent 80%),
-      radial-gradient(circle at 0% 100%, rgba(255, 121, 198, 0.05), transparent 50%),
+      radial-gradient(circle at 50% -20%, rgba(120, 119, 255, 0.12), transparent 70%),
+      radial-gradient(circle at 0% 100%, rgba(255, 121, 198, 0.03), transparent 40%),
       #fcfbff;
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Geist", "Helvetica Neue", sans-serif;
     letter-spacing: -0.022em;
-    line-height: 1.4;
+    line-height: 1.45;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-sans tracking-tighter;
+    @apply font-sans tracking-tightest;
   }
 }
 
 .glass-card {
-  @apply bg-white/20 backdrop-blur-3xl border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.02)];
+  @apply bg-white/30 backdrop-blur-3xl border border-white/40 shadow-[0_4px_24px_rgba(0,0,0,0.02)];
   box-shadow: 
-    0 4px 24px -1px rgba(0, 0, 0, 0.02),
-    0 0 1px rgba(255, 255, 255, 0.6) inset;
+    0 4px 24px -1px rgba(0, 0, 0, 0.01),
+    0 0 1px rgba(255, 255, 255, 0.7) inset;
 }
 
 .glass-button {
-  @apply backdrop-blur-2xl border border-white/40 transition-all duration-300 hover:scale-[1.01] active:scale-[0.97] shadow-sm;
+  @apply bg-white/20 backdrop-blur-2xl border border-white/40 transition-all duration-300 hover:scale-[1.01] active:scale-[0.97] shadow-sm;
 }
 
 .vision-dock {
-  @apply bg-white/20 backdrop-blur-3xl border border-white/30 shadow-[0_20px_50px_rgba(0,0,0,0.03)];
+  @apply bg-white/20 backdrop-blur-3xl border border-white/30 shadow-[0_15px_40px_rgba(0,0,0,0.04)];
 }
 
 .glass-input {
@@ -75,4 +75,8 @@
 
 input::placeholder {
   @apply opacity-30 font-medium;
+}
+
+.apple-list-row {
+  @apply flex items-center justify-between py-2 px-1 border-b border-on-surface/5 last:border-0 transition-all active:bg-black/[0.02];
 }

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { use, useMemo } from "react";
@@ -22,7 +21,9 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
   const services = useMemo(() => {
     if (category === 'all') {
       let all: any[] = [];
-      Object.values(servicesByCategory).forEach(list => all = [...all, ...list]);
+      Object.values(servicesByCategory).forEach(list => {
+        all = [...all, ...list];
+      });
       return all;
     }
     return servicesByCategory[category as CategorySlug] || [];
@@ -35,70 +36,73 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
   }
 
   return (
-    <div className="container mx-auto py-4 px-4 sm:px-6 lg:px-8 bg-[#F5F5F9] min-h-screen">
-      <div className="flex items-center gap-3 mb-6">
-        <Button asChild variant="ghost" className="rounded-full h-10 w-10 p-0 hover:bg-white transition-all active:scale-95">
-          <Link href="/">
-            <ArrowLeft className="h-5 w-5 text-on-surface" />
+    <div className="max-w-xl mx-auto pt-10 pb-24 px-4 space-y-4">
+      <div className="flex items-center gap-3 mb-2 px-1">
+        <Button asChild variant="ghost" size="icon" className="h-8 w-8 rounded-full bg-white/40 hover:bg-white/60 active:scale-95 transition-all">
+          <Link href="/explorar">
+            <ArrowLeft className="h-4 w-4 text-primary" />
           </Link>
         </Button>
-        <h1 className="text-xl font-bold tracking-tight text-on-surface">
-          {categoryName}
-        </h1>
+        <div className="space-y-0">
+          <h1 className="text-lg font-extrabold tracking-tight text-on-surface">{categoryName}</h1>
+          <p className="text-[9px] font-bold text-on-surface-variant/30 uppercase tracking-[0.2em]">Selecciona un servicio</p>
+        </div>
       </div>
 
-      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
+      <div className="grid grid-cols-3 gap-2">
         {services.map((service) => {
           const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
           const isPerplexity = service.id === 'perplexity';
           const isGemini = service.id === 'gemini';
           
           const brandColor = isPerplexity ? "text-[#1adec5]" : (isGemini ? "text-primary" : (isWhiteBg ? "text-primary" : "text-white"));
-          const planColor = isWhiteBg ? "text-on-surface-variant/60" : "text-white/70";
-          const labelColor = isWhiteBg ? "text-on-surface-variant/40" : "text-white/60";
+          const planColor = isWhiteBg ? "text-on-surface-variant/50" : "text-white/70";
+          const labelColor = isWhiteBg ? "text-on-surface-variant/30" : "text-white/40";
           
           return (
             <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
               <div 
                 className={cn(
-                  "relative rounded-2xl p-3 aspect-[4/5] flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 active:scale-95 shadow-sm overflow-hidden border-none",
-                  isWhiteBg && "shadow-[0_2px_10px_rgb(0,0,0,0.04)]"
+                  "relative rounded-[2.2rem] p-3 aspect-[4/5] flex flex-col justify-between transition-all duration-500 hover:scale-[1.03] active:scale-95 shadow-sm overflow-hidden border-none",
+                  isWhiteBg ? "glass-card" : "shadow-lg shadow-black/5"
                 )}
-                style={{ backgroundColor: service.color || '#4343d5' }}
+                style={{ backgroundColor: !isWhiteBg ? (service.color || '#4343d5') : undefined }}
               >
+                {!isWhiteBg && <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />}
+                
                 {service.discount && (
-                  <div className="absolute top-2 right-2 bg-black/10 backdrop-blur-md w-6 h-6 rounded-full flex items-center justify-center z-10 border border-white/10">
-                    <span className={cn("text-[7px] font-bold", brandColor)}>
+                  <div className="absolute top-2.5 right-2.5 bg-black/10 backdrop-blur-md w-6 h-6 rounded-full flex items-center justify-center z-10 border border-white/10">
+                    <span className={cn("text-[7px] font-black", brandColor)}>
                       {service.discount}
                     </span>
                   </div>
                 )}
 
-                <div className="space-y-0.5">
+                <div className="relative z-10 space-y-0.5">
                   <h3 className={cn(
-                    "text-[11px] font-bold tracking-tight leading-none pr-4 truncate",
+                    "text-[10px] font-extrabold tracking-tight leading-none pr-4 truncate",
                     brandColor
                   )}>
                     {service.name}
                   </h3>
                   <p className={cn(
-                    "text-[8px] font-medium opacity-80",
+                    "text-[8px] font-bold opacity-80 uppercase tracking-tighter",
                     planColor
                   )}>
                     {service.planName || "PREMIUM"}
                   </p>
                 </div>
 
-                <div className="space-y-0.5">
+                <div className="relative z-10 space-y-0.5">
                   <p className={cn(
-                    "text-[7px] font-bold uppercase tracking-widest",
+                    "text-[7px] font-black uppercase tracking-widest",
                     labelColor
                   )}>
                     DESDE
                   </p>
                   <div className="flex items-baseline gap-0.5">
                     <span className={cn(
-                      "text-sm font-bold tracking-tight",
+                      "text-sm font-extrabold tracking-tight",
                       brandColor
                     )}>
                       S/ {service.pricePerMonth}
@@ -110,6 +114,12 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
           );
         })}
       </div>
+
+      {services.length === 0 && (
+        <div className="text-center py-20 glass-card rounded-[2.5rem] border-dashed border-primary/10">
+          <p className="text-[10px] font-black uppercase tracking-widest opacity-20">Próximamente más servicios</p>
+        </div>
+      )}
     </div>
   );
 }
