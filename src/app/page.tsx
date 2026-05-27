@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useMemo } from "react";
@@ -104,7 +105,7 @@ export default function Home() {
                   </h2>
                 </div>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                   {services.map((service) => {
                     const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
                     const isPerplexity = service.id === 'perplexity';
@@ -116,32 +117,32 @@ export default function Home() {
                       <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
                         <div 
                           className={cn(
-                            "relative rounded-[2rem] p-7 aspect-[16/10] flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95 shadow-lg overflow-hidden border-none",
+                            "relative rounded-[2rem] p-5 aspect-[4/5] flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95 shadow-lg overflow-hidden border-none",
                             isWhiteBg && "shadow-[0_8px_30px_rgb(0,0,0,0.06)]"
                           )}
                           style={{ backgroundColor: service.color || '#4343d5' }}
                         >
                           {/* Discount Badge */}
                           {service.discount && (
-                            <div className="absolute top-4 right-4 bg-black/5 backdrop-blur-md px-3 py-1 rounded-full">
+                            <div className="absolute top-3 right-3 bg-black/10 backdrop-blur-md px-2 py-0.5 rounded-full">
                               <span className={cn(
-                                "text-[10px] font-bold",
-                                "text-[#40f5d0]"
+                                "text-[9px] font-bold",
+                                isPerplexity ? "text-[#1adec5]" : "text-white"
                               )}>
                                 {service.discount}
                               </span>
                             </div>
                           )}
 
-                          <div className="space-y-1">
+                          <div className="space-y-0.5">
                             <h3 className={cn(
-                              "text-3xl font-bold tracking-tight leading-none",
+                              "text-xl font-bold tracking-tight leading-none",
                               brandColor
                             )}>
                               {service.name}
                             </h3>
                             <p className={cn(
-                              "text-sm font-medium",
+                              "text-[10px] font-medium opacity-80",
                               planColor
                             )}>
                               {service.planName || "PREMIUM"}
@@ -151,21 +152,21 @@ export default function Home() {
                           <div className="space-y-1">
                             {service.id !== 'gemini' && (
                               <p className={cn(
-                                "text-[10px] font-medium opacity-60 uppercase tracking-wider",
+                                "text-[8px] font-medium opacity-60 uppercase tracking-wider",
                                 isWhiteBg ? "text-on-surface-variant" : "text-white"
                               )}>
                                 Planes desde
                               </p>
                             )}
-                            <div className="flex items-baseline gap-1">
+                            <div className="flex items-baseline gap-0.5">
                               <span className={cn(
-                                "text-3xl font-bold tracking-tight",
+                                "text-xl font-bold tracking-tight",
                                 brandColor
                               )}>
                                 S/ {service.pricePerMonth}
                               </span>
                               <span className={cn(
-                                "text-sm font-medium opacity-40",
+                                "text-[10px] font-medium opacity-40",
                                 isWhiteBg ? "text-on-surface" : "text-white"
                               )}>
                                 /mes
