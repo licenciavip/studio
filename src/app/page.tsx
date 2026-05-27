@@ -95,12 +95,12 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mt-10 space-y-12">
+        <section className="mt-10 space-y-8">
           {hasResults ? (
             Object.entries(groupedServices).map(([slug, services]) => (
               <div key={slug} className="space-y-6">
                 <div className="px-2">
-                  <h2 className="text-2xl font-bold tracking-tight text-on-surface">
+                  <h2 className="text-3xl font-bold tracking-tight text-on-surface">
                     {categoryLabels[slug] || slug}
                   </h2>
                 </div>
@@ -109,9 +109,12 @@ export default function Home() {
                   {services.map((service) => {
                     const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
                     const isPerplexity = service.id === 'perplexity';
+                    const isGemini = service.id === 'gemini';
+                    
+                    const brandColor = isPerplexity ? "text-[#1adec5]" : (isGemini ? "text-primary" : "text-white");
                     const textColor = isWhiteBg ? "text-on-surface" : "text-white";
-                    const brandColor = isPerplexity ? "text-[#1adec5]" : (isWhiteBg ? "text-primary" : "text-white");
-                    const planColor = isWhiteBg ? "text-on-surface-variant" : "text-white/80";
+                    const planColor = isWhiteBg ? "text-on-surface-variant/80" : "text-white/80";
+                    const labelColor = isWhiteBg ? "text-on-surface-variant/60" : "text-white/60";
                     
                     return (
                       <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
@@ -124,25 +127,25 @@ export default function Home() {
                         >
                           {/* Discount Badge */}
                           {service.discount && (
-                            <div className="absolute top-3 right-3 bg-black/10 backdrop-blur-md px-2 py-0.5 rounded-full">
+                            <div className="absolute top-3 right-3 bg-black/10 backdrop-blur-md px-2 py-0.5 rounded-full z-10">
                               <span className={cn(
                                 "text-[9px] font-bold",
-                                isPerplexity ? "text-[#1adec5]" : (isWhiteBg ? "text-secondary-fixed-dim" : "text-white")
+                                isPerplexity ? "text-[#1adec5]" : (isWhiteBg ? "text-primary" : "text-white")
                               )}>
                                 {service.discount}
                               </span>
                             </div>
                           )}
 
-                          <div className="space-y-0.5">
+                          <div className="space-y-1">
                             <h3 className={cn(
-                              "text-xl font-bold tracking-tight leading-none",
+                              "text-lg font-bold tracking-tight leading-none",
                               brandColor
                             )}>
                               {service.name}
                             </h3>
                             <p className={cn(
-                              "text-[10px] font-medium opacity-80",
+                              "text-[10px] font-medium",
                               planColor
                             )}>
                               {service.planName || "PREMIUM"}
@@ -150,14 +153,12 @@ export default function Home() {
                           </div>
 
                           <div className="space-y-1">
-                            {service.id !== 'gemini' && (
-                              <p className={cn(
-                                "text-[8px] font-medium opacity-60 uppercase tracking-wider",
-                                isWhiteBg ? "text-on-surface-variant" : "text-white"
-                              )}>
-                                Planes desde
-                              </p>
-                            )}
+                            <p className={cn(
+                              "text-[8px] font-medium uppercase tracking-wider",
+                              labelColor
+                            )}>
+                              Planes desde
+                            </p>
                             <div className="flex items-baseline gap-0.5">
                               <span className={cn(
                                 "text-xl font-bold tracking-tight",
@@ -167,7 +168,7 @@ export default function Home() {
                               </span>
                               <span className={cn(
                                 "text-[10px] font-medium opacity-40",
-                                isWhiteBg ? "text-on-surface" : "text-white"
+                                textColor
                               )}>
                                 /mes
                               </span>

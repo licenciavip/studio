@@ -11,8 +11,8 @@ import { notFound } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const categoryNames: Record<string, string> = {
-  ia: "INTELIGENCIA ARTIFICIAL",
-  all: "TODOS LOS SERVICIOS"
+  ia: "Inteligencia Artificial",
+  all: "Todos los Servicios"
 };
 
 export default function CategoryPage({ params: paramsPromise }: { params: Promise<{ category: string }> }) {
@@ -28,7 +28,7 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
     return servicesByCategory[category as CategorySlug] || [];
   }, [category]);
 
-  const categoryName = categoryNames[category] || "SERVICIOS";
+  const categoryName = categoryNames[category] || "Servicios";
 
   if (services.length === 0 && category !== 'all') {
     notFound();
@@ -42,7 +42,7 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
             <ArrowLeft className="h-6 w-6 text-on-surface" />
           </Link>
         </Button>
-        <h1 className="text-[9px] font-normal uppercase tracking-[0.3em] text-on-surface-variant/40 font-sans">
+        <h1 className="text-3xl font-bold tracking-tight text-on-surface">
           {categoryName}
         </h1>
       </div>
@@ -51,9 +51,12 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
         {services.map((service) => {
           const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
           const isPerplexity = service.id === 'perplexity';
+          const isGemini = service.id === 'gemini';
+          
+          const brandColor = isPerplexity ? "text-[#1adec5]" : (isGemini ? "text-primary" : "text-white");
           const textColor = isWhiteBg ? "text-on-surface" : "text-white";
-          const brandColor = isPerplexity ? "text-[#1adec5]" : (isWhiteBg ? "text-primary" : "text-white");
-          const planColor = isWhiteBg ? "text-on-surface-variant" : "text-white/80";
+          const planColor = isWhiteBg ? "text-on-surface-variant/80" : "text-white/80";
+          const labelColor = isWhiteBg ? "text-on-surface-variant/60" : "text-white/60";
           
           return (
             <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
@@ -65,25 +68,25 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
                 style={{ backgroundColor: service.color || '#4343d5' }}
               >
                 {service.discount && (
-                  <div className="absolute top-3 right-3 bg-black/10 backdrop-blur-md px-2 py-0.5 rounded-full">
+                  <div className="absolute top-3 right-3 bg-black/10 backdrop-blur-md px-2 py-0.5 rounded-full z-10">
                     <span className={cn(
                       "text-[9px] font-bold",
-                      isPerplexity ? "text-[#1adec5]" : "text-white"
+                      isPerplexity ? "text-[#1adec5]" : (isWhiteBg ? "text-primary" : "text-white")
                     )}>
                       {service.discount}
                     </span>
                   </div>
                 )}
 
-                <div className="space-y-0.5">
+                <div className="space-y-1">
                   <h3 className={cn(
-                    "text-xl font-bold tracking-tight leading-none",
+                    "text-lg font-bold tracking-tight leading-none",
                     brandColor
                   )}>
                     {service.name}
                   </h3>
                   <p className={cn(
-                    "text-[10px] font-medium opacity-80",
+                    "text-[10px] font-medium",
                     planColor
                   )}>
                     {service.planName || "PREMIUM"}
@@ -92,8 +95,8 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
 
                 <div className="space-y-1">
                   <p className={cn(
-                    "text-[8px] font-medium opacity-60 uppercase tracking-wider",
-                    textColor
+                    "text-[8px] font-medium uppercase tracking-wider",
+                    labelColor
                   )}>
                     Planes desde
                   </p>
