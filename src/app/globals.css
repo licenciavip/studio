@@ -23,7 +23,7 @@
     --border: 224 31.8% 81%;
     --input: 224 31.8% 91%;
     --ring: 240 65% 55%;
-    --radius: 2rem;
+    --radius: 1.5rem;
   }
 }
 
@@ -33,29 +33,29 @@
   }
   body {
     @apply bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary;
-    background: radial-gradient(circle at 20% 0%, rgba(225, 224, 255, 0.4), transparent 800px),
-                radial-gradient(circle at 80% 0%, rgba(234, 237, 255, 0.5), transparent 800px),
+    background: radial-gradient(circle at 20% 0%, rgba(225, 224, 255, 0.4), transparent 600px),
+                radial-gradient(circle at 80% 0%, rgba(234, 237, 255, 0.5), transparent 600px),
                 linear-gradient(to bottom, #fcfbff, #f4f6ff);
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Geist", "Helvetica Neue", sans-serif;
     letter-spacing: -0.015em;
-    line-height: 1.5;
+    line-height: 1.4;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-sans tracking-tight;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
   }
 }
 
 .glass-card {
-  @apply bg-white/30 backdrop-blur-[32px] border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.04)];
+  @apply bg-white/40 backdrop-blur-3xl border border-white/30 shadow-[0_8px_32px_rgba(0,0,0,0.03)];
 }
 
 .glass-button {
-  @apply backdrop-blur-xl border border-white/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.97] shadow-[0_4px_16px_rgba(0,0,0,0.06)];
+  @apply backdrop-blur-2xl border border-white/30 transition-all duration-200 hover:scale-[1.01] active:scale-[0.98] shadow-[0_4px_16px_rgba(0,0,0,0.04)];
 }
 
 .vision-dock {
-  @apply bg-white/25 backdrop-blur-3xl border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.1)];
+  @apply bg-white/30 backdrop-blur-3xl border border-white/40 shadow-[0_20px_50px_rgba(0,0,0,0.08)];
 }
 
 .pb-safe {
