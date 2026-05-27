@@ -26,7 +26,6 @@ export default function Home() {
   const { toast } = useToast();
   const user = auth?.currentUser;
 
-  // Solo mostramos categorías que tengan al menos un servicio
   const groupedServices = useMemo(() => {
     return Object.fromEntries(
       Object.entries(servicesByCategory).filter(([_, services]) => services.length > 0)
@@ -74,17 +73,19 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F5F5F9]">
-      <main className="flex-grow w-full max-w-[1280px] mx-auto pb-24 px-4">
-        {/* SALUDO Y BOTÓN COMPARTIR */}
-        <section className="pt-4 space-y-4">
+      {/* Contenedor principal limitado y centrado para PC */}
+      <main className="flex-grow w-full max-w-2xl mx-auto pb-24 px-4">
+        
+        {/* SALUDO */}
+        <section className="pt-6 space-y-4">
           <div className="px-1">
-            <h1 className="text-base font-medium text-on-surface">
+            <h1 className="text-sm font-bold text-on-surface opacity-60 uppercase tracking-widest">
               Hola, {user?.displayName?.split(' ')[0] || 'Deyvid'} 👋
             </h1>
           </div>
           
           <Link href="/compartir" className="block">
-            <div className="w-full h-14 bg-gradient-to-r from-[#4343d5] to-[#f4511e] rounded-xl flex items-center justify-center gap-3 shadow-lg active:scale-[0.98] transition-all">
+            <div className="w-full h-14 bg-gradient-to-r from-primary to-[#f4511e] rounded-2xl flex items-center justify-center gap-3 shadow-lg active:scale-[0.98] transition-all">
               <PlusCircle className="h-6 w-6 text-white" />
               <span className="text-white font-bold text-lg tracking-tight">Compartir una suscripción</span>
             </div>
@@ -94,21 +95,21 @@ export default function Home() {
         {/* NOVEDADES */}
         <section className="mt-8 space-y-3">
           <h2 className="text-lg font-bold text-on-surface px-1">Novedades</h2>
-          <div className="relative overflow-hidden rounded-2xl border-none bg-white shadow-sm transition-transform active:scale-[0.98] max-w-md">
+          <div className="relative overflow-hidden rounded-2xl border-none bg-white shadow-sm transition-all hover:shadow-md active:scale-[0.98] group">
             <div className="p-4 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center">
-                  <Image src="https://picsum.photos/seed/novedades/100/100" alt="Novedad" width={24} height={24} className="rounded-md" />
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center shadow-inner">
+                  <Image src="https://picsum.photos/seed/novedades/100/100" alt="Novedad" width={28} height={28} className="rounded-md" />
                 </div>
                 <div>
-                  <h3 className="text-xs font-bold text-on-surface leading-tight">Lank Mundial 2026</h3>
-                  <p className="text-[9px] text-on-surface-variant">Prode, resultados y más</p>
+                  <h3 className="text-sm font-bold text-on-surface">Lank Mundial 2026</h3>
+                  <p className="text-[10px] text-on-surface-variant font-medium">Prode, resultados y más</p>
                 </div>
               </div>
-              <ChevronRight className="h-3 w-3 text-on-surface-variant/20" />
+              <ChevronRight className="h-4 w-4 text-on-surface-variant/30 group-hover:translate-x-1 transition-transform" />
             </div>
-            <div className="bg-[#ff4d00] py-1 px-4 text-center">
-              <p className="text-[8px] font-bold text-white uppercase tracking-wider">El mejor lugar para vivir el mundial</p>
+            <div className="bg-[#ff4d00] py-1.5 px-4 text-center">
+              <p className="text-[9px] font-black text-white uppercase tracking-[0.15em]">El mejor lugar para vivir el mundial</p>
             </div>
           </div>
         </section>
@@ -117,38 +118,38 @@ export default function Home() {
         <section className="mt-8 space-y-3">
           <div className="flex justify-between items-center px-1">
             <h2 className="text-lg font-bold text-on-surface">Mis Grupos</h2>
-            <Link href="/mis-grupos" className="text-[8px] font-bold text-primary hover:opacity-70 transition-colors uppercase tracking-wider">VER TODO</Link>
+            <Link href="/mis-grupos" className="text-[10px] font-bold text-primary hover:opacity-70 transition-colors uppercase tracking-widest">VER TODO</Link>
           </div>
           {groups.slice(0, 1).map((group) => (
-            <Link href={`/mis-grupos/${group.id}`} key={group.id} className="block max-w-md">
-              <div className="p-4 flex items-center justify-between rounded-2xl border-none bg-white shadow-sm active:scale-[0.98] transition-transform">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center">
-                    <Image src={`https://picsum.photos/seed/${group.id}/100/100`} alt={group.service} width={22} height={22} className="object-contain" />
+            <Link href={`/mis-grupos/${group.id}`} key={group.id} className="block group">
+              <div className="p-4 flex items-center justify-between rounded-2xl border-none bg-white shadow-sm hover:shadow-md active:scale-[0.98] transition-all">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center shadow-inner">
+                    <Image src={`https://picsum.photos/seed/${group.id}/100/100`} alt={group.service} width={26} height={26} className="object-contain" />
                   </div>
                   <div>
-                    <h3 className="text-xs font-bold text-on-surface leading-tight">{group.service}</h3>
-                    <p className="text-[9px] text-on-surface-variant">{group.slots.filled} cupos compartidos</p>
+                    <h3 className="text-sm font-bold text-on-surface leading-tight">{group.service}</h3>
+                    <p className="text-[10px] text-on-surface-variant font-medium">{group.slots.filled} cupos compartidos</p>
                   </div>
                 </div>
-                <ChevronRight className="h-3 w-3 text-on-surface-variant/20" />
+                <ChevronRight className="h-4 w-4 text-on-surface-variant/30 group-hover:translate-x-1 transition-transform" />
               </div>
             </Link>
           ))}
         </section>
 
-        {/* IA & HERRAMIENTAS - DISEÑO RESPONSIVO */}
+        {/* IA & HERRAMIENTAS */}
         <section className="mt-10 space-y-6">
           {hasResults ? (
             Object.entries(groupedServices).map(([slug, services]) => (
               <div key={slug} className="space-y-4">
                 <div className="px-1">
-                  <h2 className="text-lg font-bold tracking-tight text-on-surface leading-tight">
+                  <h2 className="text-lg font-bold tracking-tight text-on-surface">
                     {categoryLabels[slug] || slug}
                   </h2>
                 </div>
                 
-                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
+                <div className="grid grid-cols-3 gap-2">
                   {services.map((service) => {
                     const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
                     const isPerplexity = service.id === 'perplexity';
@@ -217,25 +218,25 @@ export default function Home() {
         </section>
 
         {/* SUGERENCIAS */}
-        <section className="mt-8 py-8 text-center space-y-4 bg-white/50 rounded-3xl border border-white shadow-inner max-w-lg mx-auto">
+        <section className="mt-12 py-10 text-center space-y-4 bg-white/40 rounded-3xl border border-white shadow-sm">
           <div className="space-y-1">
-            <h2 className="text-sm font-bold text-on-surface leading-tight uppercase tracking-tight">
+            <h2 className="text-xs font-black text-on-surface leading-tight uppercase tracking-[0.2em]">
               ¿BUSCAS OTRA HERRAMIENTA?
             </h2>
-            <p className="text-[9px] text-on-surface-variant/60 font-medium max-w-[180px] mx-auto leading-relaxed">
+            <p className="text-[10px] text-on-surface-variant/60 font-medium max-w-[200px] mx-auto leading-relaxed">
               Dinos qué IA necesitas y la traeremos para ti de inmediato.
             </p>
           </div>
           <div className="max-w-[240px] mx-auto px-4">
             <Input 
-              className="w-full bg-white border-none rounded-lg h-10 text-xs font-medium shadow-sm focus-visible:ring-primary px-4 placeholder:opacity-40 text-center" 
-              placeholder="EJ: MIDJOURNEY, FIREFLY..."
+              className="w-full bg-white border-none rounded-xl h-11 text-xs font-bold shadow-sm focus-visible:ring-primary px-4 placeholder:opacity-30 text-center" 
+              placeholder="EJ: MIDJOURNEY..."
               value={recommendation}
               onChange={(e) => setRecommendation(e.target.value)}
               onKeyDown={handleRecommendSubmit}
               disabled={isSubmittingRecLocal}
             />
-            <p className="mt-3 text-[7px] text-on-surface-variant/40 font-bold uppercase tracking-[0.2em]">PRESIONA ENTER PARA ENVIAR</p>
+            <p className="mt-4 text-[7px] text-on-surface-variant/40 font-black uppercase tracking-[0.3em]">PRESIONA ENTER</p>
           </div>
         </section>
       </main>
