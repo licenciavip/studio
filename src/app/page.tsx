@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useMemo } from "react";
@@ -10,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { useAuth, useFirestore } from "@/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useToast } from "@/hooks/use-toast";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Search } from "lucide-react";
 import type { CategorySlug, Service } from "@/lib/types";
 
 const categoryLabels: Record<string, string> = {
@@ -84,12 +83,10 @@ export default function Home() {
         <section className="pt-6">
           <div className="relative flex items-center group">
             <div className="absolute left-4 flex items-center justify-center pointer-events-none">
-              <span className="material-symbols-outlined text-on-surface-variant/40 group-focus-within:text-primary transition-colors text-lg">
-                search
-              </span>
+              <Search className="h-5 w-5 text-on-surface-variant/40 group-focus-within:text-primary transition-colors" />
             </div>
             <Input 
-              className="w-full pl-10 pr-4 py-3 bg-white border-none rounded-2xl focus-visible:ring-primary transition-all text-[11px] placeholder:text-on-surface-variant/20 shadow-sm h-12" 
+              className="w-full pl-11 pr-4 py-3 bg-white border-none rounded-2xl focus-visible:ring-primary transition-all text-sm placeholder:text-on-surface-variant/20 shadow-sm h-12" 
               placeholder="¿Qué servicio de IA buscas?" 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -102,59 +99,73 @@ export default function Home() {
             Object.entries(groupedServices).map(([slug, services]) => (
               <div key={slug} className="space-y-6">
                 <div className="px-2">
-                  <h2 className="text-[9px] font-normal uppercase tracking-[0.3em] text-on-surface-variant/40">
+                  <h2 className="text-[9px] font-normal uppercase tracking-[0.3em] text-on-surface-variant/40 font-sans">
                     {categoryLabels[slug] || slug.toUpperCase()}
                   </h2>
                 </div>
                 
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                   {services.map((service) => {
                     const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
-                    const textColor = isWhiteBg ? "text-[#000839]" : "text-white";
+                    const isPerplexity = service.id === 'perplexity';
+                    const textColor = isWhiteBg ? "text-[#4343d5]" : "text-white";
+                    const planColor = isWhiteBg ? "text-on-surface" : "text-white/80";
                     
                     return (
                       <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
                         <div 
                           className={cn(
-                            "relative rounded-[2rem] p-6 aspect-square flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95 shadow-lg overflow-hidden border-none",
-                            isWhiteBg && "shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
+                            "relative rounded-[2rem] p-7 aspect-[16/8] flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95 shadow-lg overflow-hidden border-none",
+                            isWhiteBg && "shadow-[0_8px_30px_rgb(0,0,0,0.06)]"
                           )}
                           style={{ backgroundColor: service.color || '#4343d5' }}
                         >
-                          <div className="space-y-0.5">
+                          {/* Discount Badge */}
+                          {service.discount && (
+                            <div className="absolute top-4 right-4 bg-black/5 backdrop-blur-md px-3 py-1 rounded-full">
+                              <span className={cn(
+                                "text-[10px] font-bold",
+                                isWhiteBg ? "text-green-500" : (isPerplexity ? "text-green-400" : "text-white/60")
+                              )}>
+                                {service.discount}
+                              </span>
+                            </div>
+                          )}
+
+                          <div className="space-y-1">
                             <h3 className={cn(
-                              "text-[0.95rem] font-normal uppercase tracking-tighter leading-none",
-                              textColor
+                              "text-2xl font-bold tracking-tight leading-none",
+                              isPerplexity ? "text-[#1adec5]" : textColor
                             )}>
                               {service.name}
                             </h3>
                             <p className={cn(
-                              "text-[8px] font-normal uppercase tracking-tighter opacity-70",
-                              textColor
+                              "text-xs font-medium",
+                              planColor
                             )}>
                               {service.planName || "PREMIUM"}
                             </p>
                           </div>
 
-                          <div className="space-y-0.5">
+                          <div className="space-y-1">
                             <p className={cn(
-                              "text-[8px] font-normal uppercase tracking-widest opacity-60",
+                              "text-[9px] font-medium opacity-40 uppercase tracking-wider",
                               textColor
                             )}>
-                              DESDE
+                              Planes desde
                             </p>
-                            <div className="flex items-baseline gap-0.5">
+                            <div className="flex items-baseline gap-1">
                               <span className={cn(
-                                "text-[0.95rem] font-normal tracking-tighter leading-none",
-                                textColor
+                                "text-2xl font-bold tracking-tight",
+                                isPerplexity ? "text-[#1adec5]" : textColor
                               )}>
-                                S/{service.pricePerMonth || "15.90"}
+                                S/ {service.pricePerMonth}
                               </span>
                               <span className={cn(
-                                "text-[8px] font-normal uppercase opacity-40 ml-0.5",
+                                "text-xs font-medium opacity-40",
                                 textColor
                               )}>
-                                /MES
+                                /mes
                               </span>
                             </div>
                           </div>

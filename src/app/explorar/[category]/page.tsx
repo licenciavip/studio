@@ -1,4 +1,3 @@
-
 "use client";
 
 import { use, useMemo } from "react";
@@ -47,54 +46,67 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
         </h1>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {services.map((service) => {
           const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
-          const textColor = isWhiteBg ? "text-[#000839]" : "text-white";
+          const isPerplexity = service.id === 'perplexity';
+          const textColor = isWhiteBg ? "text-[#4343d5]" : "text-white";
+          const planColor = isWhiteBg ? "text-on-surface" : "text-white/80";
           
           return (
             <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
               <div 
                 className={cn(
-                  "relative rounded-[2rem] p-6 aspect-square flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95 shadow-lg overflow-hidden border-none",
+                  "relative rounded-[2rem] p-7 aspect-[16/8] flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95 shadow-lg overflow-hidden border-none",
                   isWhiteBg && "shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
                 )}
                 style={{ backgroundColor: service.color || '#4343d5' }}
               >
-                <div className="space-y-0.5">
+                {service.discount && (
+                  <div className="absolute top-4 right-4 bg-black/5 backdrop-blur-md px-3 py-1 rounded-full">
+                    <span className={cn(
+                      "text-[10px] font-bold",
+                      isWhiteBg ? "text-green-500" : (isPerplexity ? "text-green-400" : "text-white/60")
+                    )}>
+                      {service.discount}
+                    </span>
+                  </div>
+                )}
+
+                <div className="space-y-1">
                   <h3 className={cn(
-                    "font-sans font-normal text-[0.95rem] uppercase tracking-tighter leading-none",
-                    textColor
+                    "text-2xl font-bold tracking-tight leading-none",
+                    isPerplexity ? "text-[#1adec5]" : textColor
                   )}>
                     {service.name}
                   </h3>
                   <p className={cn(
-                    "text-[8px] font-normal uppercase tracking-tighter opacity-70",
-                    textColor
+                    "text-xs font-medium",
+                    planColor
                   )}>
                     {service.planName || "PREMIUM"}
                   </p>
                 </div>
 
-                <div className="space-y-0.5">
+                <div className="space-y-1">
                   <p className={cn(
-                    "text-[8px] font-normal uppercase tracking-widest opacity-60",
+                    "text-[9px] font-medium opacity-40 uppercase tracking-wider",
                     textColor
                   )}>
-                    DESDE
+                    Planes desde
                   </p>
-                  <div className="flex items-baseline gap-0.5">
+                  <div className="flex items-baseline gap-1">
                     <span className={cn(
-                      "text-[0.95rem] font-sans font-normal tracking-tighter leading-none",
-                      textColor
+                      "text-2xl font-bold tracking-tight",
+                      isPerplexity ? "text-[#1adec5]" : textColor
                     )}>
-                      S/{service.pricePerMonth || "15.90"}
+                      S/ {service.pricePerMonth}
                     </span>
                     <span className={cn(
-                      "text-[8px] font-normal uppercase opacity-40 ml-0.5",
+                      "text-xs font-medium opacity-40",
                       textColor
                     )}>
-                      /MES
+                      /mes
                     </span>
                   </div>
                 </div>

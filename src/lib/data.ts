@@ -2,10 +2,10 @@ import type { CategorySlug, Subscription, OrderStatus, Service, Group, Order } f
 
 export const servicesByCategory: Record<CategorySlug, Service[]> = {
   ia: [
-    { id: "chatgpt", name: "ChatGPT", logoId: "chatgpt-logo", color: "#10a37f", pricePerMonth: "26.90", planName: "ChatGPT Plus" },
-    { id: "claude", name: "Claude", logoId: "chatgpt-logo", color: "#d97757", pricePerMonth: "47.90", planName: "Claude Pro" },
-    { id: "gemini", name: "Gemini", logoId: "chatgpt-logo", color: "#ffffff", pricePerMonth: "16.90", planName: "Gemini AI" },
-    { id: "perplexity", name: "Perplexity", logoId: "chatgpt-logo", color: "#005a5a", pricePerMonth: "47.90", planName: "Perplexity Pro" },
+    { id: "chatgpt", name: "ChatGPT", logoId: "chatgpt-logo", color: "#10a37f", pricePerMonth: "26.90", planName: "ChatGPT Plus", discount: "-58%" },
+    { id: "claude", name: "Claude", logoId: "chatgpt-logo", color: "#d97757", pricePerMonth: "47.90", planName: "Claude Pro", discount: "-82%" },
+    { id: "gemini", name: "Gemini", logoId: "chatgpt-logo", color: "#ffffff", pricePerMonth: "16.90", planName: "Gemini AI", discount: "-65%" },
+    { id: "perplexity", name: "Perplexity", logoId: "chatgpt-logo", color: "#0b1416", pricePerMonth: "47.90", planName: "Perplexity Pro", discount: "-46%" },
   ],
   streaming: [],
   musica: [],

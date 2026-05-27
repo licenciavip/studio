@@ -72,3 +72,25 @@ export type Service = {
   pricePerMonth?: string;
   planName?: string;
 };
+
+export interface Group {
+  id: string;
+  service: string;
+  host: string;
+  userRole: 'Anfitrión' | 'Miembro';
+  slots: { filled: number; total: number };
+  publicPrice: number;
+  netEarning: number;
+  status: 'Activo' | 'Incompleto' | 'Finalizado';
+  credentials: { email: string; pass: string };
+  nextBill: string;
+}
+
+export interface Order {
+  id: string;
+  service: string;
+  host: string;
+  price: number;
+  status: OrderStatus;
+  expires: string;
+}
