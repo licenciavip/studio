@@ -104,7 +104,7 @@ export default function Home() {
             Object.entries(groupedServices).map(([slug, services]) => (
               <div key={slug} className="space-y-6">
                 <div className="px-2">
-                  <h2 className="text-[10px] font-medium uppercase tracking-[0.3em] text-on-surface-variant/40 font-sans">
+                  <h2 className="text-[9px] font-medium uppercase tracking-[0.3em] text-on-surface-variant/20 font-inter">
                     {categoryLabels[slug] || slug.toUpperCase()}
                   </h2>
                 </div>
@@ -123,26 +123,24 @@ export default function Home() {
                           )}
                           style={{ backgroundColor: service.color || '#4343d5' }}
                         >
-                          {/* Top part */}
                           <div className="space-y-0.5">
                             <h3 className={cn(
-                              "font-sans font-black text-[0.95rem] uppercase tracking-tighter leading-none",
+                              "font-sans font-black text-[1.1rem] uppercase tracking-tighter leading-none",
                               textColor
                             )}>
                               {service.name}
                             </h3>
                             <p className={cn(
-                              "text-[8px] font-black uppercase tracking-tighter opacity-70",
+                              "text-[10px] font-black uppercase tracking-tighter opacity-70",
                               textColor
                             )}>
                               {service.planName || "PREMIUM"}
                             </p>
                           </div>
 
-                          {/* Bottom part */}
-                          <div className="space-y-0">
+                          <div className="space-y-0.5">
                             <p className={cn(
-                              "text-[8px] font-black uppercase tracking-widest opacity-60",
+                              "text-[10px] font-black uppercase tracking-widest opacity-60",
                               textColor
                             )}>
                               DESDE
@@ -155,7 +153,7 @@ export default function Home() {
                                 S/{service.pricePerMonth || "15.90"}
                               </span>
                               <span className={cn(
-                                "text-[8px] font-black uppercase opacity-40 ml-0.5",
+                                "text-[10px] font-black uppercase opacity-40 ml-0.5",
                                 textColor
                               )}>
                                 /MES
@@ -179,7 +177,7 @@ export default function Home() {
         {/* Novedades y Mis Grupos */}
         <section className="mt-14 space-y-10">
           <div className="space-y-4">
-            <h2 className="text-[10px] font-medium uppercase tracking-[0.3em] text-on-surface-variant/40 px-2 font-sans">NOVEDADES</h2>
+            <h2 className="text-[9px] font-medium uppercase tracking-[0.3em] text-on-surface-variant/20 px-2 font-inter">NOVEDADES</h2>
             <div className="relative overflow-hidden rounded-[2.2rem] border-none bg-white shadow-sm transition-transform active:scale-[0.98]">
               <div className="p-5 flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -201,7 +199,7 @@ export default function Home() {
 
           <div className="space-y-4">
             <div className="flex justify-between items-center px-2">
-              <h2 className="text-[10px] font-medium uppercase tracking-[0.3em] text-on-surface-variant/40 font-sans">MIS GRUPOS</h2>
+              <h2 className="text-[9px] font-medium uppercase tracking-[0.3em] text-on-surface-variant/20 font-inter">MIS GRUPOS</h2>
               <Link href="/mis-grupos" className="text-[9px] font-black text-primary hover:opacity-70 transition-colors uppercase tracking-widest">VER TODO</Link>
             </div>
             {groups.slice(0, 1).map((group) => (
