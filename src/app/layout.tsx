@@ -5,11 +5,8 @@ import { cn } from "@/lib/utils";
 import Header from "@/components/layout/header";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { Toaster } from "@/components/ui/toaster";
-import { Inter } from 'next/font/google';
 import { FirebaseClientProvider } from "@/firebase";
 import { FirebaseErrorListener } from "@/components/FirebaseErrorListener";
-
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
   title: "SubShare",
@@ -31,7 +28,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..0&display=block" />
       </head>
-      <body className={cn("min-h-screen bg-background text-foreground font-sans antialiased pb-24", inter.variable)}>
+      <body className={cn("min-h-screen bg-background text-foreground font-sans antialiased pb-24")}>
         <FirebaseClientProvider>
           <FirebaseErrorListener />
           <div className="relative flex flex-col min-h-screen">

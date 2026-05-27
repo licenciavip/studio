@@ -89,7 +89,7 @@ export default function Home() {
               </span>
             </div>
             <Input 
-              className="w-full pl-10 pr-4 py-3 bg-white border-none rounded-2xl focus-visible:ring-primary transition-all text-[11px] placeholder:text-on-surface-variant/20 shadow-sm h-12 font-sans" 
+              className="w-full pl-10 pr-4 py-3 bg-white border-none rounded-2xl focus-visible:ring-primary transition-all text-[11px] placeholder:text-on-surface-variant/20 shadow-sm h-12" 
               placeholder="¿Qué servicio de IA buscas?" 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -102,7 +102,7 @@ export default function Home() {
             Object.entries(groupedServices).map(([slug, services]) => (
               <div key={slug} className="space-y-6">
                 <div className="px-2">
-                  <h2 className="text-[9px] font-normal uppercase tracking-[0.3em] text-on-surface-variant/40 font-sans">
+                  <h2 className="text-[9px] font-normal uppercase tracking-[0.3em] text-on-surface-variant/40">
                     {categoryLabels[slug] || slug.toUpperCase()}
                   </h2>
                 </div>
@@ -123,7 +123,7 @@ export default function Home() {
                         >
                           <div className="space-y-0.5">
                             <h3 className={cn(
-                              "font-sans font-normal text-[0.95rem] uppercase tracking-tighter leading-none",
+                              "text-[0.95rem] font-normal uppercase tracking-tighter leading-none",
                               textColor
                             )}>
                               {service.name}
@@ -145,7 +145,7 @@ export default function Home() {
                             </p>
                             <div className="flex items-baseline gap-0.5">
                               <span className={cn(
-                                "text-[0.95rem] font-sans font-normal tracking-tighter leading-none",
+                                "text-[0.95rem] font-normal tracking-tighter leading-none",
                                 textColor
                               )}>
                                 S/{service.pricePerMonth || "15.90"}
@@ -174,7 +174,7 @@ export default function Home() {
 
         <section className="mt-14 space-y-10">
           <div className="space-y-4">
-            <h2 className="text-[9px] font-normal uppercase tracking-[0.3em] text-on-surface-variant/40 px-2 font-sans">NOVEDADES</h2>
+            <h2 className="text-[9px] font-normal uppercase tracking-[0.3em] text-on-surface-variant/40 px-2">NOVEDADES</h2>
             <div className="relative overflow-hidden rounded-[2rem] border-none bg-white shadow-sm transition-transform active:scale-[0.98]">
               <div className="p-5 flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -196,7 +196,7 @@ export default function Home() {
 
           <div className="space-y-4">
             <div className="flex justify-between items-center px-2">
-              <h2 className="text-[9px] font-normal uppercase tracking-[0.3em] text-on-surface-variant/40 font-sans">MIS GRUPOS</h2>
+              <h2 className="text-[9px] font-normal uppercase tracking-[0.3em] text-on-surface-variant/40">MIS GRUPOS</h2>
               <Link href="/mis-grupos" className="text-[8px] font-normal text-primary hover:opacity-70 transition-colors uppercase tracking-[0.2em]">VER TODO</Link>
             </div>
             {groups.slice(0, 1).map((group) => (
@@ -220,7 +220,7 @@ export default function Home() {
 
         <section className="mt-16 py-14 text-center space-y-7 bg-white/50 rounded-[3rem] border border-white shadow-inner">
           <div className="space-y-2">
-            <h2 className="text-[14px] font-sans font-normal text-on-surface leading-tight uppercase tracking-tight">
+            <h2 className="text-[14px] font-normal text-on-surface leading-tight uppercase tracking-tight">
               ¿BUSCAS OTRA HERRAMIENTA?
             </h2>
             <p className="text-[8px] text-on-surface-variant/40 font-normal uppercase tracking-[0.2em] max-w-[240px] mx-auto">
@@ -229,7 +229,7 @@ export default function Home() {
           </div>
           <div className="max-w-xs mx-auto px-4">
             <Input 
-              className="w-full bg-white border-none rounded-2xl h-12 text-[10px] font-normal shadow-sm focus-visible:ring-primary px-6 placeholder:opacity-20 text-center font-sans" 
+              className="w-full bg-white border-none rounded-2xl h-12 text-[10px] font-normal shadow-sm focus-visible:ring-primary px-6 placeholder:opacity-20 text-center" 
               placeholder="EJ: MIDJOURNEY, FIREFLY..."
               value={recommendation}
               onChange={(e) => setRecommendation(e.target.value)}
