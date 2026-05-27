@@ -118,42 +118,42 @@ export default function Home() {
                       <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
                         <div 
                           className={cn(
-                            "relative rounded-[2rem] p-5 aspect-square flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95 shadow-lg overflow-hidden border-none",
+                            "relative rounded-[2.5rem] p-6 aspect-square flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95 shadow-lg overflow-hidden border-none",
                             isWhiteBg && "shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
                           )}
                           style={{ backgroundColor: service.color || '#4343d5' }}
                         >
-                          <div className="space-y-0.5">
+                          <div className="space-y-1">
                             <h3 className={cn(
-                              "font-sans font-black text-[1.1rem] uppercase tracking-tighter leading-none",
+                              "font-sans font-medium text-[1.1rem] uppercase tracking-tighter leading-none",
                               textColor
                             )}>
                               {service.name}
                             </h3>
                             <p className={cn(
-                              "text-[10px] font-black uppercase tracking-tighter opacity-70",
+                              "text-[10px] font-normal uppercase tracking-tighter opacity-70",
                               textColor
                             )}>
                               {service.planName || "PREMIUM"}
                             </p>
                           </div>
 
-                          <div className="space-y-0.5">
+                          <div className="space-y-1">
                             <p className={cn(
-                              "text-[10px] font-black uppercase tracking-widest opacity-60",
+                              "text-[10px] font-normal uppercase tracking-widest opacity-60",
                               textColor
                             )}>
                               DESDE
                             </p>
                             <div className="flex items-baseline gap-0.5">
                               <span className={cn(
-                                "text-[1.1rem] font-sans font-black tracking-tighter leading-none",
+                                "text-[1.1rem] font-sans font-medium tracking-tighter leading-none",
                                 textColor
                               )}>
                                 S/{service.pricePerMonth || "15.90"}
                               </span>
                               <span className={cn(
-                                "text-[10px] font-black uppercase opacity-40 ml-0.5",
+                                "text-[10px] font-normal uppercase opacity-40 ml-0.5",
                                 textColor
                               )}>
                                 /MES
@@ -168,7 +168,7 @@ export default function Home() {
               </div>
             ))
           ) : (
-            <div className="py-20 text-center text-muted-foreground text-[10px] font-bold uppercase tracking-widest border-2 border-dashed rounded-[3rem] border-outline-variant/30">
+            <div className="py-20 text-center text-muted-foreground text-[10px] font-normal uppercase tracking-widest border-2 border-dashed rounded-[3rem] border-outline-variant/30">
               SIN RESULTADOS
             </div>
           )}
@@ -185,14 +185,14 @@ export default function Home() {
                     <Image src="https://picsum.photos/seed/novedades/100/100" alt="Novedad" width={40} height={40} className="rounded-lg" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-black text-on-surface leading-tight uppercase">Lank Mundial 2026</h3>
-                    <p className="text-[10px] font-medium text-on-surface-variant opacity-60">Prode, resultados y más</p>
+                    <h3 className="text-sm font-medium text-on-surface leading-tight uppercase">Lank Mundial 2026</h3>
+                    <p className="text-[10px] font-normal text-on-surface-variant opacity-60">Prode, resultados y más</p>
                   </div>
                 </div>
                 <ChevronRight className="h-5 w-5 text-outline-variant/50" />
               </div>
               <div className="bg-[#ff4d00] py-1.5 px-4 text-center">
-                <p className="text-[8px] font-black text-white uppercase tracking-widest">El mejor lugar para vivir el mundial</p>
+                <p className="text-[8px] font-normal text-white uppercase tracking-widest">El mejor lugar para vivir el mundial</p>
               </div>
             </div>
           </div>
@@ -200,7 +200,7 @@ export default function Home() {
           <div className="space-y-4">
             <div className="flex justify-between items-center px-2">
               <h2 className="text-[9px] font-normal uppercase tracking-[0.3em] text-on-surface-variant/40 font-inter">MIS GRUPOS</h2>
-              <Link href="/mis-grupos" className="text-[9px] font-black text-primary hover:opacity-70 transition-colors uppercase tracking-widest">VER TODO</Link>
+              <Link href="/mis-grupos" className="text-[9px] font-medium text-primary hover:opacity-70 transition-colors uppercase tracking-widest">VER TODO</Link>
             </div>
             {groups.slice(0, 1).map((group) => (
               <Link href={`/mis-grupos/${group.id}`} key={group.id} className="block">
@@ -210,8 +210,8 @@ export default function Home() {
                       <Image src={`https://picsum.photos/seed/${group.id}/100/100`} alt={group.service} width={28} height={28} className="object-contain" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-black text-on-surface leading-tight uppercase">{group.service}</h3>
-                      <p className="text-[10px] font-medium text-on-surface-variant opacity-60">{group.slots.filled} cupos compartidos</p>
+                      <h3 className="text-sm font-medium text-on-surface leading-tight uppercase">{group.service}</h3>
+                      <p className="text-[10px] font-normal text-on-surface-variant opacity-60">{group.slots.filled} cupos compartidos</p>
                     </div>
                   </div>
                   <ChevronRight className="h-5 w-5 text-outline-variant/50" />
@@ -224,23 +224,23 @@ export default function Home() {
         {/* Sección de Recomendaciones */}
         <section className="mt-16 py-14 text-center space-y-7 bg-white/50 rounded-[3rem] border border-white shadow-inner">
           <div className="space-y-2">
-            <h2 className="text-xl font-sans font-black text-on-surface leading-tight uppercase tracking-tighter">
+            <h2 className="text-xl font-sans font-medium text-on-surface leading-tight uppercase tracking-tighter">
               ¿BUSCAS OTRA HERRAMIENTA?
             </h2>
-            <p className="text-[9px] text-on-surface-variant/50 font-black uppercase tracking-widest max-w-[240px] mx-auto">
+            <p className="text-[9px] text-on-surface-variant/50 font-normal uppercase tracking-widest max-w-[240px] mx-auto">
               Dinos qué IA necesitas y la traeremos para ti.
             </p>
           </div>
           <div className="max-w-xs mx-auto px-4">
             <Input 
-              className="w-full bg-white border-none rounded-2xl h-12 text-[11px] font-bold shadow-sm focus-visible:ring-primary px-6 placeholder:font-black placeholder:opacity-20 text-center" 
+              className="w-full bg-white border-none rounded-2xl h-12 text-[11px] font-medium shadow-sm focus-visible:ring-primary px-6 placeholder:font-normal placeholder:opacity-20 text-center" 
               placeholder="EJ: MIDJOURNEY, FIREFLY..."
               value={recommendation}
               onChange={(e) => setRecommendation(e.target.value)}
               onKeyDown={handleRecommendSubmit}
               disabled={isSubmittingRecLocal}
             />
-            <p className="mt-5 text-[8px] text-muted-foreground/40 font-black uppercase tracking-[0.25em]">PRESIONA ENTER PARA ENVIAR</p>
+            <p className="mt-5 text-[8px] text-muted-foreground/40 font-normal uppercase tracking-[0.25em]">PRESIONA ENTER PARA ENVIAR</p>
           </div>
         </section>
       </main>

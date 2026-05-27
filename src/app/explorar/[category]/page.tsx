@@ -56,42 +56,42 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
             <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
               <div 
                 className={cn(
-                  "relative rounded-[2rem] p-5 aspect-square flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95 shadow-lg overflow-hidden border-none",
+                  "relative rounded-[2.5rem] p-6 aspect-square flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95 shadow-lg overflow-hidden border-none",
                   isWhiteBg && "shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
                 )}
                 style={{ backgroundColor: service.color || '#4343d5' }}
               >
-                <div className="space-y-0.5">
+                <div className="space-y-1">
                   <h3 className={cn(
-                    "font-sans font-black text-[1.1rem] uppercase tracking-tighter leading-none",
+                    "font-sans font-medium text-[1.1rem] uppercase tracking-tighter leading-none",
                     textColor
                   )}>
                     {service.name}
                   </h3>
                   <p className={cn(
-                    "text-[10px] font-black uppercase tracking-tighter opacity-70",
+                    "text-[10px] font-normal uppercase tracking-tighter opacity-70",
                     textColor
                   )}>
                     {service.planName || "PREMIUM"}
                   </p>
                 </div>
 
-                <div className="space-y-0.5">
+                <div className="space-y-1">
                   <p className={cn(
-                    "text-[10px] font-black uppercase tracking-widest opacity-60",
+                    "text-[10px] font-normal uppercase tracking-widest opacity-60",
                     textColor
                   )}>
                     DESDE
                   </p>
                   <div className="flex items-baseline gap-0.5">
                     <span className={cn(
-                      "text-[1.1rem] font-sans font-black tracking-tighter leading-none",
+                      "text-[1.1rem] font-sans font-medium tracking-tighter leading-none",
                       textColor
                     )}>
                       S/{service.pricePerMonth || "15.90"}
                     </span>
                     <span className={cn(
-                      "text-[10px] font-black uppercase opacity-40 ml-0.5",
+                      "text-[10px] font-normal uppercase opacity-40 ml-0.5",
                       textColor
                     )}>
                       /MES
