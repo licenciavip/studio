@@ -1,3 +1,4 @@
+
 "use client";
 
 import { use, useMemo } from "react";
@@ -11,7 +12,7 @@ import { cn } from "@/lib/utils";
 
 const categoryNames: Record<string, string> = {
   ia: "Inteligencia Artificial",
-  all: "Todos los Servicios"
+  all: "Servicios Premium"
 };
 
 export default function CategoryPage({ params: paramsPromise }: { params: Promise<{ category: string }> }) {
@@ -36,16 +37,16 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
   }
 
   return (
-    <div className="max-w-xl mx-auto pt-10 pb-24 px-4 space-y-4">
+    <div className="max-w-xl mx-auto pt-12 pb-24 px-4 space-y-4">
       <div className="flex items-center gap-3 mb-2 px-1">
         <Button asChild variant="ghost" size="icon" className="h-8 w-8 rounded-full bg-white/40 hover:bg-white/60 active:scale-95 transition-all">
           <Link href="/explorar">
-            <ArrowLeft className="h-4 w-4 text-primary" />
+            <ArrowLeft className="h-3.5 w-3.5 text-primary" />
           </Link>
         </Button>
         <div className="space-y-0">
-          <h1 className="text-lg font-extrabold tracking-tight text-on-surface">{categoryName}</h1>
-          <p className="text-[9px] font-bold text-on-surface-variant/30 uppercase tracking-[0.2em]">Selecciona un servicio</p>
+          <h1 className="text-base font-extrabold tracking-tight text-on-surface">{categoryName}</h1>
+          <p className="text-[8px] font-bold text-on-surface-variant/30 uppercase tracking-[0.2em]">Elige una plataforma</p>
         </div>
       </div>
 
@@ -63,7 +64,7 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
             <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
               <div 
                 className={cn(
-                  "relative rounded-[2.2rem] p-3 aspect-[4/5] flex flex-col justify-between transition-all duration-500 hover:scale-[1.03] active:scale-95 shadow-sm overflow-hidden border-none",
+                  "relative rounded-[1.8rem] p-3 aspect-[1/1.1] flex flex-col justify-between transition-all duration-500 hover:scale-[1.03] active:scale-95 shadow-sm overflow-hidden border-none",
                   isWhiteBg ? "glass-card" : "shadow-lg shadow-black/5"
                 )}
                 style={{ backgroundColor: !isWhiteBg ? (service.color || '#4343d5') : undefined }}
@@ -71,8 +72,8 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
                 {!isWhiteBg && <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />}
                 
                 {service.discount && (
-                  <div className="absolute top-2.5 right-2.5 bg-black/10 backdrop-blur-md w-6 h-6 rounded-full flex items-center justify-center z-10 border border-white/10">
-                    <span className={cn("text-[7px] font-black", brandColor)}>
+                  <div className="absolute top-2 right-2 bg-black/10 backdrop-blur-md w-5 h-5 rounded-full flex items-center justify-center z-10 border border-white/10">
+                    <span className={cn("text-[6px] font-black", brandColor)}>
                       {service.discount}
                     </span>
                   </div>
@@ -80,13 +81,13 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
 
                 <div className="relative z-10 space-y-0.5">
                   <h3 className={cn(
-                    "text-[10px] font-extrabold tracking-tight leading-none pr-4 truncate",
+                    "text-[9px] font-extrabold tracking-tight leading-none pr-3 truncate",
                     brandColor
                   )}>
                     {service.name}
                   </h3>
                   <p className={cn(
-                    "text-[8px] font-bold opacity-80 uppercase tracking-tighter",
+                    "text-[7px] font-bold opacity-80 uppercase tracking-tighter",
                     planColor
                   )}>
                     {service.planName || "PREMIUM"}
@@ -95,19 +96,17 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
 
                 <div className="relative z-10 space-y-0.5">
                   <p className={cn(
-                    "text-[7px] font-black uppercase tracking-widest",
+                    "text-[6px] font-black uppercase tracking-tighter",
                     labelColor
                   )}>
                     DESDE
                   </p>
-                  <div className="flex items-baseline gap-0.5">
-                    <span className={cn(
-                      "text-sm font-extrabold tracking-tight",
-                      brandColor
-                    )}>
-                      S/ {service.pricePerMonth}
-                    </span>
-                  </div>
+                  <span className={cn(
+                    "text-[11px] font-extrabold tracking-tight",
+                    brandColor
+                  )}>
+                    S/ {service.pricePerMonth}
+                  </span>
                 </div>
               </div>
             </Link>
@@ -116,8 +115,8 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
       </div>
 
       {services.length === 0 && (
-        <div className="text-center py-20 glass-card rounded-[2.5rem] border-dashed border-primary/10">
-          <p className="text-[10px] font-black uppercase tracking-widest opacity-20">Próximamente más servicios</p>
+        <div className="text-center py-20 glass-card rounded-[2.2rem] border-dashed border-primary/10">
+          <p className="text-[8px] font-black uppercase tracking-widest opacity-20">Próximamente más opciones</p>
         </div>
       )}
     </div>
