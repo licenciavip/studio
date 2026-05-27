@@ -25,16 +25,16 @@ export default function CompartirCategoryPage() {
   const categoryName = categoryNames[category] || "Servicios";
 
   return (
-    <div className="min-h-screen bg-background -mx-4 -mt-6 pb-24">
+    <div className="min-h-screen bg-[#F5F5F9] -mx-4 -mt-6 pb-24">
       <div className="container mx-auto py-8 px-6 max-w-5xl">
         <div className="flex items-center mb-10">
-          <Button asChild variant="ghost" size="icon" className="rounded-full mr-2 hover:bg-white/50">
+          <Button asChild variant="ghost" size="icon" className="rounded-full mr-2 hover:bg-white">
             <Link href="/compartir">
               <ArrowLeft className="h-6 w-6 text-on-surface" />
             </Link>
           </Button>
           <div className="flex-1 text-left">
-            <h1 className="text-2xl font-sora font-black text-on-surface uppercase tracking-tighter">
+            <h1 className="text-[10px] font-bold tracking-[0.3em] text-on-surface-variant/40 uppercase">
               {categoryName}
             </h1>
           </div>
@@ -43,41 +43,45 @@ export default function CompartirCategoryPage() {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {services.map((service) => {
             const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
+            const textColorClass = isWhiteBg ? "text-[#000839]" : "text-white";
+            
             return (
               <Link href={`/publicar?category=${category}&service=${service.id}`} key={service.id} className="block group">
                 <div 
                   className={cn(
-                    "relative rounded-[2.2rem] p-5 aspect-[4/5] flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1 active:scale-95 shadow-[0_8px_30px_rgb(0,0,0,0.06)] overflow-hidden border",
-                    isWhiteBg ? "border-outline-variant/40" : "border-white/10"
+                    "relative rounded-[2.8rem] p-7 aspect-[4/5] flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95 shadow-lg overflow-hidden",
+                    isWhiteBg && "shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
                   )}
                   style={{ backgroundColor: service.color || '#4343d5' }}
                 >
-                  <div className="space-y-1">
+                  {/* Top part: Name and Plan */}
+                  <div className="space-y-0.5">
                     <h3 className={cn(
-                      "font-sora font-black text-[1.5rem] uppercase tracking-tighter leading-[0.9]",
-                      isWhiteBg ? "text-on-surface" : "text-white"
+                      "font-sora font-black text-[1.6rem] uppercase tracking-tighter leading-[1]",
+                      textColorClass
                     )}>
                       {service.name}
                     </h3>
                     <p className={cn(
-                      "text-[8px] font-black uppercase tracking-wider opacity-70",
-                      isWhiteBg ? "text-on-surface-variant" : "text-white"
+                      "text-[9px] font-black uppercase tracking-tight opacity-70",
+                      textColorClass
                     )}>
                       {service.planName || "PREMIUM"}
                     </p>
                   </div>
 
+                  {/* Bottom part: Receive action */}
                   <div className="space-y-0.5">
                     <p className={cn(
-                      "text-[8px] font-black uppercase tracking-[0.1em] opacity-60",
-                      isWhiteBg ? "text-on-surface-variant" : "text-white"
+                      "text-[9px] font-black uppercase tracking-widest opacity-60",
+                      textColorClass
                     )}>
                       PUBLICAR
                     </p>
                     <div className="flex items-baseline gap-1">
                       <span className={cn(
-                        "text-[1.25rem] font-sora font-black tracking-tighter",
-                        isWhiteBg ? "text-on-surface" : "text-white"
+                        "text-[1.35rem] font-sora font-black tracking-tighter",
+                        textColorClass
                       )}>
                         RECIBE &gt;
                       </span>

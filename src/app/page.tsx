@@ -94,10 +94,10 @@ export default function Home() {
   const hasResults = Object.keys(groupedServices).length > 0;
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <main className="flex-grow w-full max-w-[1280px] mx-auto pb-24">
+    <div className="flex flex-col min-h-screen bg-[#F5F5F9]">
+      <main className="flex-grow w-full max-w-[1280px] mx-auto pb-24 px-4">
         {/* Búsqueda */}
-        <section className="px-4 pt-4">
+        <section className="pt-6">
           <div className="relative flex items-center group">
             <div className="absolute left-4 flex items-center justify-center pointer-events-none">
               <span className="material-symbols-outlined text-outline/70 group-focus-within:text-primary transition-colors text-lg">
@@ -105,7 +105,7 @@ export default function Home() {
               </span>
             </div>
             <Input 
-              className="w-full pl-10 pr-4 py-3 bg-white border-outline-variant/60 rounded-xl focus-visible:ring-primary focus-visible:border-primary transition-all text-xs placeholder:text-outline/50 shadow-sm h-10" 
+              className="w-full pl-10 pr-4 py-3 bg-white border-none rounded-2xl focus-visible:ring-primary transition-all text-xs placeholder:text-outline/40 shadow-sm h-12" 
               placeholder="¿Qué servicio de IA buscas?" 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -114,29 +114,12 @@ export default function Home() {
         </section>
 
         {/* Galería de Servicios IA */}
-        <section className="mt-8 px-4 space-y-8">
-          <div className="flex gap-2 overflow-x-auto no-scrollbar py-1">
-            {categories.map((cat) => (
-              <Button 
-                key={cat.slug}
-                variant={selectedCategory === cat.slug ? "default" : "secondary"}
-                size="sm"
-                onClick={() => setSelectedCategory(cat.slug)}
-                className={cn(
-                  "rounded-full px-5 whitespace-nowrap active:scale-95 transition-transform h-8 text-[10px] font-black uppercase tracking-widest shadow-sm",
-                  selectedCategory === cat.slug ? "bg-primary text-white border-none" : "bg-white text-on-surface-variant border border-outline-variant/30"
-                )}
-              >
-                {cat.label}
-              </Button>
-            ))}
-          </div>
-
+        <section className="mt-10 space-y-12">
           {hasResults ? (
             Object.entries(groupedServices).map(([slug, services]) => (
-              <div key={slug} className="space-y-4">
-                <div className="flex justify-between items-center px-1">
-                  <h2 className="text-[10px] font-black uppercase tracking-[0.25em] text-on-surface-variant opacity-40">
+              <div key={slug} className="space-y-6">
+                <div className="px-2">
+                  <h2 className="text-[10px] font-bold uppercase tracking-[0.3em] text-on-surface-variant/40">
                     {categoryLabels[slug] || slug.toUpperCase()}
                   </h2>
                 </div>
@@ -144,47 +127,51 @@ export default function Home() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                   {services.map((service) => {
                     const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
+                    const textColorClass = isWhiteBg ? "text-[#000839]" : "text-white";
+                    
                     return (
                       <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
                         <div 
                           className={cn(
-                            "relative rounded-[2.2rem] p-5 aspect-[4/5] flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1 active:scale-95 shadow-[0_8px_30px_rgb(0,0,0,0.06)] overflow-hidden border",
-                            isWhiteBg ? "border-outline-variant/40" : "border-white/10"
+                            "relative rounded-[2.8rem] p-7 aspect-[4/5] flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95 shadow-lg overflow-hidden",
+                            isWhiteBg && "shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
                           )}
                           style={{ backgroundColor: service.color || '#4343d5' }}
                         >
-                          <div className="space-y-1">
+                          {/* Top part: Name and Plan */}
+                          <div className="space-y-0.5">
                             <h3 className={cn(
-                              "font-sora font-black text-[1.5rem] uppercase tracking-tighter leading-[0.9]",
-                              isWhiteBg ? "text-on-surface" : "text-white"
+                              "font-sora font-black text-[1.6rem] uppercase tracking-tighter leading-[1]",
+                              textColorClass
                             )}>
                               {service.name}
                             </h3>
                             <p className={cn(
-                              "text-[8px] font-black uppercase tracking-wider opacity-70",
-                              isWhiteBg ? "text-on-surface-variant" : "text-white"
+                              "text-[9px] font-black uppercase tracking-tight opacity-70",
+                              textColorClass
                             )}>
                               {service.planName || "PREMIUM"}
                             </p>
                           </div>
 
+                          {/* Bottom part: Price */}
                           <div className="space-y-0.5">
                             <p className={cn(
-                              "text-[8px] font-black uppercase tracking-[0.1em] opacity-60",
-                              isWhiteBg ? "text-on-surface-variant" : "text-white"
+                              "text-[9px] font-black uppercase tracking-widest opacity-60",
+                              textColorClass
                             )}>
                               DESDE
                             </p>
                             <div className="flex items-baseline gap-1">
                               <span className={cn(
-                                "text-[1.25rem] font-sora font-black tracking-tighter",
-                                isWhiteBg ? "text-on-surface" : "text-white"
+                                "text-[1.35rem] font-sora font-black tracking-tighter",
+                                textColorClass
                               )}>
-                                S/ {service.pricePerMonth || "15.90"}
+                                S/{service.pricePerMonth || "15.90"}
                               </span>
                               <span className={cn(
-                                "text-[8px] font-black opacity-40",
-                                isWhiteBg ? "text-on-surface-variant" : "text-white"
+                                "text-[9px] font-black uppercase opacity-40",
+                                textColorClass
                               )}>
                                 /MES
                               </span>
@@ -198,53 +185,53 @@ export default function Home() {
               </div>
             ))
           ) : (
-            <div className="py-20 text-center text-muted-foreground text-[10px] font-bold uppercase tracking-widest border-2 border-dashed rounded-[2.5rem] border-outline-variant/30">
+            <div className="py-20 text-center text-muted-foreground text-[10px] font-bold uppercase tracking-widest border-2 border-dashed rounded-[3rem] border-outline-variant/30">
               SIN RESULTADOS
             </div>
           )}
         </section>
 
         {/* Novedades y Mis Grupos */}
-        <section className="mt-12 px-4 space-y-6">
-          <div className="space-y-3">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant px-1 opacity-60">NOVEDADES</h2>
-            <div className="relative overflow-hidden rounded-3xl border border-outline-variant/30 bg-white shadow-sm transition-transform active:scale-[0.98]">
-              <div className="p-4 flex items-center justify-between">
+        <section className="mt-14 space-y-10">
+          <div className="space-y-4">
+            <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/40 px-2">NOVEDADES</h2>
+            <div className="relative overflow-hidden rounded-[2.2rem] border-none bg-white shadow-sm transition-transform active:scale-[0.98]">
+              <div className="p-5 flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center">
-                    <Image src="https://picsum.photos/seed/novedades/100/100" alt="Novedad" width={32} height={32} className="rounded-md" />
+                  <div className="w-12 h-12 rounded-2xl bg-surface-container flex items-center justify-center">
+                    <Image src="https://picsum.photos/seed/novedades/100/100" alt="Novedad" width={40} height={40} className="rounded-lg" />
                   </div>
                   <div>
                     <h3 className="text-sm font-black text-on-surface leading-tight uppercase">Lank Mundial 2026</h3>
-                    <p className="text-[10px] font-medium text-on-surface-variant">Prode, resultados y más</p>
+                    <p className="text-[10px] font-medium text-on-surface-variant opacity-60">Prode, resultados y más</p>
                   </div>
                 </div>
-                <ChevronRight className="h-4 w-4 text-outline-variant" />
+                <ChevronRight className="h-5 w-5 text-outline-variant/50" />
               </div>
-              <div className="bg-[#ff4d00] py-1 px-4 text-center">
+              <div className="bg-[#ff4d00] py-1.5 px-4 text-center">
                 <p className="text-[8px] font-black text-white uppercase tracking-widest">El mejor lugar para vivir el mundial</p>
               </div>
             </div>
           </div>
 
-          <div className="space-y-3">
-            <div className="flex justify-between items-center px-1">
-              <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant opacity-60">MIS GRUPOS</h2>
+          <div className="space-y-4">
+            <div className="flex justify-between items-center px-2">
+              <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant/40">MIS GRUPOS</h2>
               <Link href="/mis-grupos" className="text-[9px] font-black text-primary hover:opacity-70 transition-colors uppercase tracking-widest">VER TODO</Link>
             </div>
             {groups.slice(0, 1).map((group) => (
               <Link href={`/mis-grupos/${group.id}`} key={group.id} className="block">
-                <div className="p-4 flex items-center justify-between rounded-3xl border border-outline-variant/30 bg-white shadow-sm active:scale-[0.98] transition-transform">
+                <div className="p-5 flex items-center justify-between rounded-[2.2rem] border-none bg-white shadow-sm active:scale-[0.98] transition-transform">
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center">
-                      <Image src={`https://picsum.photos/seed/${group.id}/100/100`} alt={group.service} width={24} height={24} className="object-contain" />
+                    <div className="w-12 h-12 rounded-2xl bg-surface-container flex items-center justify-center">
+                      <Image src={`https://picsum.photos/seed/${group.id}/100/100`} alt={group.service} width={28} height={28} className="object-contain" />
                     </div>
                     <div>
                       <h3 className="text-sm font-black text-on-surface leading-tight uppercase">{group.service}</h3>
-                      <p className="text-[10px] font-medium text-on-surface-variant">{group.slots.filled} cupos compartidos</p>
+                      <p className="text-[10px] font-medium text-on-surface-variant opacity-60">{group.slots.filled} cupos compartidos</p>
                     </div>
                   </div>
-                  <ChevronRight className="h-4 w-4 text-outline-variant" />
+                  <ChevronRight className="h-5 w-5 text-outline-variant/50" />
                 </div>
               </Link>
             ))}
@@ -252,25 +239,25 @@ export default function Home() {
         </section>
 
         {/* Sección de Recomendaciones */}
-        <section className="mt-12 px-4 py-12 text-center space-y-6 bg-surface-container/30 rounded-[2.5rem] mx-4 border border-outline-variant/10 shadow-inner">
-          <div className="space-y-1.5">
+        <section className="mt-16 py-14 text-center space-y-7 bg-white/50 rounded-[3rem] border border-white shadow-inner">
+          <div className="space-y-2">
             <h2 className="text-xl font-sora font-black text-on-surface leading-tight uppercase tracking-tighter">
-              ¿BUSCAS OTRA Herramienta?
+              ¿BUSCAS OTRA HERRAMIENTA?
             </h2>
-            <p className="text-[10px] text-on-surface-variant font-black uppercase tracking-widest max-w-[220px] mx-auto opacity-50">
+            <p className="text-[9px] text-on-surface-variant/50 font-black uppercase tracking-widest max-w-[240px] mx-auto">
               Dinos qué IA necesitas y la traeremos para ti.
             </p>
           </div>
-          <div className="max-w-xs mx-auto">
+          <div className="max-w-xs mx-auto px-4">
             <Input 
-              className="w-full bg-white border-outline-variant rounded-2xl h-11 text-[11px] font-bold shadow-sm focus-visible:ring-primary px-6 placeholder:font-black placeholder:opacity-20 text-center" 
+              className="w-full bg-white border-none rounded-2xl h-12 text-[11px] font-bold shadow-sm focus-visible:ring-primary px-6 placeholder:font-black placeholder:opacity-20 text-center" 
               placeholder="EJ: MIDJOURNEY, FIREFLY..."
               value={recommendation}
               onChange={(e) => setRecommendation(e.target.value)}
               onKeyDown={handleRecommendSubmit}
               disabled={isSubmittingRecLocal}
             />
-            <p className="mt-4 text-[8px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-30">PRESIONA ENTER PARA ENVIAR</p>
+            <p className="mt-5 text-[8px] text-muted-foreground/40 font-black uppercase tracking-[0.25em]">PRESIONA ENTER PARA ENVIAR</p>
           </div>
         </section>
       </main>
