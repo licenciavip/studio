@@ -204,61 +204,64 @@ export default function Home() {
                 </div>
                 
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-                  {services.map((service) => (
-                    <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
-                      <div 
-                        className={cn(
-                          "relative rounded-xl p-3 aspect-square flex flex-col justify-between transition-transform active:scale-95 shadow-sm overflow-hidden border",
-                          service.color === "#ffffff" ? "border-outline-variant/30" : "border-white/10"
-                        )}
-                        style={{ backgroundColor: service.color || '#4343d5' }}
-                      >
-                        {service.discount && (
-                          <div className="absolute top-2 right-2 bg-green-500 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md shadow-lg border border-white/20">
-                            {service.discount}
-                          </div>
-                        )}
+                  {services.map((service) => {
+                    const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
+                    return (
+                      <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
+                        <div 
+                          className={cn(
+                            "relative rounded-3xl p-4 aspect-square flex flex-col justify-between transition-transform active:scale-95 shadow-sm overflow-hidden border",
+                            isWhiteBg ? "border-outline-variant/30" : "border-white/10"
+                          )}
+                          style={{ backgroundColor: service.color || '#4343d5' }}
+                        >
+                          {service.discount && (
+                            <div className="absolute top-3 right-3 bg-[#10a37f] text-white text-[8px] font-black px-1.5 py-0.5 rounded-md shadow-lg border border-white/20">
+                              {service.discount}
+                            </div>
+                          )}
 
-                        <div className="space-y-0.5">
-                          <h3 className={cn(
-                            "font-sora font-black text-sm uppercase tracking-tighter leading-none truncate",
-                            service.color === "#ffffff" || service.color === "#ffea00" || service.color === "#ffcc00" ? "text-on-surface" : "text-white"
-                          )}>
-                            {service.name}
-                          </h3>
-                          <p className={cn(
-                            "text-[9px] font-medium opacity-80 truncate",
-                            service.color === "#ffffff" || service.color === "#ffea00" || service.color === "#ffcc00" ? "text-on-surface-variant" : "text-white"
-                          )}>
-                            {service.planName || service.name}
-                          </p>
-                        </div>
+                          <div className="space-y-0.5">
+                            <h3 className={cn(
+                              "font-sora font-black text-lg uppercase tracking-tighter leading-none truncate",
+                              isWhiteBg ? "text-on-surface" : "text-white"
+                            )}>
+                              {service.name}
+                            </h3>
+                            <p className={cn(
+                              "text-[10px] font-medium opacity-80 truncate",
+                              isWhiteBg ? "text-on-surface-variant" : "text-white"
+                            )}>
+                              {service.planName || service.name}
+                            </p>
+                          </div>
 
-                        <div className="space-y-0.5">
-                          <p className={cn(
-                            "text-[8px] font-medium opacity-60",
-                            service.color === "#ffffff" || service.color === "#ffea00" || service.color === "#ffcc00" ? "text-on-surface-variant" : "text-white"
-                          )}>
-                            Desde
-                          </p>
-                          <div className="flex items-baseline gap-0.5">
-                            <span className={cn(
-                              "text-base font-sora font-bold",
-                              service.color === "#ffffff" || service.color === "#ffea00" || service.color === "#ffcc00" ? "text-on-surface" : "text-white"
+                          <div className="space-y-0.5">
+                            <p className={cn(
+                              "text-[10px] font-medium opacity-70",
+                              isWhiteBg ? "text-on-surface-variant" : "text-white"
                             )}>
-                              S/ {service.pricePerMonth || "15.90"}
-                            </span>
-                            <span className={cn(
-                              "text-[8px] font-medium opacity-50",
-                              service.color === "#ffffff" || service.color === "#ffea00" || service.color === "#ffcc00" ? "text-on-surface-variant" : "text-white"
-                            )}>
-                              /mes
-                            </span>
+                              Desde
+                            </p>
+                            <div className="flex items-baseline gap-0.5">
+                              <span className={cn(
+                                "text-lg font-sora font-black",
+                                isWhiteBg ? "text-on-surface" : "text-white"
+                              )}>
+                                S/ {service.pricePerMonth || "15.90"}
+                              </span>
+                              <span className={cn(
+                                "text-[10px] font-medium opacity-50",
+                                isWhiteBg ? "text-on-surface-variant" : "text-white"
+                              )}>
+                                /mes
+                              </span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </Link>
-                  ))}
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             ))
