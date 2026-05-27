@@ -34,7 +34,7 @@ export default function CompartirCategoryPage() {
             </Link>
           </Button>
           <div className="flex-1 text-left">
-            <h1 className="text-[10px] font-black tracking-[0.3em] text-on-surface-variant/30 uppercase">
+            <h1 className="text-[9px] font-black tracking-[0.3em] text-on-surface-variant/20 uppercase font-inter">
               {categoryName}
             </h1>
           </div>
@@ -57,13 +57,13 @@ export default function CompartirCategoryPage() {
                   {/* Top part */}
                   <div className="space-y-0.5">
                     <h3 className={cn(
-                      "font-sora font-black text-[1.1rem] uppercase tracking-tighter leading-none",
+                      "font-sora font-black text-[0.95rem] uppercase tracking-tighter leading-none",
                       textColor
                     )}>
                       {service.name}
                     </h3>
                     <p className={cn(
-                      "text-[10px] font-black uppercase tracking-tighter opacity-70",
+                      "text-[8px] font-black uppercase tracking-tighter opacity-70",
                       textColor
                     )}>
                       {service.planName || "PREMIUM"}
@@ -73,14 +73,14 @@ export default function CompartirCategoryPage() {
                   {/* Bottom part: Action */}
                   <div className="space-y-0">
                     <p className={cn(
-                      "text-[10px] font-black uppercase tracking-widest opacity-60",
+                      "text-[8px] font-black uppercase tracking-widest opacity-60",
                       textColor
                     )}>
                       PUBLICAR
                     </p>
                     <div className="flex items-baseline gap-1">
                       <span className={cn(
-                        "text-[1rem] font-sora font-black tracking-tighter",
+                        "text-[0.95rem] font-sora font-black tracking-tighter",
                         textColor
                       )}>
                         RECIBE >
