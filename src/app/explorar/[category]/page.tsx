@@ -42,7 +42,7 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
             <ArrowLeft className="h-6 w-6 text-on-surface" />
           </Link>
         </Button>
-        <h1 className="text-[9px] font-medium uppercase tracking-[0.3em] text-on-surface-variant/20 font-inter">
+        <h1 className="text-[9px] font-normal uppercase tracking-[0.3em] text-on-surface-variant/40 font-inter">
           {categoryName}
         </h1>
       </div>

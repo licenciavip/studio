@@ -34,7 +34,7 @@ export default function CompartirCategoryPage() {
             </Link>
           </Button>
           <div className="flex-1 text-left">
-            <h1 className="text-[9px] font-medium uppercase tracking-[0.3em] text-on-surface-variant/20 font-inter">
+            <h1 className="text-[9px] font-normal uppercase tracking-[0.3em] text-on-surface-variant/40 font-inter">
               {categoryName}
             </h1>
           </div>
