@@ -94,7 +94,7 @@ export default function BilleteraPage() {
         setNewOrderInstructions({ ...orderData, createdAt: new Date() } as any);
         setShowRechargeDialog(false);
         setRechargeAmount("");
-        toast({ title: "Orden Generada", description: "Sigue las instrucciones para completar tu recarga." });
+        toast({ title: "Orden Generada", description: "Sigue las instrucciones." });
       })
       .catch(async (err) => {
         const pErr = new FirestorePermissionError({ path: `paymentOrders/${orderId}`, operation: 'create', requestResourceData: orderData });
@@ -103,68 +103,39 @@ export default function BilleteraPage() {
       .finally(() => setIsCreatingOrder(false));
   };
 
-  const handleRegisterPayment = async () => {
-    if (!selectedOrder || !firestore) return;
-    
-    setIsRegistering(true);
-    const updateData = {
-      operationNumber: formData.operationNumber,
-      bankOrigin: formData.bankOrigin,
-      payerName: formData.payerName,
-      amountPaid: parseFloat(formData.amountPaid),
-      status: "uploaded",
-      reviewStatus: "uploaded",
-      paidAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-      proofImageUrl: `https://picsum.photos/seed/${selectedOrder.id}/400/600` 
-    };
-
-    updateDoc(doc(firestore, "paymentOrders", selectedOrder.id), updateData)
-      .then(() => {
-        toast({ title: "Pago registrado", description: "Tu comprobante está siendo revisado." });
-        setSelectedOrder(null);
-        setFormData({ operationNumber: "", bankOrigin: "", payerName: "", amountPaid: "" });
-      })
-      .catch(async (err) => {
-        const pErr = new FirestorePermissionError({ path: `paymentOrders/${selectedOrder.id}`, operation: 'update', requestResourceData: updateData });
-        errorEmitter.emit('permission-error', pErr);
-      })
-      .finally(() => setIsRegistering(false));
-  };
-
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'pending': return <span className="bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full text-[9px] font-black uppercase flex items-center gap-1 border border-amber-200 tracking-wider">Pendiente</span>;
-      case 'uploaded': return <span className="bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full text-[9px] font-black uppercase flex items-center gap-1 border border-blue-200 tracking-wider">En revisión</span>;
-      case 'approved': return <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded-full text-[9px] font-black uppercase flex items-center gap-1 border border-green-200 tracking-wider">Aprobado</span>;
-      case 'rejected': return <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded-full text-[9px] font-black uppercase flex items-center gap-1 border border-red-200 tracking-wider">Rechazado</span>;
+      case 'pending': return <span className="bg-amber-100/50 text-amber-700 px-2 py-0.5 rounded-full text-[9px] font-black uppercase border border-amber-200/50">Pendiente</span>;
+      case 'uploaded': return <span className="bg-blue-100/50 text-blue-700 px-2 py-0.5 rounded-full text-[9px] font-black uppercase border border-blue-200/50">Revisión</span>;
+      case 'approved': return <span className="bg-green-100/50 text-green-700 px-2 py-0.5 rounded-full text-[9px] font-black uppercase border border-green-200/50">Aprobado</span>;
+      case 'rejected': return <span className="bg-red-100/50 text-red-700 px-2 py-0.5 rounded-full text-[9px] font-black uppercase border border-red-200/50">Rechazado</span>;
       default: return null;
     }
   };
 
   return (
-    <div className="max-w-xl mx-auto pt-20 pb-32 px-4 space-y-8">
-      {/* Wallet Card - Apple Style */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-[#6b6bff] p-8 rounded-[3rem] text-white shadow-2xl shadow-primary/30">
-        <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
-          <TrendingUp className="h-[200px] w-[200px]" />
+    <div className="max-w-xl mx-auto pt-24 pb-40 px-6 space-y-10">
+      {/* Wallet Card - Apple Card Style */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-[#1c1c1e] to-[#2c2c2e] p-10 rounded-[2.8rem] text-white shadow-[0_20px_50px_rgba(0,0,0,0.15)] transition-transform active:scale-[0.98]">
+        <div className="absolute top-0 right-0 p-10 opacity-[0.03] pointer-events-none">
+          <TrendingUp className="h-[240px] w-[240px]" />
         </div>
-        <div className="relative z-10 space-y-6">
-          <div className="space-y-1">
-            <p className="text-[10px] font-bold opacity-60 uppercase tracking-[0.2em]">Saldo Disponible</p>
-            <h1 className="text-5xl font-bold tracking-tightest">
+        <div className="relative z-10 space-y-8">
+          <div className="space-y-1.5">
+            <p className="text-[10px] font-black opacity-40 uppercase tracking-[0.3em]">Saldo Disponible</p>
+            <h1 className="text-6xl font-bold tracking-tighter">
               ${wallet?.balance.toFixed(2) || "0.00"}
             </h1>
           </div>
           <div className="flex gap-4">
             <button 
               onClick={() => setShowRechargeDialog(true)} 
-              className="flex-1 glass-button bg-white text-primary rounded-2xl h-14 text-sm font-bold flex items-center justify-center gap-2 hover:bg-white/90"
+              className="flex-1 glass-button bg-white text-black rounded-2xl h-14 text-sm font-bold flex items-center justify-center gap-2"
             >
               <Plus className="h-4 w-4" />
               Recargar
             </button>
-            <button className="flex-1 glass-button bg-white/10 text-white rounded-2xl h-14 text-sm font-bold flex items-center justify-center gap-2 hover:bg-white/20">
+            <button className="flex-1 glass-button bg-white/10 text-white rounded-2xl h-14 text-sm font-bold flex items-center justify-center gap-2">
               <ArrowUpRight className="h-4 w-4" />
               Retirar
             </button>
@@ -175,48 +146,40 @@ export default function BilleteraPage() {
       {/* Activity Section */}
       <div className="space-y-6">
         <div className="flex items-center gap-2 px-2">
-          <History className="h-4 w-4 text-primary" />
-          <h2 className="text-base font-bold text-on-surface tracking-tight">Actividad</h2>
+          <History className="h-4 w-4 text-primary/60" />
+          <h2 className="text-sm font-bold text-on-surface/80 tracking-tight">Actividad</h2>
         </div>
         
         <div className="space-y-4">
-          {loadingOrders && <p className="text-center text-on-surface-variant/40 py-8 text-[10px] font-bold uppercase tracking-widest">Cargando transacciones...</p>}
+          {loadingOrders && <p className="text-center text-on-surface-variant/30 py-10 text-[10px] font-black uppercase tracking-widest">Sincronizando...</p>}
           
           {orders?.map((order) => (
-            <div key={order.id} className="glass-card p-4 rounded-3xl flex items-center justify-between hover:bg-white/60 transition-all group">
+            <div key={order.id} className="glass-card p-5 rounded-[2rem] flex items-center justify-between hover:bg-white/40 transition-all group">
               <div className="flex items-center gap-4">
-                <div className="w-11 h-11 flex items-center justify-center rounded-2xl bg-primary/5 text-primary border border-primary/10">
+                <div className="w-12 h-12 flex items-center justify-center rounded-2xl bg-white/20 text-primary border border-white/30 shadow-sm">
                   {order.type === 'wallet_recharge' ? <Plus className="h-5 w-5" /> : <TrendingUp className="h-5 w-5" />}
                 </div>
-                <div>
+                <div className="space-y-0.5">
                   <p className="text-sm font-bold text-on-surface tracking-tight">
-                    {order.type === 'wallet_recharge' ? 'Recarga de Saldo' : 'Pago de Servicio'}
+                    {order.type === 'wallet_recharge' ? 'Recarga' : 'Suscripción'}
                   </p>
-                  <p className="text-[9px] text-on-surface-variant/40 font-bold tracking-wider uppercase">{order.paymentCode}</p>
+                  <p className="text-[9px] text-on-surface-variant/40 font-black tracking-widest uppercase">{order.paymentCode}</p>
                 </div>
               </div>
-              <div className="text-right space-y-1">
+              <div className="text-right space-y-1.5">
                 <p className={`text-base font-bold tracking-tight ${order.status === 'approved' ? 'text-green-600' : 'text-on-surface'}`}>
                   {order.type === 'wallet_recharge' ? '+' : '-'}${order.amountExpected.toFixed(2)}
                 </p>
                 <div className="flex justify-end">
                   {getStatusBadge(order.status)}
                 </div>
-                {order.status === 'pending' && (
-                  <button 
-                    className="text-[9px] font-bold text-primary hover:underline pt-1 tracking-tight" 
-                    onClick={() => setSelectedOrder(order)}
-                  >
-                    SUBIR COMPROBANTE
-                  </button>
-                )}
               </div>
             </div>
           ))}
           
           {!loadingOrders && orders?.length === 0 && (
-            <div className="text-center py-20 glass-card rounded-[3rem] border-dashed border-primary/20 bg-white/20">
-               <p className="text-on-surface-variant/60 text-sm font-medium tracking-tight">No hay actividad reciente.</p>
+            <div className="text-center py-24 glass-card rounded-[3rem] border-dashed border-primary/10">
+               <p className="text-on-surface-variant/40 text-sm font-medium">Sin transacciones recientes.</p>
             </div>
           )}
         </div>
@@ -224,33 +187,33 @@ export default function BilleteraPage() {
 
       {/* RECHARGE DIALOG - APPLE STYLE */}
       <Dialog open={showRechargeDialog} onOpenChange={setShowRechargeDialog}>
-        <DialogContent className="glass-card rounded-[3rem] max-w-sm p-8 border-white/60">
+        <DialogContent className="glass-card rounded-[3rem] max-w-sm p-10">
           <DialogHeader className="space-y-2">
             <DialogTitle className="text-xl font-bold text-center tracking-tight">Recargar</DialogTitle>
-            <DialogDescription className="text-center text-sm font-medium tracking-tight">Ingresa el monto a recargar en USD</DialogDescription>
+            <DialogDescription className="text-center text-sm font-medium text-on-surface-variant/60">Ingresa el monto (USD)</DialogDescription>
           </DialogHeader>
-          <div className="py-8 space-y-6">
+          <div className="py-10 space-y-6">
             <div className="relative">
-              <span className="absolute left-6 top-1/2 -translate-y-1/2 font-bold text-2xl text-primary/40">$</span>
+              <span className="absolute left-6 top-1/2 -translate-y-1/2 font-bold text-2xl text-primary/30">$</span>
               <input 
                 type="number" 
                 placeholder="0.00" 
                 value={rechargeAmount} 
                 onChange={(e) => setRechargeAmount(e.target.value)} 
-                className="w-full bg-surface-container rounded-3xl h-20 text-4xl font-bold text-primary pl-12 pr-6 outline-none text-center shadow-inner tracking-tighter"
+                className="w-full bg-white/10 backdrop-blur-md rounded-3xl h-20 text-4xl font-bold text-primary pl-12 pr-6 outline-none text-center shadow-inner tracking-tighter"
               />
             </div>
-            <p className="text-[9px] text-center font-bold text-on-surface-variant/40 uppercase tracking-widest">Mínimo $5.00</p>
+            <p className="text-[9px] text-center font-black text-on-surface-variant/30 uppercase tracking-[0.3em]">MÍNIMO $5.00</p>
           </div>
           <DialogFooter className="flex-col gap-3">
             <Button 
-              className="w-full h-14 rounded-2xl text-sm font-bold shadow-xl shadow-primary/20 tracking-tight" 
+              className="w-full h-14 rounded-2xl text-sm font-bold shadow-xl shadow-primary/10" 
               onClick={handleCreateRechargeOrder} 
               disabled={isCreatingOrder || !rechargeAmount || parseFloat(rechargeAmount) < 5}
             >
-              Generar Orden de Pago
+              Generar Orden
             </Button>
-            <Button variant="ghost" className="w-full rounded-2xl text-sm font-bold tracking-tight" onClick={() => setShowRechargeDialog(false)}>Cancelar</Button>
+            <Button variant="ghost" className="w-full h-12 rounded-2xl text-xs font-bold text-on-surface-variant/60" onClick={() => setShowRechargeDialog(false)}>Cancelar</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

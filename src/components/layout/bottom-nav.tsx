@@ -6,8 +6,8 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/", label: "Inicio", icon: "home" },
-  { href: "/mis-grupos", label: "Mis Grupos", icon: "group" },
-  { href: "/billetera", label: "Billetera", icon: "account_balance_wallet" },
+  { href: "/mis-grupos", label: "Mis Grupos", icon: "grid_view" },
+  { href: "/billetera", label: "Billetera", icon: "wallet" },
   { href: "/perfil", label: "Perfil", icon: "person" },
 ];
 
@@ -15,8 +15,8 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <div className="fixed bottom-6 left-0 right-0 z-50 px-6">
-      <nav className="max-w-md mx-auto flex justify-around items-center h-16 bg-white/40 backdrop-blur-3xl border border-white/40 rounded-[2.5rem] shadow-2xl shadow-black/10 px-2 overflow-hidden">
+    <div className="fixed bottom-8 left-0 right-0 z-[200] px-8">
+      <nav className="max-w-md mx-auto vision-dock flex justify-around items-center h-16 rounded-[2.5rem] px-2">
         {navItems.map((item) => {
           const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
           
@@ -26,29 +26,24 @@ export function BottomNav() {
               href={item.href}
               className={cn(
                 "relative flex flex-col items-center justify-center flex-1 h-full transition-all duration-500",
-                isActive ? "text-primary" : "text-on-surface-variant/40"
+                isActive ? "text-primary" : "text-on-surface-variant/30"
               )}
             >
-              {isActive && (
-                <div className="absolute top-1 w-8 h-1 bg-primary rounded-full blur-[1px] opacity-60" />
-              )}
               <div className={cn(
-                "p-2 rounded-2xl transition-all duration-300",
+                "p-2.5 rounded-2xl transition-all duration-500 ease-out",
                 isActive ? "scale-110" : "scale-100 hover:text-on-surface"
               )}>
                 <span 
-                  className="material-symbols-outlined text-[20px]" 
-                  style={{ fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}
+                  className="material-symbols-outlined text-[22px]" 
+                  style={{ fontVariationSettings: isActive ? "'FILL' 1, 'wght' 400" : "'FILL' 0, 'wght' 300" }}
                 >
                   {item.icon}
                 </span>
               </div>
-              <span className={cn(
-                "text-[9px] font-black tracking-tight transition-all duration-300",
-                isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1"
-              )}>
-                {item.label}
-              </span>
+              
+              {isActive && (
+                <div className="absolute -bottom-1 w-1 h-1 bg-primary rounded-full shadow-[0_0_8px_rgba(67,67,213,0.8)]" />
+              )}
             </Link>
           );
         })}
