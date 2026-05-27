@@ -27,7 +27,8 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [recommendation, setRecommendation] = useState("");
-  const [isSubmittingRec, setIsSubmittingRec] = useState(false);
+  const [isSubmittingRec] = useState(false);
+  const [isSubmittingRecLocal, setIsSubmittingRecLocal] = useState(false);
 
   const auth = useAuth();
   const firestore = useFirestore();
@@ -65,7 +66,7 @@ export default function Home() {
         return;
       }
 
-      setIsSubmittingRec(true);
+      setIsSubmittingRecLocal(true);
       try {
         await addDoc(collection(firestore, "serviceRecommendations"), {
           userId: auth.currentUser.uid,
@@ -86,7 +87,7 @@ export default function Home() {
           variant: "destructive"
         });
       } finally {
-        setIsSubmittingRec(false);
+        setIsSubmittingRecLocal(false);
       }
     }
   };
@@ -113,38 +114,37 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Novedades Section */}
-        <section className="mt-6 px-4 space-y-3">
-          <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant px-1 opacity-60">NOVEDADES</h2>
-          <div className="relative overflow-hidden rounded-[1.5rem] border border-outline-variant/30 bg-white shadow-sm transition-transform active:scale-[0.98]">
-            <div className="p-4 flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center">
-                   <Image src="https://picsum.photos/seed/novedades/100/100" alt="Novedad" width={32} height={32} className="rounded-md" />
+        {/* Novedades y Mis Grupos */}
+        <section className="mt-6 px-4 space-y-6">
+          <div className="space-y-3">
+            <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant px-1 opacity-60">NOVEDADES</h2>
+            <div className="relative overflow-hidden rounded-3xl border border-outline-variant/30 bg-white shadow-sm transition-transform active:scale-[0.98]">
+              <div className="p-4 flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center">
+                    <Image src="https://picsum.photos/seed/novedades/100/100" alt="Novedad" width={32} height={32} className="rounded-md" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-black text-on-surface leading-tight uppercase">Lank Mundial 2026</h3>
+                    <p className="text-[10px] font-medium text-on-surface-variant">Prode, resultados y más</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-sm font-black text-on-surface leading-tight uppercase">Lank Mundial 2026</h3>
-                  <p className="text-[10px] font-medium text-on-surface-variant">Prode, resultados y más</p>
-                </div>
+                <ChevronRight className="h-4 w-4 text-outline-variant" />
               </div>
-              <ChevronRight className="h-4 w-4 text-outline-variant" />
-            </div>
-            <div className="bg-[#ff4d00] py-1 px-4">
-              <p className="text-[8px] font-black text-white uppercase tracking-widest">El mejor lugar para vivir el mundial</p>
+              <div className="bg-[#ff4d00] py-1 px-4 text-center">
+                <p className="text-[8px] font-black text-white uppercase tracking-widest">El mejor lugar para vivir el mundial</p>
+              </div>
             </div>
           </div>
-        </section>
 
-        {/* Mis Grupos Section */}
-        <section className="mt-6 px-4 space-y-3">
-          <div className="flex justify-between items-center px-1">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant opacity-60">MIS GRUPOS</h2>
-            <Link href="/mis-grupos" className="text-[9px] font-black text-primary hover:opacity-70 transition-colors uppercase tracking-widest">VER TODO</Link>
-          </div>
-          <div className="space-y-2">
+          <div className="space-y-3">
+            <div className="flex justify-between items-center px-1">
+              <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant opacity-60">MIS GRUPOS</h2>
+              <Link href="/mis-grupos" className="text-[9px] font-black text-primary hover:opacity-70 transition-colors uppercase tracking-widest">VER TODO</Link>
+            </div>
             {groups.slice(0, 1).map((group) => (
               <Link href={`/mis-grupos/${group.id}`} key={group.id} className="block">
-                <div className="p-4 flex items-center justify-between rounded-[1.5rem] border border-outline-variant/30 bg-white shadow-sm active:scale-[0.98] transition-transform">
+                <div className="p-4 flex items-center justify-between rounded-3xl border border-outline-variant/30 bg-white shadow-sm active:scale-[0.98] transition-transform">
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center">
                       <Image src={`https://picsum.photos/seed/${group.id}/100/100`} alt={group.service} width={24} height={24} className="object-contain" />
@@ -162,7 +162,7 @@ export default function Home() {
         </section>
 
         {/* Galería de Servicios IA */}
-        <section className="mt-8 px-4 space-y-8">
+        <section className="mt-10 px-4 space-y-8">
           <div className="flex gap-2 overflow-x-auto no-scrollbar py-1">
             {categories.map((cat) => (
               <Button 
@@ -172,7 +172,7 @@ export default function Home() {
                 onClick={() => setSelectedCategory(cat.slug)}
                 className={cn(
                   "rounded-full px-5 whitespace-nowrap active:scale-95 transition-transform h-8 text-[10px] font-black uppercase tracking-widest shadow-sm",
-                  selectedCategory === cat.slug ? "bg-primary text-white" : "bg-white text-on-surface-variant border border-outline-variant/30"
+                  selectedCategory === cat.slug ? "bg-primary text-white border-none" : "bg-white text-on-surface-variant border border-outline-variant/30"
                 )}
               >
                 {cat.label}
@@ -189,7 +189,7 @@ export default function Home() {
                   </h2>
                 </div>
                 
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                   {services.map((service) => {
                     const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
                     return (
@@ -223,7 +223,7 @@ export default function Home() {
                             )}>
                               DESDE
                             </p>
-                            <div className="flex items-baseline gap-0.5">
+                            <div className="flex items-baseline gap-1">
                               <span className={cn(
                                 "text-[1.35rem] font-sora font-black tracking-tighter",
                                 isWhiteBg ? "text-on-surface" : "text-white"
@@ -246,7 +246,7 @@ export default function Home() {
               </div>
             ))
           ) : (
-            <div className="py-12 text-center text-muted-foreground text-[10px] font-bold uppercase tracking-widest border-2 border-dashed rounded-[2rem] border-outline-variant/30">
+            <div className="py-20 text-center text-muted-foreground text-[10px] font-bold uppercase tracking-widest border-2 border-dashed rounded-[2.5rem] border-outline-variant/30">
               SIN RESULTADOS
             </div>
           )}
@@ -269,7 +269,7 @@ export default function Home() {
               value={recommendation}
               onChange={(e) => setRecommendation(e.target.value)}
               onKeyDown={handleRecommendSubmit}
-              disabled={isSubmittingRec}
+              disabled={isSubmittingRecLocal}
             />
             <p className="mt-4 text-[8px] text-muted-foreground font-black uppercase tracking-[0.2em] opacity-30">PRESIONA ENTER PARA ENVIAR</p>
           </div>

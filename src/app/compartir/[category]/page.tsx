@@ -4,7 +4,7 @@
 import { servicesByCategory } from "@/lib/data";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import type { CategorySlug } from "@/lib/types";
 import { notFound, useParams } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -67,14 +67,13 @@ export default function CompartirCategoryPage() {
                     </p>
                   </div>
 
-                  <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
                     <p className={cn(
-                      "text-[9px] font-black uppercase tracking-[0.1em] opacity-80",
+                      "text-[10px] font-black uppercase tracking-[0.1em] text-right",
                       isWhiteBg ? "text-primary" : "text-white"
                     )}>
-                      PUBLICAR
+                      PUBLICAR &gt;
                     </p>
-                    <ChevronRight className={cn("h-4 w-4", isWhiteBg ? "text-primary" : "text-white")} />
                   </div>
                 </div>
               </Link>

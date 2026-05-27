@@ -11,7 +11,6 @@ import { notFound } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const categoryNames: Record<string, string> = {
-   स्ट्रीमिंग: "Streaming",
   ia: "Inteligencia Artificial",
   all: "Todos los Servicios"
 };
@@ -82,7 +81,7 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
                   )}>
                     DESDE
                   </p>
-                  <div className="flex items-baseline gap-0.5">
+                  <div className="flex items-baseline gap-1">
                     <span className={cn(
                       "text-[1.35rem] font-sora font-black tracking-tighter",
                       isWhiteBg ? "text-on-surface" : "text-white"
