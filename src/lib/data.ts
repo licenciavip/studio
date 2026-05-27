@@ -8,27 +8,27 @@ export const servicesByCategory: Record<CategorySlug, Service[]> = {
       logoId: "chatgpt-logo", 
       color: "#10a37f", 
       pricePerMonth: "26.90", 
-      hostEarnings: "15.00",
+      hostEarnings: "75.52",
       planName: "ChatGPT Plus", 
       discount: "-58%" 
     },
     { 
       id: "claude", 
-      name: "Claude", 
+      name: "Claude Pro", 
       logoId: "chatgpt-logo", 
       color: "#d97757", 
       pricePerMonth: "47.90", 
-      hostEarnings: "25.00",
+      hostEarnings: "82.30",
       planName: "Claude Pro", 
       discount: "-32%" 
     },
     { 
       id: "gemini", 
-      name: "Gemini", 
+      name: "Gemini AI", 
       logoId: "chatgpt-logo", 
       color: "#ffffff", 
       pricePerMonth: "16.90", 
-      hostEarnings: "10.00",
+      hostEarnings: "61.65",
       planName: "Gemini AI", 
       discount: "-65%" 
     },
@@ -38,7 +38,7 @@ export const servicesByCategory: Record<CategorySlug, Service[]> = {
       logoId: "chatgpt-logo", 
       color: "#0b1416", 
       pricePerMonth: "47.90", 
-      hostEarnings: "28.00",
+      hostEarnings: "78.40",
       planName: "Perplexity Pro", 
       discount: "-46%" 
     },

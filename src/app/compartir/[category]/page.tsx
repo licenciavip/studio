@@ -37,61 +37,34 @@ export default function CompartirCategoryPage() {
           </h1>
         </div>
 
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
           {services.map((service) => {
-            const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
-            const isPerplexity = service.id === 'perplexity';
-            const isGemini = service.id === 'gemini';
-            
-            const brandColor = isPerplexity ? "text-[#1adec5]" : (isGemini ? "text-primary" : (isWhiteBg ? "text-primary" : "text-white"));
-            const planColor = isWhiteBg ? "text-on-surface-variant/60" : "text-white/70";
-            const labelColor = isWhiteBg ? "text-on-surface-variant/40" : "text-white/60";
-            
             return (
               <Link href={`/publicar?category=${category}&service=${service.id}`} key={service.id} className="block group">
                 <div 
-                  className={cn(
-                    "relative rounded-2xl p-3 aspect-[4/5] flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 active:scale-95 shadow-sm overflow-hidden border-none",
-                    isWhiteBg && "shadow-[0_2px_10px_rgb(0,0,0,0.04)]"
-                  )}
-                  style={{ backgroundColor: service.color || '#4343d5' }}
+                  className="relative rounded-2xl p-4 aspect-[4/3] flex flex-col justify-between transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 active:scale-95 bg-white border border-outline-variant/30 overflow-hidden shadow-sm"
                 >
-                  {service.discount && (
-                    <div className="absolute top-2 right-2 bg-black/10 backdrop-blur-md w-6 h-6 rounded-full flex items-center justify-center z-10 border border-white/10">
-                      <span className={cn("text-[7px] font-bold", brandColor)}>
-                        {service.discount}
-                      </span>
-                    </div>
-                  )}
-
-                  <div className="space-y-0.5">
-                    <h3 className={cn(
-                      "text-[11px] font-bold tracking-tight leading-none pr-4 truncate",
-                      brandColor
-                    )}>
+                  <div className="flex justify-between items-start w-full">
+                    <h3 className="text-[12px] font-bold tracking-tight text-on-surface leading-tight pr-1 line-clamp-2">
                       {service.name}
                     </h3>
-                    <p className={cn(
-                      "text-[8px] font-medium opacity-80",
-                      planColor
-                    )}>
-                      {service.planName || "PREMIUM"}
-                    </p>
+                    <div className="bg-amber-100/60 px-2 py-0.5 rounded-full border border-amber-200/50 shrink-0">
+                      <span className="text-[7px] font-bold text-amber-700/80 uppercase">
+                        Compartiendo
+                      </span>
+                    </div>
                   </div>
 
-                  <div className="space-y-0.5">
-                    <p className={cn(
-                      "text-[7px] font-bold uppercase tracking-widest",
-                      labelColor
-                    )}>
-                      COMPARTE
+                  <div className="space-y-0.5 mt-2">
+                    <p className="text-[9px] font-medium text-on-surface-variant/50">
+                      Recibe hasta
                     </p>
-                    <div className="flex flex-wrap items-baseline gap-0.5">
-                      <span className={cn(
-                        "text-[10px] font-bold tracking-tight",
-                        brandColor
-                      )}>
-                        RECIBE > S/ {service.hostEarnings}
+                    <div className="flex items-baseline gap-0.5">
+                      <span className="text-sm font-bold text-secondary tracking-tight">
+                        S/ {service.hostEarnings}
+                      </span>
+                      <span className="text-[8px] font-medium text-on-surface-variant/40">
+                        /mes
                       </span>
                     </div>
                   </div>
