@@ -13,19 +13,66 @@ import {
   LogOut, 
   Edit2,
   ChevronRight,
-  ExternalLink
+  ShieldCheck,
+  Bell,
+  CreditCard,
+  User
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function PerfilPage() {
   const auth = useAuth();
   const user = auth?.currentUser;
 
+  const SettingRow = ({ 
+    icon: Icon, 
+    label, 
+    value, 
+    href, 
+    destructive,
+    rightElement 
+  }: { 
+    icon: any, 
+    label: string, 
+    value?: string, 
+    href?: string,
+    destructive?: boolean,
+    rightElement?: React.ReactNode
+  }) => {
+    const content = (
+      <div className={cn(
+        "flex items-center justify-between py-3 px-4 transition-all active:bg-white/10",
+        destructive ? "text-red-500" : "text-on-surface"
+      )}>
+        <div className="flex items-center gap-3">
+          <div className={cn(
+            "w-7 h-7 rounded-lg flex items-center justify-center border border-white/20",
+            destructive ? "bg-red-500/10" : "bg-white/10"
+          )}>
+            <Icon className={cn("h-4 w-4", destructive ? "text-red-500" : "text-primary")} />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[11px] font-bold tracking-tight">{label}</span>
+            {value && <span className="text-[9px] font-medium opacity-50 uppercase tracking-widest">{value}</span>}
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          {rightElement}
+          {href && <ChevronRight className="h-3.5 w-3.5 opacity-30" />}
+        </div>
+      </div>
+    );
+
+    if (href) return <Link href={href} className="block">{content}</Link>;
+    return content;
+  };
+
   return (
-    <div className="max-w-2xl mx-auto space-y-6 py-8">
-      {/* Profile Identity Card */}
-      <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-3xl p-6 shadow-sm">
-        <div className="flex items-center gap-4 mb-6">
-          <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-inner border-2 border-primary-fixed relative">
+    <div className="max-w-xl mx-auto pt-10 pb-24 px-4 space-y-6">
+      {/* Mini Profile Header - Apple ID Style */}
+      <section className="flex items-center justify-between px-1">
+        <div className="flex items-center gap-4">
+          <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-white shadow-lg">
             <Image 
               src={user?.photoURL || "https://picsum.photos/seed/user/200/200"} 
               alt={user?.displayName || "User"} 
@@ -33,97 +80,79 @@ export default function PerfilPage() {
               className="object-cover"
             />
           </div>
-          <div className="flex-1">
-            <h1 className="text-3xl font-sora font-bold text-on-surface">{user?.displayName || "Usuario de SubShare"}</h1>
-            <p className="text-sm font-medium text-on-surface-variant">Miembro desde Enero 2023</p>
+          <div>
+            <h1 className="text-lg font-extrabold tracking-tight leading-none mb-1">
+              {user?.displayName || "Deyvid Poolera"}
+            </h1>
+            <p className="text-[10px] font-bold text-on-surface-variant/40 uppercase tracking-widest">
+              ID: {user?.uid.slice(0, 8).toUpperCase() || "SH-99283"}
+            </p>
           </div>
-          <Button variant="ghost" size="icon" className="rounded-full bg-surface-container text-primary hover:bg-primary hover:text-white transition-all">
-            <Edit2 className="h-5 w-5" />
-          </Button>
+        </div>
+        <Button size="icon" variant="ghost" className="rounded-full bg-white/40 h-8 w-8">
+          <Edit2 className="h-3.5 w-3.5 text-primary" />
+        </Button>
+      </section>
+
+      {/* Account Info - Compact Grid */}
+      <section className="grid grid-cols-2 gap-2">
+        <div className="glass-card p-3 rounded-2xl">
+          <p className="text-[8px] font-black text-on-surface-variant/30 uppercase tracking-[0.15em] mb-1">Email</p>
+          <p className="text-[11px] font-bold truncate">{user?.email || "deyvid@poolera.com"}</p>
+        </div>
+        <div className="glass-card p-3 rounded-2xl">
+          <p className="text-[8px] font-black text-on-surface-variant/30 uppercase tracking-[0.15em] mb-1">Teléfono</p>
+          <p className="text-[11px] font-bold">+51 987 654 321</p>
+        </div>
+      </section>
+
+      {/* Settings Groups - iOS Style Lists */}
+      <div className="space-y-6">
+        {/* Security Group */}
+        <div className="space-y-1.5">
+          <h2 className="text-[10px] font-bold text-on-surface-variant/40 uppercase tracking-widest px-4">Seguridad</h2>
+          <div className="glass-card rounded-[1.8rem] overflow-hidden divide-y divide-white/10">
+            <SettingRow icon={Lock} label="Cambiar Contraseña" href="/perfil/password" />
+            <SettingRow 
+              icon={Fingerprint} 
+              label="Acceso Biométrico" 
+              rightElement={
+                <div className="w-8 h-4 bg-primary rounded-full relative">
+                  <div className="absolute right-1 top-0.5 w-3 h-3 bg-white rounded-full"></div>
+                </div>
+              } 
+            />
+            <SettingRow icon={ShieldCheck} label="Verificación en dos pasos" value="Activado" href="/perfil/2fa" />
+          </div>
         </div>
 
-        {/* Personal Information */}
-        <div className="space-y-2 border-t border-outline-variant/20 pt-6">
-          <h4 className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider px-3 mb-2">Información Personal</h4>
-          
-          <div className="flex items-center gap-3 p-3 rounded-2xl hover:bg-surface-container transition-colors cursor-pointer group">
-            <div className="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center text-on-surface-variant group-hover:text-primary transition-colors">
-              <Mail className="h-5 w-5" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[10px] text-on-surface-variant font-bold uppercase">Email</span>
-              <span className="text-sm font-medium text-on-surface">{user?.email || "Sin email"}</span>
-            </div>
+        {/* Preferences Group */}
+        <div className="space-y-1.5">
+          <h2 className="text-[10px] font-bold text-on-surface-variant/40 uppercase tracking-widest px-4">Preferencias</h2>
+          <div className="glass-card rounded-[1.8rem] overflow-hidden divide-y divide-white/10">
+            <SettingRow icon={Bell} label="Notificaciones" href="/perfil/notificaciones" />
+            <SettingRow icon={CreditCard} label="Métodos de Pago" href="/perfil/pagos" />
           </div>
+        </div>
 
-          <div className="flex items-center gap-3 p-3 rounded-2xl hover:bg-surface-container transition-colors cursor-pointer group">
-            <div className="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center text-on-surface-variant group-hover:text-primary transition-colors">
-              <Smartphone className="h-5 w-5" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[10px] text-on-surface-variant font-bold uppercase">Teléfono</span>
-              <span className="text-sm font-medium text-on-surface">+1 (555) 012-3456</span>
-            </div>
+        {/* Support & Legal */}
+        <div className="space-y-1.5">
+          <h2 className="text-[10px] font-bold text-on-surface-variant/40 uppercase tracking-widest px-4">Soporte</h2>
+          <div className="glass-card rounded-[1.8rem] overflow-hidden divide-y divide-white/10">
+            <SettingRow icon={HelpCircle} label="Centro de Ayuda" href="/ayuda" />
+            <SettingRow 
+              icon={LogOut} 
+              label="Cerrar Sesión" 
+              destructive 
+              href="#"
+            />
           </div>
         </div>
       </div>
 
-      {/* Settings Groups */}
-      <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-3xl overflow-hidden shadow-sm">
-        {/* Security & Privacy */}
-        <div className="p-6 border-b border-outline-variant/20">
-          <h4 className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-4">Seguridad</h4>
-          <nav className="space-y-2">
-            <button className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-surface-container transition-colors group">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-on-surface-variant group-hover:text-primary transition-colors">
-                  <Lock className="h-5 w-5" />
-                </div>
-                <span className="text-sm font-medium text-on-surface">Cambiar Contraseña</span>
-              </div>
-              <ChevronRight className="h-5 w-5 text-outline-variant" />
-            </button>
-
-            <button className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-surface-container transition-colors group">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-on-surface-variant group-hover:text-primary transition-colors">
-                  <Fingerprint className="h-5 w-5" />
-                </div>
-                <span className="text-sm font-medium text-on-surface">Login Biométrico</span>
-              </div>
-              <div className="w-10 h-5 bg-primary rounded-full relative">
-                <div className="absolute right-1 top-1 w-3 h-3 bg-white rounded-full transition-all"></div>
-              </div>
-            </button>
-          </nav>
-        </div>
-
-        {/* Support & Logout */}
-        <div className="p-6">
-          <h4 className="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-4">Ayuda y Soporte</h4>
-          <nav className="space-y-2">
-            <Button variant="ghost" className="w-full justify-between p-3 rounded-xl hover:bg-surface-container transition-colors group h-auto font-normal" asChild>
-              <Link href="/ayuda">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-on-surface-variant group-hover:text-primary transition-colors">
-                    <HelpCircle className="h-5 w-5" />
-                  </div>
-                  <span className="text-sm font-medium text-on-surface">Centro de Ayuda</span>
-                </div>
-                <ChevronRight className="h-5 w-5 text-outline-variant" />
-              </Link>
-            </Button>
-
-            <button className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-surface-container transition-colors group text-red-600 mt-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center">
-                  <LogOut className="h-5 w-5" />
-                </div>
-                <span className="text-sm font-bold">Cerrar Sesión</span>
-              </div>
-            </button>
-          </nav>
-        </div>
+      {/* Footer Info */}
+      <div className="text-center pt-4">
+        <p className="text-[9px] font-black text-on-surface-variant/20 uppercase tracking-[0.3em]">Poolera v2.0.1</p>
       </div>
     </div>
   );
