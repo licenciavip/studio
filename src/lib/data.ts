@@ -26,7 +26,7 @@ export const servicesByCategory: Record<CategorySlug, Service[]> = {
       id: "gemini", 
       name: "Gemini AI", 
       logoId: "chatgpt-logo", 
-      color: "#ffffff", 
+      color: "#4285f4", 
       pricePerMonth: "16.90", 
       hostEarnings: "61.65",
       planName: "Gemini AI", 
@@ -55,8 +55,8 @@ export const servicesByCategory: Record<CategorySlug, Service[]> = {
 };
 
 export const currentUser = {
-  name: "Alex Thompson",
-  email: "alex.t@example.com",
+  name: "Deyvid",
+  email: "deyvid@example.com",
   avatar: "https://picsum.photos/seed/alex/200/200",
 };
 
@@ -80,7 +80,7 @@ export const groups: Group[] = [
   { 
     id: '1', 
     service: 'ChatGPT Plus', 
-    host: 'Alex Thompson',
+    host: 'Deyvid',
     userRole: 'Anfitrión',
     slots: { filled: 3, total: 5 }, 
     publicPrice: 26.90, 

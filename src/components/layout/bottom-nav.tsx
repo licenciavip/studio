@@ -16,7 +16,7 @@ export function BottomNav() {
 
   return (
     <div className="fixed bottom-6 left-0 right-0 z-50 px-6">
-      <nav className="max-w-md mx-auto flex justify-around items-center h-16 bg-white/60 backdrop-blur-2xl border border-white/40 rounded-[2.5rem] shadow-2xl shadow-black/10 px-2 overflow-hidden">
+      <nav className="max-w-md mx-auto flex justify-around items-center h-16 bg-white/40 backdrop-blur-3xl border border-white/40 rounded-[2.5rem] shadow-2xl shadow-black/10 px-2 overflow-hidden">
         {navItems.map((item) => {
           const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
           
@@ -25,12 +25,12 @@ export function BottomNav() {
               key={item.href}
               href={item.href}
               className={cn(
-                "relative flex flex-col items-center justify-center flex-1 h-full transition-all duration-300",
-                isActive ? "text-primary" : "text-on-surface-variant/60"
+                "relative flex flex-col items-center justify-center flex-1 h-full transition-all duration-500",
+                isActive ? "text-primary" : "text-on-surface-variant/40"
               )}
             >
               {isActive && (
-                <div className="absolute top-1 w-8 h-1 bg-primary rounded-full blur-[1px]" />
+                <div className="absolute top-1 w-8 h-1 bg-primary rounded-full blur-[1px] opacity-60" />
               )}
               <div className={cn(
                 "p-2 rounded-2xl transition-all duration-300",
@@ -44,7 +44,7 @@ export function BottomNav() {
                 </span>
               </div>
               <span className={cn(
-                "text-[9px] font-bold tracking-tight transition-all",
+                "text-[9px] font-black tracking-tight transition-all duration-300",
                 isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1"
               )}>
                 {item.label}

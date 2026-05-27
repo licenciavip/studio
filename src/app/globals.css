@@ -33,9 +33,9 @@
   }
   body {
     @apply bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary;
-    background: radial-gradient(circle at top right, rgba(225, 224, 255, 0.5), transparent 400px),
-                radial-gradient(circle at bottom left, rgba(234, 237, 255, 0.5), transparent 400px),
-                #faf8ff;
+    background: radial-gradient(circle at top right, rgba(225, 224, 255, 0.6), transparent 500px),
+                radial-gradient(circle at bottom left, rgba(234, 237, 255, 0.6), transparent 500px),
+                linear-gradient(to bottom, #fcfbff, #f4f6ff);
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
     letter-spacing: -0.015em;
   }
@@ -45,11 +45,11 @@
 }
 
 .glass-card {
-  @apply bg-white/40 backdrop-blur-xl border border-white/40 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)];
+  @apply bg-white/50 backdrop-blur-2xl border border-white/60 shadow-[0_8px_32px_0_rgba(31,38,135,0.06)];
 }
 
 .glass-button {
-  @apply backdrop-blur-md border border-white/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98];
+  @apply backdrop-blur-md border border-white/30 transition-all duration-300 hover:scale-[1.02] active:scale-[0.96] shadow-sm;
 }
 
 .pb-safe {

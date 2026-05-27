@@ -1,4 +1,3 @@
-
 'use client';
 
 import { servicesByCategory } from "@/lib/data";
@@ -25,20 +24,20 @@ export default function CompartirCategoryPage() {
   const categoryLabel = categoryLabels[category] || "SERVICIOS";
 
   return (
-    <div className="min-h-screen bg-[#F5F5F9] -mx-4 -mt-6 pb-24">
-      <div className="container mx-auto py-8 px-4 max-w-5xl">
-        <div className="flex items-center gap-3 mb-6">
-          <Button asChild variant="ghost" className="rounded-full h-10 w-10 p-0 hover:bg-white transition-all active:scale-95">
+    <div className="min-h-screen -mx-4 -mt-6 pb-24">
+      <div className="container mx-auto py-8 px-4 max-w-xl">
+        <div className="flex items-center gap-3 mb-8">
+          <Button asChild variant="ghost" className="rounded-full h-10 w-10 p-0 hover:bg-white/50 transition-all active:scale-95">
             <Link href="/compartir">
               <ArrowLeft className="h-5 w-5 text-on-surface" />
             </Link>
           </Button>
-          <h1 className="text-xl font-bold tracking-tight text-on-surface">
+          <h1 className="text-xl font-sora font-extrabold tracking-tight text-on-surface">
             {categoryLabel}
           </h1>
         </div>
 
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
+        <div className="grid grid-cols-3 gap-2">
           {services.map((service) => {
             const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
             const isPerplexity = service.id === 'perplexity';
@@ -52,14 +51,16 @@ export default function CompartirCategoryPage() {
               <Link href={`/publicar?category=${category}&service=${service.id}`} key={service.id} className="block group">
                 <div 
                   className={cn(
-                    "relative rounded-2xl p-3 aspect-[4/5] flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 active:scale-95 shadow-sm overflow-hidden border-none",
-                    isWhiteBg && "shadow-[0_2px_10px_rgb(0,0,0,0.04)]"
+                    "relative rounded-[2rem] p-3 aspect-[4/5] flex flex-col justify-between transition-all duration-500 hover:shadow-xl hover:scale-[1.05] active:scale-95 overflow-hidden border-none",
+                    isWhiteBg ? "glass-card" : "shadow-lg shadow-black/5"
                   )}
-                  style={{ backgroundColor: service.color || '#4343d5' }}
+                  style={{ backgroundColor: !isWhiteBg ? (service.color || '#4343d5') : undefined }}
                 >
-                  <div className="space-y-0.5">
+                  {!isWhiteBg && <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent pointer-events-none" />}
+                  
+                  <div className="relative z-10 space-y-0.5">
                     <h3 className={cn(
-                      "text-[11px] font-bold tracking-tight leading-none pr-4 truncate",
+                      "text-[11px] font-bold tracking-tight leading-none pr-4",
                       brandColor
                     )}>
                       {service.name}
@@ -72,16 +73,16 @@ export default function CompartirCategoryPage() {
                     </p>
                   </div>
 
-                  <div className="space-y-0.5">
+                  <div className="relative z-10 space-y-0.5">
                     <p className={cn(
-                      "text-[7px] font-bold uppercase tracking-widest",
+                      "text-[7px] font-black uppercase tracking-widest",
                       labelColor
                     )}>
-                      RECIBE HASTA
+                      RECIBE
                     </p>
                     <div className="flex items-baseline gap-0.5">
                       <span className={cn(
-                        "text-sm font-bold tracking-tight",
+                        "text-sm font-sora font-extrabold tracking-tight",
                         brandColor
                       )}>
                         S/ {service.hostEarnings}
