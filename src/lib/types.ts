@@ -70,6 +70,7 @@ export type Service = {
   color?: string;
   discount?: string;
   pricePerMonth?: string;
+  hostEarnings?: string; // Lo que recibe el anfitrión
   planName?: string;
 };
 

@@ -1,4 +1,3 @@
-
 'use client';
 
 import { servicesByCategory } from "@/lib/data";
@@ -26,7 +25,7 @@ export default function CompartirCategoryPage() {
 
   return (
     <div className="min-h-screen bg-[#F5F5F9] -mx-4 -mt-6 pb-24">
-      <div className="container mx-auto py-8 px-6 max-w-5xl">
+      <div className="container mx-auto py-8 px-4 max-w-5xl">
         <div className="flex items-center gap-3 mb-6">
           <Button asChild variant="ghost" className="rounded-full h-10 w-10 p-0 hover:bg-white transition-all active:scale-95">
             <Link href="/compartir">
@@ -87,12 +86,12 @@ export default function CompartirCategoryPage() {
                     )}>
                       COMPARTE
                     </p>
-                    <div className="flex items-baseline gap-0.5">
+                    <div className="flex flex-wrap items-baseline gap-0.5">
                       <span className={cn(
-                        "text-sm font-bold tracking-tight",
+                        "text-[10px] font-bold tracking-tight",
                         brandColor
                       )}>
-                        RECIBE >
+                        RECIBE > S/ {service.hostEarnings}
                       </span>
                     </div>
                   </div>

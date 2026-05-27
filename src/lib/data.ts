@@ -1,12 +1,47 @@
-
 import type { CategorySlug, Subscription, OrderStatus, Service, Group, Order } from "@/lib/types";
 
 export const servicesByCategory: Record<CategorySlug, Service[]> = {
   ia: [
-    { id: "chatgpt", name: "ChatGPT", logoId: "chatgpt-logo", color: "#10a37f", pricePerMonth: "26.90", planName: "ChatGPT Plus", discount: "-58%" },
-    { id: "claude", name: "Claude", logoId: "chatgpt-logo", color: "#d97757", pricePerMonth: "47.90", planName: "Claude Pro", discount: "-32%" },
-    { id: "gemini", name: "Gemini", logoId: "chatgpt-logo", color: "#ffffff", pricePerMonth: "16.90", planName: "Gemini AI", discount: "-65%" },
-    { id: "perplexity", name: "Perplexity", logoId: "chatgpt-logo", color: "#0b1416", pricePerMonth: "47.90", planName: "Perplexity Pro", discount: "-46%" },
+    { 
+      id: "chatgpt", 
+      name: "ChatGPT", 
+      logoId: "chatgpt-logo", 
+      color: "#10a37f", 
+      pricePerMonth: "26.90", 
+      hostEarnings: "15.00",
+      planName: "ChatGPT Plus", 
+      discount: "-58%" 
+    },
+    { 
+      id: "claude", 
+      name: "Claude", 
+      logoId: "chatgpt-logo", 
+      color: "#d97757", 
+      pricePerMonth: "47.90", 
+      hostEarnings: "25.00",
+      planName: "Claude Pro", 
+      discount: "-32%" 
+    },
+    { 
+      id: "gemini", 
+      name: "Gemini", 
+      logoId: "chatgpt-logo", 
+      color: "#ffffff", 
+      pricePerMonth: "16.90", 
+      hostEarnings: "10.00",
+      planName: "Gemini AI", 
+      discount: "-65%" 
+    },
+    { 
+      id: "perplexity", 
+      name: "Perplexity", 
+      logoId: "chatgpt-logo", 
+      color: "#0b1416", 
+      pricePerMonth: "47.90", 
+      hostEarnings: "28.00",
+      planName: "Perplexity Pro", 
+      discount: "-46%" 
+    },
   ],
   streaming: [],
   musica: [],
