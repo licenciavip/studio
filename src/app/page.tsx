@@ -89,7 +89,7 @@ export default function Home() {
               </span>
             </div>
             <Input 
-              className="w-full pl-10 pr-4 py-3 bg-white border-none rounded-2xl focus-visible:ring-primary transition-all text-xs placeholder:text-outline/40 shadow-sm h-12" 
+              className="w-full pl-10 pr-4 py-3 bg-white border-none rounded-2xl focus-visible:ring-primary transition-all text-xs placeholder:text-outline/40 shadow-sm h-12 font-sans" 
               placeholder="¿Qué servicio de IA buscas?" 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -102,7 +102,7 @@ export default function Home() {
             Object.entries(groupedServices).map(([slug, services]) => (
               <div key={slug} className="space-y-6">
                 <div className="px-2">
-                  <h2 className="text-[9px] font-normal uppercase tracking-[0.3em] text-on-surface-variant/40 font-inter">
+                  <h2 className="text-[9px] font-normal uppercase tracking-[0.3em] text-on-surface-variant/40 font-sans">
                     {categoryLabels[slug] || slug.toUpperCase()}
                   </h2>
                 </div>
@@ -174,7 +174,7 @@ export default function Home() {
 
         <section className="mt-14 space-y-10">
           <div className="space-y-4">
-            <h2 className="text-[9px] font-normal uppercase tracking-[0.3em] text-on-surface-variant/40 px-2 font-inter">NOVEDADES</h2>
+            <h2 className="text-[9px] font-normal uppercase tracking-[0.3em] text-on-surface-variant/40 px-2 font-sans">NOVEDADES</h2>
             <div className="relative overflow-hidden rounded-[2rem] border-none bg-white shadow-sm transition-transform active:scale-[0.98]">
               <div className="p-5 flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -182,7 +182,7 @@ export default function Home() {
                     <Image src="https://picsum.photos/seed/novedades/100/100" alt="Novedad" width={40} height={40} className="rounded-lg" />
                   </div>
                   <div>
-                    <h3 className="text-xs font-normal text-on-surface leading-tight uppercase">Lank Mundial 2026</h3>
+                    <h3 className="text-xs font-normal text-on-surface leading-tight uppercase tracking-tight">Lank Mundial 2026</h3>
                     <p className="text-[9px] font-normal text-on-surface-variant opacity-60">Prode, resultados y más</p>
                   </div>
                 </div>
@@ -196,7 +196,7 @@ export default function Home() {
 
           <div className="space-y-4">
             <div className="flex justify-between items-center px-2">
-              <h2 className="text-[9px] font-normal uppercase tracking-[0.3em] text-on-surface-variant/40 font-inter">MIS GRUPOS</h2>
+              <h2 className="text-[9px] font-normal uppercase tracking-[0.3em] text-on-surface-variant/40 font-sans">MIS GRUPOS</h2>
               <Link href="/mis-grupos" className="text-[9px] font-normal text-primary hover:opacity-70 transition-colors uppercase tracking-widest">VER TODO</Link>
             </div>
             {groups.slice(0, 1).map((group) => (
@@ -207,7 +207,7 @@ export default function Home() {
                       <Image src={`https://picsum.photos/seed/${group.id}/100/100`} alt={group.service} width={28} height={28} className="object-contain" />
                     </div>
                     <div>
-                      <h3 className="text-xs font-normal text-on-surface leading-tight uppercase">{group.service}</h3>
+                      <h3 className="text-xs font-normal text-on-surface leading-tight uppercase tracking-tight">{group.service}</h3>
                       <p className="text-[9px] font-normal text-on-surface-variant opacity-60">{group.slots.filled} cupos compartidos</p>
                     </div>
                   </div>
@@ -229,7 +229,7 @@ export default function Home() {
           </div>
           <div className="max-w-xs mx-auto px-4">
             <Input 
-              className="w-full bg-white border-none rounded-2xl h-12 text-[10px] font-normal shadow-sm focus-visible:ring-primary px-6 placeholder:font-normal placeholder:opacity-20 text-center" 
+              className="w-full bg-white border-none rounded-2xl h-12 text-[10px] font-normal shadow-sm focus-visible:ring-primary px-6 placeholder:font-normal placeholder:opacity-20 text-center font-sans" 
               placeholder="EJ: MIDJOURNEY, FIREFLY..."
               value={recommendation}
               onChange={(e) => setRecommendation(e.target.value)}
