@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import { useAuth, useFirestore } from "@/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useToast } from "@/hooks/use-toast";
-import { ChevronRight, Search, PlusCircle } from "lucide-react";
+import { ChevronRight, PlusCircle } from "lucide-react";
 import type { CategorySlug, Service } from "@/lib/types";
 
 const categoryLabels: Record<string, string> = {
@@ -18,7 +18,6 @@ const categoryLabels: Record<string, string> = {
 };
 
 export default function Home() {
-  const [searchQuery, setSearchQuery] = useState("");
   const [recommendation, setRecommendation] = useState("");
   const [isSubmittingRecLocal, setIsSubmittingRecLocal] = useState(false);
 
@@ -28,17 +27,8 @@ export default function Home() {
   const user = auth?.currentUser;
 
   const groupedServices = useMemo(() => {
-    const result: Record<string, Service[]> = {};
-    const query = searchQuery.toLowerCase();
-
-    Object.entries(servicesByCategory).forEach(([slug, services]) => {
-      const filtered = services.filter(s => s.name.toLowerCase().includes(query));
-      if (filtered.length > 0) {
-        result[slug] = filtered;
-      }
-    });
-    return result;
-  }, [searchQuery]);
+    return servicesByCategory;
+  }, []);
 
   const handleRecommendSubmit = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && recommendation.trim()) {
@@ -96,21 +86,6 @@ export default function Home() {
               <span className="text-white font-bold text-lg tracking-tight">Lankear una suscripción</span>
             </div>
           </Link>
-        </section>
-
-        {/* BUSCADOR */}
-        <section className="pt-6">
-          <div className="relative flex items-center group">
-            <div className="absolute left-4 flex items-center justify-center pointer-events-none">
-              <Search className="h-4 w-4 text-on-surface-variant/40 group-focus-within:text-primary transition-colors" />
-            </div>
-            <Input 
-              className="w-full pl-10 pr-4 py-2 bg-white border-none rounded-xl focus-visible:ring-primary transition-all text-xs placeholder:text-on-surface-variant/20 shadow-sm h-10" 
-              placeholder="¿Qué servicio buscas?" 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
         </section>
 
         {/* NOVEDADES */}
