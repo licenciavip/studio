@@ -5,16 +5,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  Film,
-  Music,
-  School,
-  Gamepad2,
-  Palette,
-  ShieldCheck,
   BrainCircuit,
-  Swords,
-  HeartPulse,
-  Settings2,
   ArrowLeft,
 } from "lucide-react";
 import Link from "next/link";
@@ -28,47 +19,38 @@ type Category = {
 };
 
 const categories: Category[] = [
-  { title: "Películas y Series", slug: "streaming", icon: <Film className="h-8 w-8 text-primary" /> },
-  { title: "Gaming", slug: "gaming", icon: <Gamepad2 className="h-8 w-8 text-primary" /> },
-  { title: "Diseño", slug: "diseno", icon: <Palette className="h-8 w-8 text-primary" /> },
-  { title: "Música", slug: "musica", icon: <Music className="h-8 w-8 text-primary" /> },
-  { title: "Deportes", slug: "deportes", icon: <Swords className="h-8 w-8 text-primary" /> },
-  { title: "VPNs y Seguridad", slug: "seguridad", icon: <ShieldCheck className="h-8 w-8 text-primary" /> },
-  { title: "Inteligencia Artificial", slug: "ia", icon: <BrainCircuit className="h-8 w-8 text-primary" /> },
-  { title: "Educación", slug: "educacion", icon: <School className="h-8 w-8 text-primary" /> },
-  { title: "Software", slug: "software", icon: <Settings2 className="h-8 w-8 text-primary" /> },
-  { title: "Bienestar", slug: "bienestar", icon: <HeartPulse className="h-8 w-8 text-primary" /> },
+  { title: "Inteligencia Artificial", slug: "ia", icon: <BrainCircuit className="h-6 w-6 text-primary" /> },
 ];
 
 export default function ExplorarPage() {
   return (
-    <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
-      <div className="flex items-center justify-between mb-10">
+    <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <div className="flex items-center justify-between mb-8">
         <div className="flex-1">
-          <Button asChild variant="outline">
+          <Button asChild variant="outline" size="sm" className="rounded-xl">
             <Link href="/">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Regresar
             </Link>
           </Button>
         </div>
-        <div className="flex-[2] text-center">
-          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+        <div className="flex-[4] text-center">
+          <h1 className="text-2xl font-sora font-bold tracking-tight">
             Selecciona una categoría
           </h1>
         </div>
         <div className="flex-1"></div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="max-w-xs mx-auto">
         {categories.map((category) => (
           <Link href={`/explorar/${category.slug}`} key={category.title}>
-            <Card className="flex items-center p-4 h-full transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg cursor-pointer border-none shadow-sm bg-card">
-              <div className="bg-primary/10 p-3 rounded-lg mr-4">
+            <Card className="flex items-center p-4 h-full transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg cursor-pointer border border-outline-variant/30 shadow-sm bg-card rounded-2xl">
+              <div className="bg-primary/10 p-2.5 rounded-xl mr-4">
                  {category.icon}
               </div>
               <CardHeader className="p-0">
-                <CardTitle className="font-sans text-base font-semibold">
+                <CardTitle className="font-sora text-sm font-bold">
                   {category.title}
                 </CardTitle>
               </CardHeader>
