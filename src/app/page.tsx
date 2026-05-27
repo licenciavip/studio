@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useMemo } from "react";
@@ -6,6 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { servicesByCategory } from "@/lib/data";
 import { cn } from "@/lib/utils";
+import { useAuth, useFirestore } from "@/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { useToast } from "@/hooks/use-toast";
 import type { CategorySlug, Service } from "@/lib/types";
 
 const categories = [
@@ -20,6 +24,12 @@ const categoryLabels: Record<string, string> = {
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [recommendation, setRecommendation] = useState("");
+  const [isSubmittingRec, setIsSubmittingRec] = useState(false);
+
+  const auth = useAuth();
+  const firestore = useFirestore();
+  const { toast } = useToast();
 
   const groupedServices = useMemo(() => {
     const result: Record<string, Service[]> = {};
@@ -41,6 +51,43 @@ export default function Home() {
     }
     return result;
   }, [selectedCategory, searchQuery]);
+
+  const handleRecommendSubmit = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && recommendation.trim()) {
+      if (!auth.currentUser) {
+        toast({
+          title: "Inicia sesión",
+          description: "Debes estar conectado para enviar una sugerencia.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      setIsSubmittingRec(true);
+      try {
+        await addDoc(collection(firestore, "serviceRecommendations"), {
+          userId: auth.currentUser.uid,
+          serviceName: recommendation.trim(),
+          createdAt: serverTimestamp(),
+        });
+
+        toast({
+          title: "¡Gracias!",
+          description: "Hemos recibido tu sugerencia. ¡Pronto la evaluaremos!",
+        });
+        setRecommendation("");
+      } catch (error) {
+        console.error("Error al enviar recomendación:", error);
+        toast({
+          title: "Error",
+          description: "No pudimos guardar tu sugerencia. Inténtalo más tarde.",
+          variant: "destructive"
+        });
+      } finally {
+        setIsSubmittingRec(false);
+      }
+    }
+  };
 
   const hasResults = Object.keys(groupedServices).length > 0;
 
@@ -158,21 +205,26 @@ export default function Home() {
           )}
         </section>
 
-        {/* Sección de Contacto al final */}
-        <section className="mt-16 px-4 py-8 text-center space-y-6">
+        {/* Sección de Recomendaciones */}
+        <section className="mt-16 px-4 py-12 text-center space-y-6 bg-surface-container/30 rounded-[2rem] mx-4 border border-outline-variant/10">
           <div className="space-y-2">
             <h2 className="text-xl font-sora font-black text-on-surface leading-tight">
               ¿Buscas otra IA?
             </h2>
-            <p className="text-xs text-on-surface-variant font-medium">
+            <p className="text-xs text-on-surface-variant font-medium max-w-[240px] mx-auto">
               Cuéntanos qué herramienta necesitas y la conseguiremos para ti.
             </p>
           </div>
           <div className="max-w-md mx-auto">
             <Input 
-              className="w-full bg-white border-outline-variant rounded-xl h-10 text-xs shadow-sm" 
+              className="w-full bg-white border-outline-variant rounded-2xl h-11 text-xs shadow-sm focus-visible:ring-primary px-5" 
               placeholder="Ej: Midjourney, Adobe Firefly..."
+              value={recommendation}
+              onChange={(e) => setRecommendation(e.target.value)}
+              onKeyDown={handleRecommendSubmit}
+              disabled={isSubmittingRec}
             />
+            <p className="mt-3 text-[10px] text-muted-foreground font-medium italic">Presiona Enter para enviar</p>
           </div>
         </section>
       </main>

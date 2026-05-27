@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "PaymentOrder": {
@@ -42,6 +43,17 @@
         "updatedAt": { "type": "string", "format": "date-time" }
       },
       "required": ["userId", "balance"]
+    },
+    "ServiceRecommendation": {
+      "title": "ServiceRecommendation",
+      "description": "Sugerencia de una nueva plataforma de IA enviada por un usuario.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "serviceName": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["serviceName", "createdAt"]
     }
   },
   "auth": {
@@ -55,6 +67,10 @@
     "/wallets/{userId}": {
       "schema": "#/backend/entities/Wallet",
       "description": "Saldo de cada usuario."
+    },
+    "/serviceRecommendations/{recommendationId}": {
+      "schema": "#/backend/entities/ServiceRecommendation",
+      "description": "Sugerencias de nuevos servicios enviadas por los usuarios."
     }
   }
 }

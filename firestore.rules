@@ -1,3 +1,4 @@
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -9,7 +10,7 @@ service cloud.firestore {
       return request.auth.uid == userId;
     }
     function isAdmin() {
-      return isAuthenticated() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      return isAuthenticated() && exists(/databases/$(database)/documents/users/$(request.auth.uid)) && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
 
     match /users/{userId} {
@@ -29,6 +30,11 @@ service cloud.firestore {
     match /wallets/{userId} {
       allow read: if isAuthenticated() && (isOwner(userId) || isAdmin());
       allow write: if isAdmin();
+    }
+
+    match /serviceRecommendations/{id} {
+      allow create: if isAuthenticated();
+      allow read: if isAdmin();
     }
   }
 }
