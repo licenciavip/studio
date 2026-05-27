@@ -41,7 +41,7 @@ export default function CompartirCategoryPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-4 gap-2">
           {services.map((service) => {
             const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
             const isPerplexity = service.id === 'perplexity';
@@ -55,7 +55,7 @@ export default function CompartirCategoryPage() {
               <Link href={`/publicar?category=${category}&service=${service.id}`} key={service.id} className="block group">
                 <div 
                   className={cn(
-                    "relative rounded-[1.5rem] p-2.5 aspect-[1/1] flex flex-col justify-between transition-all duration-500 hover:scale-[1.03] active:scale-95 overflow-hidden border-none",
+                    "relative rounded-2xl p-2 aspect-square flex flex-col justify-between transition-all duration-500 hover:scale-[1.03] active:scale-95 overflow-hidden border-none",
                     isWhiteBg ? "glass-card" : "shadow-lg shadow-black/5"
                   )}
                   style={{ backgroundColor: !isWhiteBg ? (service.color || '#4343d5') : undefined }}
@@ -64,13 +64,13 @@ export default function CompartirCategoryPage() {
                   
                   <div className="relative z-10 space-y-0.5">
                     <h3 className={cn(
-                      "text-[9px] font-bold tracking-tight leading-none pr-3 truncate",
+                      "text-[8px] font-bold tracking-tight leading-none pr-3 truncate",
                       brandColor
                     )}>
                       {service.name}
                     </h3>
                     <p className={cn(
-                      "text-[6px] font-medium opacity-80 uppercase tracking-tighter",
+                      "text-[5px] font-medium opacity-80 uppercase tracking-tighter",
                       planColor
                     )}>
                       VENDIENDO
@@ -79,13 +79,13 @@ export default function CompartirCategoryPage() {
 
                   <div className="relative z-10 space-y-0.5">
                     <p className={cn(
-                      "text-[6px] font-black uppercase tracking-tighter",
+                      "text-[5px] font-black uppercase tracking-tighter",
                       labelColor
                     )}>
                       RECIBES
                     </p>
                     <span className={cn(
-                      "text-[11px] font-sora font-extrabold tracking-tight",
+                      "text-[10px] font-sora font-extrabold tracking-tight",
                       brandColor
                     )}>
                       S/ {service.hostEarnings}
