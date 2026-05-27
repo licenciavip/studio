@@ -94,7 +94,7 @@ export default function Home() {
         {/* NOVEDADES */}
         <section className="mt-8 space-y-3">
           <h2 className="text-lg font-bold text-on-surface px-1">Novedades</h2>
-          <div className="relative overflow-hidden rounded-2xl border-none bg-white shadow-sm transition-transform active:scale-[0.98]">
+          <div className="relative overflow-hidden rounded-2xl border-none bg-white shadow-sm transition-transform active:scale-[0.98] max-w-md">
             <div className="p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center">
@@ -120,7 +120,7 @@ export default function Home() {
             <Link href="/mis-grupos" className="text-[8px] font-bold text-primary hover:opacity-70 transition-colors uppercase tracking-wider">VER TODO</Link>
           </div>
           {groups.slice(0, 1).map((group) => (
-            <Link href={`/mis-grupos/${group.id}`} key={group.id} className="block">
+            <Link href={`/mis-grupos/${group.id}`} key={group.id} className="block max-w-md">
               <div className="p-4 flex items-center justify-between rounded-2xl border-none bg-white shadow-sm active:scale-[0.98] transition-transform">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center">
@@ -137,7 +137,7 @@ export default function Home() {
           ))}
         </section>
 
-        {/* IA & HERRAMIENTAS - SOLO CATEGORÍAS CON CONTENIDO */}
+        {/* IA & HERRAMIENTAS - DISEÑO RESPONSIVO */}
         <section className="mt-10 space-y-6">
           {hasResults ? (
             Object.entries(groupedServices).map(([slug, services]) => (
@@ -148,7 +148,7 @@ export default function Home() {
                   </h2>
                 </div>
                 
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
                   {services.map((service) => {
                     const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
                     const isPerplexity = service.id === 'perplexity';
@@ -217,7 +217,7 @@ export default function Home() {
         </section>
 
         {/* SUGERENCIAS */}
-        <section className="mt-8 py-8 text-center space-y-4 bg-white/50 rounded-3xl border border-white shadow-inner">
+        <section className="mt-8 py-8 text-center space-y-4 bg-white/50 rounded-3xl border border-white shadow-inner max-w-lg mx-auto">
           <div className="space-y-1">
             <h2 className="text-sm font-bold text-on-surface leading-tight uppercase tracking-tight">
               ¿BUSCAS OTRA HERRAMIENTA?
