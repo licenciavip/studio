@@ -81,7 +81,7 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-[#F5F5F9]">
       <main className="flex-grow w-full max-w-[1280px] mx-auto pb-24 px-4">
-        <section className="pt-6">
+        <section className="pt-4">
           <div className="relative flex items-center group">
             <div className="absolute left-4 flex items-center justify-center pointer-events-none">
               <Search className="h-5 w-5 text-on-surface-variant/40 group-focus-within:text-primary transition-colors" />
@@ -95,17 +95,17 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="mt-10 space-y-8">
+        <section className="mt-8 space-y-6">
           {hasResults ? (
             Object.entries(groupedServices).map(([slug, services]) => (
-              <div key={slug} className="space-y-6">
-                <div className="px-2">
-                  <h2 className="text-3xl font-bold tracking-tight text-on-surface">
+              <div key={slug} className="space-y-4">
+                <div className="px-1">
+                  <h2 className="text-2xl font-bold tracking-tight text-on-surface">
                     {categoryLabels[slug] || slug}
                   </h2>
                 </div>
                 
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2">
                   {services.map((service) => {
                     const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
                     const isPerplexity = service.id === 'perplexity';
@@ -120,14 +120,14 @@ export default function Home() {
                       <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
                         <div 
                           className={cn(
-                            "relative rounded-[1.5rem] p-4 aspect-[4/5] flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95 shadow-lg overflow-hidden border-none",
-                            isWhiteBg && "shadow-[0_8px_30px_rgb(0,0,0,0.06)]"
+                            "relative rounded-[1.5rem] p-4 aspect-[4/5] flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95 shadow-md overflow-hidden border-none",
+                            isWhiteBg && "shadow-[0_4px_20px_rgb(0,0,0,0.04)]"
                           )}
                           style={{ backgroundColor: service.color || '#4343d5' }}
                         >
                           {/* Discount Badge */}
                           {service.discount && (
-                            <div className="absolute top-3 right-3 bg-black/10 backdrop-blur-md px-2 py-0.5 rounded-full z-10">
+                            <div className="absolute top-3 right-3 bg-black/10 backdrop-blur-md px-1.5 py-0.5 rounded-full z-10">
                               <span className={cn(
                                 "text-[8px] font-bold",
                                 isPerplexity ? "text-[#1adec5]" : (isWhiteBg ? "text-primary" : "text-white")
@@ -188,21 +188,21 @@ export default function Home() {
           )}
         </section>
 
-        <section className="mt-14 space-y-10">
-          <div className="space-y-4">
-            <h2 className="text-xl font-bold text-on-surface px-2">Novedades</h2>
+        <section className="mt-12 space-y-8">
+          <div className="space-y-3">
+            <h2 className="text-xl font-bold text-on-surface px-1">Novedades</h2>
             <div className="relative overflow-hidden rounded-[2rem] border-none bg-white shadow-sm transition-transform active:scale-[0.98]">
-              <div className="p-5 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-surface-container flex items-center justify-center">
-                    <Image src="https://picsum.photos/seed/novedades/100/100" alt="Novedad" width={40} height={40} className="rounded-lg" />
+              <div className="p-4 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-surface-container flex items-center justify-center">
+                    <Image src="https://picsum.photos/seed/novedades/100/100" alt="Novedad" width={32} height={32} className="rounded-lg" />
                   </div>
                   <div>
                     <h3 className="text-sm font-bold text-on-surface leading-tight">Lank Mundial 2026</h3>
-                    <p className="text-xs text-on-surface-variant">Prode, resultados y más</p>
+                    <p className="text-[10px] text-on-surface-variant">Prode, resultados y más</p>
                   </div>
                 </div>
-                <ChevronRight className="h-5 w-5 text-on-surface-variant/20" />
+                <ChevronRight className="h-4 w-4 text-on-surface-variant/20" />
               </div>
               <div className="bg-[#ff4d00] py-1.5 px-4 text-center">
                 <p className="text-[10px] font-bold text-white uppercase tracking-wider">El mejor lugar para vivir el mundial</p>
@@ -210,49 +210,49 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="flex justify-between items-center px-2">
+          <div className="space-y-3">
+            <div className="flex justify-between items-center px-1">
               <h2 className="text-xl font-bold text-on-surface">Mis Grupos</h2>
-              <Link href="/mis-grupos" className="text-xs font-bold text-primary hover:opacity-70 transition-colors uppercase">VER TODO</Link>
+              <Link href="/mis-grupos" className="text-[10px] font-bold text-primary hover:opacity-70 transition-colors uppercase">VER TODO</Link>
             </div>
             {groups.slice(0, 1).map((group) => (
               <Link href={`/mis-grupos/${group.id}`} key={group.id} className="block">
-                <div className="p-5 flex items-center justify-between rounded-[2rem] border-none bg-white shadow-sm active:scale-[0.98] transition-transform">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-surface-container flex items-center justify-center">
-                      <Image src={`https://picsum.photos/seed/${group.id}/100/100`} alt={group.service} width={28} height={28} className="object-contain" />
+                <div className="p-4 flex items-center justify-between rounded-[2rem] border-none bg-white shadow-sm active:scale-[0.98] transition-transform">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl bg-surface-container flex items-center justify-center">
+                      <Image src={`https://picsum.photos/seed/${group.id}/100/100`} alt={group.service} width={24} height={24} className="object-contain" />
                     </div>
                     <div>
                       <h3 className="text-sm font-bold text-on-surface leading-tight">{group.service}</h3>
-                      <p className="text-xs text-on-surface-variant">{group.slots.filled} cupos compartidos</p>
+                      <p className="text-[10px] text-on-surface-variant">{group.slots.filled} cupos compartidos</p>
                     </div>
                   </div>
-                  <ChevronRight className="h-5 w-5 text-on-surface-variant/20" />
+                  <ChevronRight className="h-4 w-4 text-on-surface-variant/20" />
                 </div>
               </Link>
             ))}
           </div>
         </section>
 
-        <section className="mt-16 py-14 text-center space-y-7 bg-white/50 rounded-[3rem] border border-white shadow-inner">
-          <div className="space-y-2">
-            <h2 className="text-xl font-bold text-on-surface leading-tight">
+        <section className="mt-12 py-12 text-center space-y-6 bg-white/50 rounded-[3rem] border border-white shadow-inner">
+          <div className="space-y-1">
+            <h2 className="text-lg font-bold text-on-surface leading-tight">
               ¿BUSCAS OTRA HERRAMIENTA?
             </h2>
-            <p className="text-xs text-on-surface-variant/60 font-medium max-w-[240px] mx-auto">
+            <p className="text-[10px] text-on-surface-variant/60 font-medium max-w-[200px] mx-auto">
               Dinos qué IA necesitas y la traeremos para ti.
             </p>
           </div>
           <div className="max-w-xs mx-auto px-4">
             <Input 
-              className="w-full bg-white border-none rounded-2xl h-12 text-sm font-medium shadow-sm focus-visible:ring-primary px-6 placeholder:opacity-40 text-center" 
+              className="w-full bg-white border-none rounded-2xl h-11 text-sm font-medium shadow-sm focus-visible:ring-primary px-6 placeholder:opacity-40 text-center" 
               placeholder="EJ: MIDJOURNEY, FIREFLY..."
               value={recommendation}
               onChange={(e) => setRecommendation(e.target.value)}
               onKeyDown={handleRecommendSubmit}
               disabled={isSubmittingRecLocal}
             />
-            <p className="mt-5 text-[10px] text-on-surface-variant/40 font-bold uppercase tracking-widest">PRESIONA ENTER PARA ENVIAR</p>
+            <p className="mt-4 text-[9px] text-on-surface-variant/40 font-bold uppercase tracking-widest">PRESIONA ENTER PARA ENVIAR</p>
           </div>
         </section>
       </main>
