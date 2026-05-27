@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { useAuth, useFirestore } from "@/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useToast } from "@/hooks/use-toast";
-import { ChevronRight, PlusCircle, Sparkles, Zap, ShieldCheck } from "lucide-react";
+import { ChevronRight, PlusCircle, Sparkles, Zap } from "lucide-react";
 import type { CategorySlug, Service } from "@/lib/types";
 
 const categoryLabels: Record<string, string> = {
@@ -20,15 +20,15 @@ const NOVEDADES = [
   {
     id: 1,
     title: "IA Pro Ilimitada",
-    desc: "Nuevos grupos de Claude 3.5 Sonnet.",
-    icon: <Sparkles className="h-3.5 w-3.5" />,
+    desc: "Claude 3.5 Sonnet disponible.",
+    icon: <Sparkles className="h-3 w-3" />,
     color: "from-primary/10 to-primary/5",
   },
   {
     id: 2,
     title: "Pagos Instantáneos",
-    desc: "Validación BCP en < 30 min.",
-    icon: <Zap className="h-3.5 w-3.5" />,
+    desc: "Validación BCP < 30 min.",
+    icon: <Zap className="h-3 w-3" />,
     color: "from-secondary/10 to-secondary/5",
   },
 ];
@@ -123,13 +123,13 @@ export default function Home() {
           </div>
           <div className="flex gap-2 overflow-x-auto no-scrollbar px-1 -mx-1 pb-1">
             {NOVEDADES.map((item) => (
-              <div key={item.id} className={cn("min-w-[180px] glass-card p-3 rounded-[1.5rem] bg-gradient-to-br border-white/40 flex flex-col justify-between h-[80px]", item.color)}>
+              <div key={item.id} className={cn("min-w-[150px] glass-card p-3 rounded-2xl bg-gradient-to-br border-white/40 flex flex-col justify-between h-[70px]", item.color)}>
                 <div className="flex items-center justify-between">
                   <div className="p-1 rounded-lg bg-white/40 text-on-surface/60">{item.icon}</div>
                   <span className="text-[6px] font-black text-on-surface/20 uppercase tracking-widest">News</span>
                 </div>
                 <div>
-                  <h4 className="text-[10px] font-bold text-on-surface leading-tight">{item.title}</h4>
+                  <h4 className="text-[9px] font-bold text-on-surface leading-tight">{item.title}</h4>
                   <p className="text-[7px] text-on-surface-variant/40 font-medium leading-tight mt-0.5 line-clamp-1">{item.desc}</p>
                 </div>
               </div>
@@ -150,7 +150,7 @@ export default function Home() {
                   const brandColor = isWhiteBg ? "text-primary" : "text-white";
                   return (
                     <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
-                      <div className={cn("relative rounded-[1.8rem] p-3 aspect-[1/1.1] flex flex-col justify-between transition-all duration-500 hover:scale-[1.03] active:scale-[0.98] overflow-hidden border border-white/5", isWhiteBg ? "glass-card" : "shadow-lg shadow-black/5")} style={{ backgroundColor: !isWhiteBg ? (service.color || '#4343d5') : undefined }}>
+                      <div className={cn("relative rounded-[1.5rem] p-2.5 aspect-[1/1] flex flex-col justify-between transition-all duration-500 hover:scale-[1.03] active:scale-[0.98] overflow-hidden border border-white/5", isWhiteBg ? "glass-card" : "shadow-lg shadow-black/5")} style={{ backgroundColor: !isWhiteBg ? (service.color || '#4343d5') : undefined }}>
                         {!isWhiteBg && <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />}
                         <div className="relative z-10 space-y-0.5">
                           <h3 className={cn("text-[9px] font-extrabold tracking-tight leading-none truncate", brandColor)}>{service.name}</h3>
@@ -170,13 +170,13 @@ export default function Home() {
         </section>
 
         {/* SUGERENCIAS */}
-        <section className="glass-card rounded-[2.2rem] p-5 text-center space-y-2 mb-8">
+        <section className="glass-card rounded-[2rem] p-4 text-center space-y-2 mb-8">
           <div className="space-y-0.5">
             <h2 className="text-[7px] font-black text-on-surface/10 uppercase tracking-[0.4em]">Propón una IA</h2>
             <p className="text-[9px] text-on-surface-variant/40 font-bold tracking-tight">¿No encuentras lo que buscas?</p>
           </div>
-          <div className="max-w-[160px] mx-auto">
-            <input className="glass-input w-full text-[10px] font-bold text-center h-9 placeholder:text-[8px] placeholder:opacity-20" placeholder="EJ: MIDJOURNEY..." value={recommendation} onChange={(e) => setRecommendation(e.target.value)} onKeyDown={handleRecommendSubmit} disabled={isSubmittingRecLocal} />
+          <div className="max-w-[140px] mx-auto">
+            <input className="glass-input w-full text-[10px] font-bold text-center h-8 placeholder:text-[8px] placeholder:opacity-20" placeholder="EJ: MIDJOURNEY..." value={recommendation} onChange={(e) => setRecommendation(e.target.value)} onKeyDown={handleRecommendSubmit} disabled={isSubmittingRecLocal} />
           </div>
         </section>
       </main>

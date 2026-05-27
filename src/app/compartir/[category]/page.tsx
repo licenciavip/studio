@@ -55,7 +55,7 @@ export default function CompartirCategoryPage() {
               <Link href={`/publicar?category=${category}&service=${service.id}`} key={service.id} className="block group">
                 <div 
                   className={cn(
-                    "relative rounded-[1.8rem] p-3 aspect-[1/1.1] flex flex-col justify-between transition-all duration-500 hover:scale-[1.03] active:scale-95 overflow-hidden border-none",
+                    "relative rounded-[1.5rem] p-2.5 aspect-[1/1] flex flex-col justify-between transition-all duration-500 hover:scale-[1.03] active:scale-95 overflow-hidden border-none",
                     isWhiteBg ? "glass-card" : "shadow-lg shadow-black/5"
                   )}
                   style={{ backgroundColor: !isWhiteBg ? (service.color || '#4343d5') : undefined }}

@@ -64,7 +64,7 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
             <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
               <div 
                 className={cn(
-                  "relative rounded-[1.8rem] p-3 aspect-[1/1.1] flex flex-col justify-between transition-all duration-500 hover:scale-[1.03] active:scale-95 shadow-sm overflow-hidden border-none",
+                  "relative rounded-[1.5rem] p-2.5 aspect-[1/1] flex flex-col justify-between transition-all duration-500 hover:scale-[1.03] active:scale-95 shadow-sm overflow-hidden border-none",
                   isWhiteBg ? "glass-card" : "shadow-lg shadow-black/5"
                 )}
                 style={{ backgroundColor: !isWhiteBg ? (service.color || '#4343d5') : undefined }}
@@ -72,8 +72,8 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
                 {!isWhiteBg && <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />}
                 
                 {service.discount && (
-                  <div className="absolute top-2 right-2 bg-black/10 backdrop-blur-md w-5 h-5 rounded-full flex items-center justify-center z-10 border border-white/10">
-                    <span className={cn("text-[6px] font-black", brandColor)}>
+                  <div className="absolute top-2 right-2 bg-black/10 backdrop-blur-md w-4 h-4 rounded-full flex items-center justify-center z-10 border border-white/10">
+                    <span className={cn("text-[5px] font-black", brandColor)}>
                       {service.discount}
                     </span>
                   </div>
@@ -115,7 +115,7 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
       </div>
 
       {services.length === 0 && (
-        <div className="text-center py-20 glass-card rounded-[2.2rem] border-dashed border-primary/10">
+        <div className="text-center py-20 glass-card rounded-[2rem] border-dashed border-primary/10">
           <p className="text-[8px] font-black uppercase tracking-widest opacity-20">Próximamente más opciones</p>
         </div>
       )}
