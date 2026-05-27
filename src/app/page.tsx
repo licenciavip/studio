@@ -81,6 +81,7 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-[#F5F5F9]">
       <main className="flex-grow w-full max-w-[1280px] mx-auto pb-24 px-4">
+        {/* BUSCADOR */}
         <section className="pt-2">
           <div className="relative flex items-center group">
             <div className="absolute left-4 flex items-center justify-center pointer-events-none">
@@ -95,12 +96,60 @@ export default function Home() {
           </div>
         </section>
 
+        {/* NOVEDADES Y MIS GRUPOS (AHORA PRIMERO) */}
         <section className="mt-6 space-y-6">
+          <div className="space-y-3">
+            <h2 className="text-lg font-bold text-on-surface px-1">Novedades</h2>
+            <div className="relative overflow-hidden rounded-2xl border-none bg-white shadow-sm transition-transform active:scale-[0.98]">
+              <div className="p-4 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center">
+                    <Image src="https://picsum.photos/seed/novedades/100/100" alt="Novedad" width={24} height={24} className="rounded-md" />
+                  </div>
+                  <div>
+                    <h3 className="text-xs font-bold text-on-surface leading-tight">Lank Mundial 2026</h3>
+                    <p className="text-[9px] text-on-surface-variant">Prode, resultados y más</p>
+                  </div>
+                </div>
+                <ChevronRight className="h-3 w-3 text-on-surface-variant/20" />
+              </div>
+              <div className="bg-[#ff4d00] py-1 px-4 text-center">
+                <p className="text-[8px] font-bold text-white uppercase tracking-wider">El mejor lugar para vivir el mundial</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex justify-between items-center px-1">
+              <h2 className="text-lg font-bold text-on-surface">Mis Grupos</h2>
+              <Link href="/mis-grupos" className="text-[8px] font-bold text-primary hover:opacity-70 transition-colors uppercase tracking-wider">VER TODO</Link>
+            </div>
+            {groups.slice(0, 1).map((group) => (
+              <Link href={`/mis-grupos/${group.id}`} key={group.id} className="block">
+                <div className="p-4 flex items-center justify-between rounded-2xl border-none bg-white shadow-sm active:scale-[0.98] transition-transform">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center">
+                      <Image src={`https://picsum.photos/seed/${group.id}/100/100`} alt={group.service} width={22} height={22} className="object-contain" />
+                    </div>
+                    <div>
+                      <h3 className="text-xs font-bold text-on-surface leading-tight">{group.service}</h3>
+                      <p className="text-[9px] text-on-surface-variant">{group.slots.filled} cupos compartidos</p>
+                    </div>
+                  </div>
+                  <ChevronRight className="h-3 w-3 text-on-surface-variant/20" />
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* IA & HERRAMIENTAS (AHORA AL FINAL) */}
+        <section className="mt-8 space-y-6">
           {hasResults ? (
             Object.entries(groupedServices).map(([slug, services]) => (
               <div key={slug} className="space-y-4">
                 <div className="px-1">
-                  <h2 className="text-xl font-bold tracking-tight text-on-surface leading-tight">
+                  <h2 className="text-lg font-bold tracking-tight text-on-surface leading-tight">
                     {categoryLabels[slug] || slug}
                   </h2>
                 </div>
@@ -178,52 +227,7 @@ export default function Home() {
           )}
         </section>
 
-        <section className="mt-8 space-y-6">
-          <div className="space-y-3">
-            <h2 className="text-lg font-bold text-on-surface px-1">Novedades</h2>
-            <div className="relative overflow-hidden rounded-2xl border-none bg-white shadow-sm transition-transform active:scale-[0.98]">
-              <div className="p-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center">
-                    <Image src="https://picsum.photos/seed/novedades/100/100" alt="Novedad" width={24} height={24} className="rounded-md" />
-                  </div>
-                  <div>
-                    <h3 className="text-xs font-bold text-on-surface leading-tight">Lank Mundial 2026</h3>
-                    <p className="text-[9px] text-on-surface-variant">Prode, resultados y más</p>
-                  </div>
-                </div>
-                <ChevronRight className="h-3 w-3 text-on-surface-variant/20" />
-              </div>
-              <div className="bg-[#ff4d00] py-1 px-4 text-center">
-                <p className="text-[8px] font-bold text-white uppercase tracking-wider">El mejor lugar para vivir el mundial</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            <div className="flex justify-between items-center px-1">
-              <h2 className="text-lg font-bold text-on-surface">Mis Grupos</h2>
-              <Link href="/mis-grupos" className="text-[8px] font-bold text-primary hover:opacity-70 transition-colors uppercase tracking-wider">VER TODO</Link>
-            </div>
-            {groups.slice(0, 1).map((group) => (
-              <Link href={`/mis-grupos/${group.id}`} key={group.id} className="block">
-                <div className="p-4 flex items-center justify-between rounded-2xl border-none bg-white shadow-sm active:scale-[0.98] transition-transform">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center">
-                      <Image src={`https://picsum.photos/seed/${group.id}/100/100`} alt={group.service} width={22} height={22} className="object-contain" />
-                    </div>
-                    <div>
-                      <h3 className="text-xs font-bold text-on-surface leading-tight">{group.service}</h3>
-                      <p className="text-[9px] text-on-surface-variant">{group.slots.filled} cupos compartidos</p>
-                    </div>
-                  </div>
-                  <ChevronRight className="h-3 w-3 text-on-surface-variant/20" />
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-
+        {/* SUGERENCIAS */}
         <section className="mt-8 py-8 text-center space-y-4 bg-white/50 rounded-3xl border border-white shadow-inner">
           <div className="space-y-1">
             <h2 className="text-sm font-bold text-on-surface leading-tight uppercase tracking-tight">
@@ -238,7 +242,7 @@ export default function Home() {
               className="w-full bg-white border-none rounded-lg h-10 text-xs font-medium shadow-sm focus-visible:ring-primary px-4 placeholder:opacity-40 text-center" 
               placeholder="EJ: MIDJOURNEY, FIREFLY..."
               value={recommendation}
-              onChange={(e) => setRecommendation(e.target.value)}
+              onChange={(e) => setSearchQuery && setRecommendation(e.target.value)}
               onKeyDown={handleRecommendSubmit}
               disabled={isSubmittingRecLocal}
             />
