@@ -35,19 +35,19 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
   }
 
   return (
-    <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-[#F5F5F9] min-h-screen">
-      <div className="flex items-center gap-4 mb-10">
-        <Button asChild variant="ghost" className="rounded-full h-12 w-12 p-0 hover:bg-white transition-all active:scale-95">
+    <div className="container mx-auto py-4 px-4 sm:px-6 lg:px-8 bg-[#F5F5F9] min-h-screen">
+      <div className="flex items-center gap-3 mb-6">
+        <Button asChild variant="ghost" className="rounded-full h-10 w-10 p-0 hover:bg-white transition-all active:scale-95">
           <Link href="/">
-            <ArrowLeft className="h-6 w-6 text-on-surface" />
+            <ArrowLeft className="h-5 w-5 text-on-surface" />
           </Link>
         </Button>
-        <h1 className="text-3xl font-bold tracking-tight text-on-surface">
+        <h1 className="text-xl font-bold tracking-tight text-on-surface">
           {categoryName}
         </h1>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
         {services.map((service) => {
           const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
           const isPerplexity = service.id === 'perplexity';
@@ -62,15 +62,15 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
             <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
               <div 
                 className={cn(
-                  "relative rounded-[2rem] p-5 aspect-[4/5] flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95 shadow-lg overflow-hidden border-none",
-                  isWhiteBg && "shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
+                  "relative rounded-2xl p-3 aspect-[4/5] flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 active:scale-95 shadow-sm overflow-hidden border-none",
+                  isWhiteBg && "shadow-[0_4px_20px_rgb(0,0,0,0.04)]"
                 )}
                 style={{ backgroundColor: service.color || '#4343d5' }}
               >
                 {service.discount && (
-                  <div className="absolute top-3 right-3 bg-black/10 backdrop-blur-md px-2 py-0.5 rounded-full z-10">
+                  <div className="absolute top-2 right-2 bg-black/10 backdrop-blur-md w-6 h-6 rounded-full flex items-center justify-center z-10">
                     <span className={cn(
-                      "text-[9px] font-bold",
+                      "text-[7px] font-bold",
                       isPerplexity ? "text-[#1adec5]" : (isWhiteBg ? "text-primary" : "text-white")
                     )}>
                       {service.discount}
@@ -78,40 +78,34 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
                   </div>
                 )}
 
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   <h3 className={cn(
-                    "text-lg font-bold tracking-tight leading-none",
+                    "text-[11px] font-bold tracking-tight leading-none truncate pr-3",
                     brandColor
                   )}>
                     {service.name}
                   </h3>
                   <p className={cn(
-                    "text-[10px] font-medium",
+                    "text-[8px] font-medium",
                     planColor
                   )}>
                     {service.planName || "PREMIUM"}
                   </p>
                 </div>
 
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   <p className={cn(
-                    "text-[8px] font-medium uppercase tracking-wider",
+                    "text-[7px] font-medium uppercase tracking-wider",
                     labelColor
                   )}>
-                    Planes desde
+                    DESDE
                   </p>
                   <div className="flex items-baseline gap-0.5">
                     <span className={cn(
-                      "text-xl font-bold tracking-tight",
+                      "text-sm font-bold tracking-tight",
                       brandColor
                     )}>
                       S/ {service.pricePerMonth}
-                    </span>
-                    <span className={cn(
-                      "text-[10px] font-medium opacity-40",
-                      textColor
-                    )}>
-                      /mes
                     </span>
                   </div>
                 </div>
