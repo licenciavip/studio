@@ -13,7 +13,7 @@ import { ChevronRight, Search } from "lucide-react";
 import type { CategorySlug, Service } from "@/lib/types";
 
 const categoryLabels: Record<string, string> = {
-  ia: "INTELIGENCIA ARTIFICIAL",
+  ia: "Inteligencia Artificial",
 };
 
 export default function Home() {
@@ -99,8 +99,8 @@ export default function Home() {
             Object.entries(groupedServices).map(([slug, services]) => (
               <div key={slug} className="space-y-6">
                 <div className="px-2">
-                  <h2 className="text-[9px] font-normal uppercase tracking-[0.3em] text-on-surface-variant/40 font-sans">
-                    {categoryLabels[slug] || slug.toUpperCase()}
+                  <h2 className="text-2xl font-bold tracking-tight text-on-surface">
+                    {categoryLabels[slug] || slug}
                   </h2>
                 </div>
                 
@@ -108,14 +108,15 @@ export default function Home() {
                   {services.map((service) => {
                     const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
                     const isPerplexity = service.id === 'perplexity';
-                    const textColor = isWhiteBg ? "text-[#4343d5]" : "text-white";
-                    const planColor = isWhiteBg ? "text-on-surface" : "text-white/80";
+                    const textColor = isWhiteBg ? "text-on-surface" : "text-white";
+                    const brandColor = isPerplexity ? "text-[#1adec5]" : (isWhiteBg ? "text-primary" : "text-white");
+                    const planColor = isWhiteBg ? "text-on-surface-variant" : "text-white/80";
                     
                     return (
                       <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
                         <div 
                           className={cn(
-                            "relative rounded-[2rem] p-7 aspect-[16/8] flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95 shadow-lg overflow-hidden border-none",
+                            "relative rounded-[2rem] p-7 aspect-[16/10] flex flex-col justify-between transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95 shadow-lg overflow-hidden border-none",
                             isWhiteBg && "shadow-[0_8px_30px_rgb(0,0,0,0.06)]"
                           )}
                           style={{ backgroundColor: service.color || '#4343d5' }}
@@ -125,7 +126,7 @@ export default function Home() {
                             <div className="absolute top-4 right-4 bg-black/5 backdrop-blur-md px-3 py-1 rounded-full">
                               <span className={cn(
                                 "text-[10px] font-bold",
-                                isWhiteBg ? "text-green-500" : (isPerplexity ? "text-green-400" : "text-white/60")
+                                "text-[#40f5d0]"
                               )}>
                                 {service.discount}
                               </span>
@@ -134,13 +135,13 @@ export default function Home() {
 
                           <div className="space-y-1">
                             <h3 className={cn(
-                              "text-2xl font-bold tracking-tight leading-none",
-                              isPerplexity ? "text-[#1adec5]" : textColor
+                              "text-3xl font-bold tracking-tight leading-none",
+                              brandColor
                             )}>
                               {service.name}
                             </h3>
                             <p className={cn(
-                              "text-xs font-medium",
+                              "text-sm font-medium",
                               planColor
                             )}>
                               {service.planName || "PREMIUM"}
@@ -148,22 +149,24 @@ export default function Home() {
                           </div>
 
                           <div className="space-y-1">
-                            <p className={cn(
-                              "text-[9px] font-medium opacity-40 uppercase tracking-wider",
-                              textColor
-                            )}>
-                              Planes desde
-                            </p>
+                            {service.id !== 'gemini' && (
+                              <p className={cn(
+                                "text-[10px] font-medium opacity-60 uppercase tracking-wider",
+                                isWhiteBg ? "text-on-surface-variant" : "text-white"
+                              )}>
+                                Planes desde
+                              </p>
+                            )}
                             <div className="flex items-baseline gap-1">
                               <span className={cn(
-                                "text-2xl font-bold tracking-tight",
-                                isPerplexity ? "text-[#1adec5]" : textColor
+                                "text-3xl font-bold tracking-tight",
+                                brandColor
                               )}>
                                 S/ {service.pricePerMonth}
                               </span>
                               <span className={cn(
-                                "text-xs font-medium opacity-40",
-                                textColor
+                                "text-sm font-medium opacity-40",
+                                isWhiteBg ? "text-on-surface" : "text-white"
                               )}>
                                 /mes
                               </span>
@@ -185,7 +188,7 @@ export default function Home() {
 
         <section className="mt-14 space-y-10">
           <div className="space-y-4">
-            <h2 className="text-[9px] font-normal uppercase tracking-[0.3em] text-on-surface-variant/40 px-2">NOVEDADES</h2>
+            <h2 className="text-xl font-bold text-on-surface px-2">Novedades</h2>
             <div className="relative overflow-hidden rounded-[2rem] border-none bg-white shadow-sm transition-transform active:scale-[0.98]">
               <div className="p-5 flex items-center justify-between">
                 <div className="flex items-center gap-4">
@@ -193,22 +196,22 @@ export default function Home() {
                     <Image src="https://picsum.photos/seed/novedades/100/100" alt="Novedad" width={40} height={40} className="rounded-lg" />
                   </div>
                   <div>
-                    <h3 className="text-[11px] font-normal text-on-surface leading-tight uppercase tracking-tight">Lank Mundial 2026</h3>
-                    <p className="text-[9px] font-normal text-on-surface-variant opacity-40">Prode, resultados y más</p>
+                    <h3 className="text-sm font-bold text-on-surface leading-tight">Lank Mundial 2026</h3>
+                    <p className="text-xs text-on-surface-variant">Prode, resultados y más</p>
                   </div>
                 </div>
                 <ChevronRight className="h-5 w-5 text-on-surface-variant/20" />
               </div>
               <div className="bg-[#ff4d00] py-1.5 px-4 text-center">
-                <p className="text-[7px] font-normal text-white uppercase tracking-[0.2em]">El mejor lugar para vivir el mundial</p>
+                <p className="text-[10px] font-bold text-white uppercase tracking-wider">El mejor lugar para vivir el mundial</p>
               </div>
             </div>
           </div>
 
           <div className="space-y-4">
             <div className="flex justify-between items-center px-2">
-              <h2 className="text-[9px] font-normal uppercase tracking-[0.3em] text-on-surface-variant/40">MIS GRUPOS</h2>
-              <Link href="/mis-grupos" className="text-[8px] font-normal text-primary hover:opacity-70 transition-colors uppercase tracking-[0.2em]">VER TODO</Link>
+              <h2 className="text-xl font-bold text-on-surface">Mis Grupos</h2>
+              <Link href="/mis-grupos" className="text-xs font-bold text-primary hover:opacity-70 transition-colors uppercase">VER TODO</Link>
             </div>
             {groups.slice(0, 1).map((group) => (
               <Link href={`/mis-grupos/${group.id}`} key={group.id} className="block">
@@ -218,8 +221,8 @@ export default function Home() {
                       <Image src={`https://picsum.photos/seed/${group.id}/100/100`} alt={group.service} width={28} height={28} className="object-contain" />
                     </div>
                     <div>
-                      <h3 className="text-[11px] font-normal text-on-surface leading-tight uppercase tracking-tight">{group.service}</h3>
-                      <p className="text-[9px] font-normal text-on-surface-variant opacity-40">{group.slots.filled} cupos compartidos</p>
+                      <h3 className="text-sm font-bold text-on-surface leading-tight">{group.service}</h3>
+                      <p className="text-xs text-on-surface-variant">{group.slots.filled} cupos compartidos</p>
                     </div>
                   </div>
                   <ChevronRight className="h-5 w-5 text-on-surface-variant/20" />
@@ -231,23 +234,23 @@ export default function Home() {
 
         <section className="mt-16 py-14 text-center space-y-7 bg-white/50 rounded-[3rem] border border-white shadow-inner">
           <div className="space-y-2">
-            <h2 className="text-[14px] font-normal text-on-surface leading-tight uppercase tracking-tight">
+            <h2 className="text-xl font-bold text-on-surface leading-tight">
               ¿BUSCAS OTRA HERRAMIENTA?
             </h2>
-            <p className="text-[8px] text-on-surface-variant/40 font-normal uppercase tracking-[0.2em] max-w-[240px] mx-auto">
+            <p className="text-xs text-on-surface-variant/60 font-medium max-w-[240px] mx-auto">
               Dinos qué IA necesitas y la traeremos para ti.
             </p>
           </div>
           <div className="max-w-xs mx-auto px-4">
             <Input 
-              className="w-full bg-white border-none rounded-2xl h-12 text-[10px] font-normal shadow-sm focus-visible:ring-primary px-6 placeholder:opacity-20 text-center" 
+              className="w-full bg-white border-none rounded-2xl h-12 text-sm font-medium shadow-sm focus-visible:ring-primary px-6 placeholder:opacity-40 text-center" 
               placeholder="EJ: MIDJOURNEY, FIREFLY..."
               value={recommendation}
               onChange={(e) => setRecommendation(e.target.value)}
               onKeyDown={handleRecommendSubmit}
               disabled={isSubmittingRecLocal}
             />
-            <p className="mt-5 text-[7px] text-on-surface-variant/20 font-normal uppercase tracking-[0.3em]">PRESIONA ENTER PARA ENVIAR</p>
+            <p className="mt-5 text-[10px] text-on-surface-variant/40 font-bold uppercase tracking-widest">PRESIONA ENTER PARA ENVIAR</p>
           </div>
         </section>
       </main>
