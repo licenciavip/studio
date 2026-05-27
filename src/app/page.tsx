@@ -183,7 +183,7 @@ export default function Home() {
             Object.entries(groupedServices).map(([slug, services]) => (
               <div key={slug} className="space-y-4">
                 <div className="flex justify-between items-center px-1">
-                  <h2 className="text-[10px] font-black uppercase tracking-[0.25em] text-on-surface-variant opacity-50">
+                  <h2 className="text-[10px] font-black uppercase tracking-[0.25em] text-on-surface-variant opacity-40">
                     {categoryLabels[slug] || slug.toUpperCase()}
                   </h2>
                 </div>
