@@ -68,73 +68,67 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen pt-14">
-      <main className="flex-grow w-full max-w-xl mx-auto pb-24 px-4 space-y-6">
+    <div className="flex flex-col min-h-screen pt-12">
+      <main className="flex-grow w-full max-w-xl mx-auto pb-24 px-4 space-y-5">
         
         {/* SALUDO Y BOTÓN PRINCIPAL */}
-        <section className="space-y-4">
+        <section className="space-y-3">
           <div className="px-1">
-            <h1 className="text-[9px] font-black text-on-surface/30 uppercase tracking-[0.2em] mb-0.5">
+            <h1 className="text-[10px] font-black text-on-surface/40 uppercase tracking-[0.15em] mb-0.5">
               Bienvenido de nuevo
             </h1>
-            <h2 className="text-xl font-bold text-on-surface tracking-tighter">
+            <h2 className="text-xl font-extrabold text-on-surface tracking-tight">
               Hola, {user?.displayName?.split(' ')[0] || 'Deyvid'} 👋
             </h2>
           </div>
           
           <Link href="/compartir" className="block group">
-            <div className="relative overflow-hidden w-full h-14 bg-gradient-to-br from-[#5d5fef] to-[#ff6b6b] rounded-[1.6rem] flex items-center justify-center gap-2 shadow-[0_12px_24px_rgba(93,95,239,0.12)] transition-all duration-300 hover:scale-[1.01] active:scale-[0.98]">
-              <div className="w-7 h-7 rounded-full bg-white/15 flex items-center justify-center">
-                <PlusCircle className="h-4 w-4 text-white" />
-              </div>
+            <div className="relative overflow-hidden w-full h-12 bg-gradient-to-br from-[#5d5fef] to-[#ff6b6b] rounded-2xl flex items-center justify-center gap-2 shadow-lg hover:scale-[1.01] active:scale-[0.98] transition-all">
+              <PlusCircle className="h-4 w-4 text-white" />
               <span className="text-white font-bold text-sm tracking-tight">Compartir una suscripción</span>
             </div>
           </Link>
         </section>
 
         {/* NOVEDADES */}
-        <section className="space-y-2">
+        <section className="space-y-1.5">
           <div className="flex items-center gap-1.5 px-2">
             <Sparkles className="h-3 w-3 text-primary/60" />
-            <h2 className="text-[10px] font-bold text-on-surface/50 tracking-tight uppercase">Novedades</h2>
+            <h2 className="text-[10px] font-bold text-on-surface/40 tracking-tight uppercase">Novedades</h2>
           </div>
-          <div className="glass-card rounded-[1.8rem] p-3.5 flex items-center justify-between transition-all hover:bg-white/50 group cursor-pointer">
+          <div className="glass-card rounded-2xl p-3 flex items-center justify-between group cursor-pointer">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shadow-sm overflow-hidden border border-white/40">
-                <Image src="https://picsum.photos/seed/novedades/200/200" alt="Novedad" width={40} height={40} className="object-cover" />
+              <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center overflow-hidden border border-white/40 shadow-sm">
+                <Image src="https://picsum.photos/seed/novedades/200/200" alt="Novedad" width={36} height={36} className="object-cover" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-on-surface tracking-tight">SubShare Mundial 2026</h3>
-                <p className="text-[9px] text-on-surface-variant/60 font-medium">Vive la emoción del fútbol pro</p>
+                <h3 className="text-xs font-bold text-on-surface tracking-tight">SubShare Mundial 2026</h3>
+                <p className="text-[9px] text-on-surface-variant/50 font-medium">Vive la emoción del fútbol pro</p>
               </div>
             </div>
-            <div className="w-7 h-7 rounded-full bg-white/30 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
-              <ChevronRight className="h-4 w-4" />
-            </div>
+            <ChevronRight className="h-4 w-4 text-on-surface-variant/30 group-hover:translate-x-1 transition-all" />
           </div>
         </section>
 
         {/* MIS GRUPOS */}
-        <section className="space-y-2">
+        <section className="space-y-1.5">
           <div className="flex justify-between items-center px-2">
-            <h2 className="text-[10px] font-bold text-on-surface/50 tracking-tight uppercase">Mis Grupos</h2>
-            <Link href="/mis-grupos" className="text-[8px] font-black text-primary/60 hover:text-primary transition-colors uppercase tracking-[0.1em]">VER TODO</Link>
+            <h2 className="text-[10px] font-bold text-on-surface/40 tracking-tight uppercase">Mis Grupos</h2>
+            <Link href="/mis-grupos" className="text-[8px] font-black text-primary/60 uppercase tracking-widest">VER TODO</Link>
           </div>
           {groups.slice(0, 1).map((group) => (
             <Link href={`/mis-grupos/${group.id}`} key={group.id} className="block group">
-              <div className="glass-card rounded-[1.8rem] p-3.5 flex items-center justify-between hover:bg-white/50 transition-all">
+              <div className="glass-card rounded-2xl p-3 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center border border-white/40 shadow-sm">
+                  <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center border border-white/40 shadow-sm">
                     <Image src={`https://picsum.photos/seed/${group.id}/100/100`} alt={group.service} width={24} height={24} className="object-contain" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold text-on-surface leading-tight tracking-tight">{group.service}</h3>
-                    <p className="text-[9px] text-on-surface-variant/60 font-medium">{group.slots.filled} cupos vendidos</p>
+                    <h3 className="text-xs font-bold text-on-surface tracking-tight">{group.service}</h3>
+                    <p className="text-[9px] text-on-surface-variant/50 font-medium">{group.slots.filled} cupos vendidos</p>
                   </div>
                 </div>
-                <div className="w-7 h-7 rounded-full bg-white/30 flex items-center justify-center group-hover:translate-x-1 transition-all shadow-sm">
-                  <ChevronRight className="h-4 w-4 text-on-surface-variant/40" />
-                </div>
+                <ChevronRight className="h-4 w-4 text-on-surface-variant/30 group-hover:translate-x-1 transition-all" />
               </div>
             </Link>
           ))}
@@ -143,64 +137,45 @@ export default function Home() {
         {/* IA & HERRAMIENTAS */}
         <section className="space-y-4">
           {Object.entries(groupedServices).map(([slug, services]) => (
-            <div key={slug} className="space-y-2.5">
+            <div key={slug} className="space-y-2">
               <div className="px-2">
-                <h2 className="text-base font-bold tracking-tighter text-on-surface">
+                <h2 className="text-sm font-bold tracking-tight text-on-surface">
                   {categoryLabels[slug] || slug}
                 </h2>
               </div>
               
-              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
+              <div className="grid grid-cols-3 gap-2">
                 {services.map((service) => {
                   const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
-                  const isPerplexity = service.id === 'perplexity';
-                  const isGemini = service.id === 'gemini';
-                  
-                  const brandColor = isPerplexity ? "text-[#1adec5]" : (isGemini ? "text-primary" : (isWhiteBg ? "text-primary" : "text-white"));
-                  const planColor = isWhiteBg ? "text-on-surface-variant/40" : "text-white/60";
-                  const labelColor = isWhiteBg ? "text-on-surface-variant/30" : "text-white/40";
+                  const brandColor = isWhiteBg ? "text-primary" : "text-white";
                   
                   return (
                     <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
                       <div 
                         className={cn(
-                          "relative rounded-[1.4rem] p-3 aspect-[4/5] flex flex-col justify-between transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_12px_24px_rgba(0,0,0,0.06)] active:scale-[0.98] overflow-hidden border border-white/10",
-                          isWhiteBg ? "glass-card" : "shadow-md shadow-black/5"
+                          "relative rounded-2xl p-3 aspect-[4/5] flex flex-col justify-between transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] overflow-hidden border border-white/10",
+                          isWhiteBg ? "glass-card" : "shadow-md"
                         )}
                         style={{ backgroundColor: !isWhiteBg ? (service.color || '#4343d5') : undefined }}
                       >
-                        {!isWhiteBg && <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />}
+                        {!isWhiteBg && <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />}
                         
                         <div className="relative z-10 space-y-0.5">
-                          <h3 className={cn(
-                            "text-[9px] font-bold tracking-tight leading-tight pr-1",
-                            brandColor
-                          )}>
+                          <h3 className={cn("text-[10px] font-bold tracking-tight leading-none", brandColor)}>
                             {service.name}
                           </h3>
-                          <p className={cn(
-                            "text-[7px] font-medium tracking-tight",
-                            planColor
-                          )}>
+                          <p className={cn("text-[7px] font-medium opacity-60 uppercase", brandColor)}>
                             {service.planName || "PREMIUM"}
                           </p>
                         </div>
 
-                        <div className="relative z-10 space-y-0">
-                          <p className={cn(
-                            "text-[6px] font-black uppercase tracking-widest opacity-60",
-                            labelColor
-                          )}>
+                        <div className="relative z-10">
+                          <p className={cn("text-[6px] font-black uppercase tracking-widest opacity-40", brandColor)}>
                             DESDE
                           </p>
-                          <div className="flex items-baseline gap-0.5">
-                            <span className={cn(
-                              "text-xs font-bold tracking-tighter",
-                              brandColor
-                            )}>
-                              S/ {service.pricePerMonth}
-                            </span>
-                          </div>
+                          <span className={cn("text-xs font-extrabold tracking-tighter", brandColor)}>
+                            S/ {service.pricePerMonth}
+                          </span>
                         </div>
                       </div>
                     </Link>
@@ -212,25 +187,21 @@ export default function Home() {
         </section>
 
         {/* SUGERENCIAS */}
-        <section className="glass-card rounded-[2rem] p-6 text-center space-y-4">
-          <div className="space-y-1">
-            <h2 className="text-[8px] font-black text-on-surface/30 uppercase tracking-[0.3em]">
-              ¿BUSCAS ALGO MÁS?
-            </h2>
-            <p className="text-[12px] text-on-surface-variant/80 font-medium max-w-[200px] mx-auto leading-tight tracking-tight">
-              Dinos qué IA necesitas y la traeremos para ti.
-            </p>
+        <section className="glass-card rounded-[2rem] p-5 text-center space-y-3">
+          <div className="space-y-0.5">
+            <h2 className="text-[8px] font-black text-on-surface/30 uppercase tracking-[0.25em]">¿BUSCAS ALGO MÁS?</h2>
+            <p className="text-[11px] text-on-surface-variant/80 font-medium">Dinos qué IA necesitas y la traeremos.</p>
           </div>
-          <div className="max-w-[220px] mx-auto space-y-2.5">
+          <div className="max-w-[200px] mx-auto space-y-2">
             <input 
-              className="w-full bg-white/20 backdrop-blur-md border border-white/10 rounded-xl h-11 text-xs font-bold shadow-inner focus:ring-2 focus:ring-primary/20 px-5 placeholder:opacity-30 text-center outline-none transition-all tracking-tight" 
+              className="glass-input w-full text-xs font-bold text-center h-10" 
               placeholder="EJ: MIDJOURNEY..."
               value={recommendation}
               onChange={(e) => setRecommendation(e.target.value)}
               onKeyDown={handleRecommendSubmit}
               disabled={isSubmittingRecLocal}
             />
-            <p className="text-[7px] text-on-surface-variant/30 font-black uppercase tracking-[0.3em]">PRESIONA ENTER</p>
+            <p className="text-[7px] text-on-surface-variant/30 font-black uppercase tracking-widest">PRESIONA ENTER</p>
           </div>
         </section>
       </main>

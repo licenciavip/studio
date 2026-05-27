@@ -16,127 +16,91 @@ export default function MisGruposPage() {
     : groups.filter(g => g.status === 'Incompleto');
 
   return (
-    <div className="max-w-xl mx-auto pt-20 pb-32 px-4 space-y-8">
-      {/* Screen Title */}
-      <div className="px-2 space-y-1">
-        <h2 className="text-3xl font-sora font-extrabold text-on-surface">Mis Grupos</h2>
-        <p className="text-sm font-medium text-on-surface-variant/60 tracking-tight">Gestiona tus servicios activos</p>
+    <div className="max-w-xl mx-auto pt-12 pb-32 px-4 space-y-6">
+      <div className="px-1 space-y-0.5">
+        <h2 className="text-2xl font-extrabold text-on-surface tracking-tight">Mis Grupos</h2>
+        <p className="text-xs font-medium text-on-surface-variant/60 tracking-tight">Gestiona tus servicios activos</p>
       </div>
 
       {/* Segmented Control - Apple Style */}
-      <div className="p-1.5 bg-white/40 backdrop-blur-xl border border-white/40 rounded-[2rem] shadow-lg shadow-black/5 flex">
+      <div className="p-1 bg-white/30 backdrop-blur-xl border border-white/40 rounded-2xl flex">
         <button 
           onClick={() => setActiveTab('Active')}
           className={cn(
-            "flex-1 py-3 text-sm font-bold rounded-[1.5rem] transition-all duration-300 flex items-center justify-center gap-2",
-            activeTab === 'Active' 
-              ? "bg-white text-primary shadow-xl shadow-primary/5" 
-              : "text-on-surface-variant/60 hover:text-on-surface"
+            "flex-1 py-2 text-[11px] font-bold rounded-xl transition-all flex items-center justify-center gap-1.5",
+            activeTab === 'Active' ? "glass-card bg-white text-primary shadow-sm" : "text-on-surface-variant/60"
           )}
         >
-          <LayoutGrid className="h-4 w-4" />
-          Activos
+          <LayoutGrid className="h-3.5 w-3.5" /> Activos
         </button>
         <button 
           onClick={() => setActiveTab('Pending')}
           className={cn(
-            "flex-1 py-3 text-sm font-bold rounded-[1.5rem] transition-all duration-300 flex items-center justify-center gap-2",
-            activeTab === 'Pending' 
-              ? "bg-white text-primary shadow-xl shadow-primary/5" 
-              : "text-on-surface-variant/60 hover:text-on-surface"
+            "flex-1 py-2 text-[11px] font-bold rounded-xl transition-all flex items-center justify-center gap-1.5",
+            activeTab === 'Pending' ? "glass-card bg-white text-primary shadow-sm" : "text-on-surface-variant/60"
           )}
         >
-          <Clock className="h-4 w-4" />
-          Pendientes
+          <Clock className="h-3.5 w-3.5" /> Pendientes
         </button>
       </div>
 
-      {/* Group List */}
-      <div className="space-y-6">
+      <div className="space-y-4">
         {displayGroups.length > 0 ? (
           displayGroups.map((group) => (
-            <div 
-              key={group.id} 
-              className="glass-card p-6 rounded-[2.5rem] hover:bg-white/60 transition-all duration-500 group"
-            >
-              <div className="flex justify-between items-start mb-6">
-                <div className="flex gap-4">
-                  <div className="w-14 h-14 rounded-[1.2rem] bg-surface-container-high flex items-center justify-center overflow-hidden border border-white/40 shadow-inner">
-                    <Image 
-                      src={`https://picsum.photos/seed/${group.id}/200/200`} 
-                      alt={group.service} 
-                      width={38} 
-                      height={38} 
-                      className="object-contain"
-                    />
+            <div key={group.id} className="glass-card p-5 rounded-[2rem] hover:bg-white/60 transition-all">
+              <div className="flex justify-between items-start mb-4">
+                <div className="flex gap-3">
+                  <div className="w-11 h-11 rounded-xl bg-surface-container-high flex items-center justify-center overflow-hidden border border-white/40">
+                    <Image src={`https://picsum.photos/seed/${group.id}/200/200`} alt={group.service} width={32} height={32} className="object-contain" />
                   </div>
                   <div>
-                    <h3 className="font-sora font-extrabold text-lg text-on-surface tracking-tight">{group.service}</h3>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className={cn(
-                        "text-[10px] uppercase tracking-[0.1em] font-black px-3 py-1 rounded-full border",
-                        group.userRole === 'Anfitrión'
-                          ? "bg-primary/10 text-primary border-primary/10" 
-                          : "bg-secondary/10 text-secondary border-secondary/10"
-                      )}>
-                        {group.userRole}
-                      </span>
-                    </div>
+                    <h3 className="font-bold text-sm text-on-surface tracking-tight">{group.service}</h3>
+                    <span className={cn(
+                      "text-[8px] uppercase tracking-widest font-black px-2 py-0.5 rounded-full border",
+                      group.userRole === 'Anfitrión' ? "bg-primary/10 text-primary border-primary/10" : "bg-secondary/10 text-secondary border-secondary/10"
+                    )}>
+                      {group.userRole}
+                    </span>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-[10px] font-black text-on-surface-variant/40 uppercase tracking-widest">Cobro</p>
-                  <p className="font-bold text-on-surface">{group.nextBill}</p>
+                  <p className="text-[8px] font-black text-on-surface-variant/30 uppercase tracking-widest">Cobro</p>
+                  <p className="text-xs font-bold text-on-surface">{group.nextBill}</p>
                 </div>
               </div>
 
-              <div className="space-y-4">
-                <div className="flex justify-between text-xs font-bold">
-                  <span className="text-on-surface-variant/60">Cupos vendidos</span>
+              <div className="space-y-2.5">
+                <div className="flex justify-between text-[10px] font-bold">
+                  <span className="text-on-surface-variant/50">Cupos vendidos</span>
                   <span className="text-primary">{group.slots.filled} de {group.slots.total}</span>
                 </div>
-                <div className="w-full bg-surface-container h-2 rounded-full overflow-hidden border border-white/20">
-                  <div 
-                    className="bg-primary h-full rounded-full transition-all duration-1000 ease-out shadow-[0_0_12px_rgba(67,67,213,0.3)]" 
-                    style={{ width: `${(group.slots.filled / group.slots.total) * 100}%` }}
-                  ></div>
+                <div className="w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
+                  <div className="bg-primary h-full rounded-full transition-all duration-1000" style={{ width: `${(group.slots.filled / group.slots.total) * 100}%` }}></div>
                 </div>
               </div>
 
-              <div className="mt-8 pt-6 border-t border-white/40 flex justify-between items-center">
-                <div className="flex -space-x-3">
+              <div className="mt-5 pt-4 border-t border-white/40 flex justify-between items-center">
+                <div className="flex -space-x-2.5">
                   {[1, 2, 3].map((i) => (
-                    <div key={i} className="w-9 h-9 rounded-full border-2 border-white overflow-hidden bg-muted shadow-md ring-2 ring-white/10 relative">
-                      <Image 
-                        src={`https://picsum.photos/seed/user${group.id}${i}/100/100`} 
-                        alt="Member" 
-                        fill
-                        className="object-cover"
-                      />
+                    <div key={i} className="w-7 h-7 rounded-full border-2 border-white overflow-hidden bg-muted shadow-sm">
+                      <Image src={`https://picsum.photos/seed/user${group.id}${i}/100/100`} alt="Member" fill className="object-cover" />
                     </div>
                   ))}
-                  {group.slots.total - 3 > 0 && (
-                    <div className="w-9 h-9 rounded-full border-2 border-white bg-surface-container flex items-center justify-center text-[11px] font-black text-on-surface-variant shadow-md">
-                      +{group.slots.total - 3}
-                    </div>
-                  )}
                 </div>
-                <Button asChild variant="link" className="text-primary font-bold hover:no-underline p-0 flex items-center gap-1 group">
-                  <Link href={`/mis-grupos/${group.id}`}>
+                <Button asChild variant="link" className="text-primary font-bold text-xs p-0 group">
+                  <Link href={`/mis-grupos/${group.id}`} className="flex items-center gap-1">
                     {group.userRole === 'Anfitrión' ? 'Gestionar' : 'Ver Detalles'}
-                    <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center group-hover:translate-x-1 transition-transform">
-                      <ChevronRight className="h-4 w-4" />
-                    </div>
+                    <ChevronRight className="h-3 w-3 group-hover:translate-x-1 transition-all" />
                   </Link>
                 </Button>
               </div>
             </div>
           ))
         ) : (
-          <div className="text-center py-24 glass-card rounded-[3rem] border-dashed border-primary/20 bg-white/20">
-            <p className="text-on-surface-variant/60 font-medium">No tienes grupos {activeTab === 'Active' ? 'activos' : 'pendientes'}.</p>
-            <Button asChild variant="link" className="mt-4 text-primary font-extrabold text-lg">
-              <Link href="/">¡Únete a uno ahora!</Link>
+          <div className="text-center py-20 glass-card rounded-[2.5rem] border-dashed border-primary/10">
+            <p className="text-on-surface-variant/40 text-xs font-medium">No tienes grupos {activeTab === 'Active' ? 'activos' : 'pendientes'}.</p>
+            <Button asChild variant="link" className="mt-2 text-primary font-bold">
+              <Link href="/">Explorar servicios</Link>
             </Button>
           </div>
         )}

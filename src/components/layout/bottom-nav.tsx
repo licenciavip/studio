@@ -15,8 +15,8 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <div className="fixed bottom-4 left-0 right-0 z-[200] px-8">
-      <nav className="max-w-[280px] mx-auto vision-dock flex justify-around items-center h-12 rounded-full px-1">
+    <div className="fixed bottom-4 left-0 right-0 z-[200] px-8 pointer-events-none">
+      <nav className="max-w-[260px] mx-auto vision-dock flex justify-around items-center h-12 rounded-full px-1 pointer-events-auto">
         {navItems.map((item) => {
           const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
           
@@ -30,8 +30,8 @@ export function BottomNav() {
               )}
             >
               <div className={cn(
-                "p-1.5 rounded-xl transition-all duration-300 ease-out",
-                isActive ? "scale-110" : "scale-100 hover:text-on-surface"
+                "transition-all duration-200",
+                isActive ? "scale-110" : "scale-100"
               )}>
                 <span 
                   className="material-symbols-outlined text-[18px]" 
@@ -42,7 +42,7 @@ export function BottomNav() {
               </div>
               
               {isActive && (
-                <div className="absolute -bottom-1 w-1 h-1 bg-primary rounded-full shadow-[0_0_8px_rgba(67,67,213,0.8)]" />
+                <div className="absolute -bottom-1.5 w-0.5 h-0.5 bg-primary rounded-full shadow-[0_0_8px_rgba(67,67,213,0.8)]" />
               )}
             </Link>
           );
