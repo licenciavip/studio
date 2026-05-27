@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 224 71% 99%;
+    --background: 240 20% 98%;
     --foreground: 224 71% 4%;
     --card: 0 0% 100%;
     --card-foreground: 224 71% 4%;
@@ -23,16 +23,19 @@
     --border: 224 31.8% 81%;
     --input: 224 31.8% 91%;
     --ring: 240 65% 55%;
-    --radius: 0.75rem;
+    --radius: 1.5rem;
   }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border/40;
   }
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary;
+    background: radial-gradient(circle at top right, rgba(225, 224, 255, 0.5), transparent 400px),
+                radial-gradient(circle at bottom left, rgba(234, 237, 255, 0.5), transparent 400px),
+                #faf8ff;
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
     letter-spacing: -0.015em;
   }
@@ -41,20 +44,12 @@
   }
 }
 
-.material-symbols-outlined {
-  font-family: 'Material Symbols Outlined' !important;
-  font-weight: normal;
-  font-style: normal;
-  font-size: 20px;
-  line-height: 1;
-  letter-spacing: normal;
-  text-transform: none;
-  display: inline-block;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
-  -webkit-font-feature-settings: 'liga';
-  -webkit-font-smoothing: antialiased;
+.glass-card {
+  @apply bg-white/40 backdrop-blur-xl border border-white/40 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)];
+}
+
+.glass-button {
+  @apply backdrop-blur-md border border-white/20 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98];
 }
 
 .pb-safe {
