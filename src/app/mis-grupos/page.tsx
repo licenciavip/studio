@@ -4,9 +4,9 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { groups, currentUser } from '@/lib/data';
+import { groups } from '@/lib/data';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, Plus } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function MisGruposPage() {
@@ -138,15 +138,6 @@ export default function MisGruposPage() {
             </Button>
           </div>
         )}
-      </div>
-
-      {/* FAB for adding groups (Only visible if user wants to share) */}
-      <div className="fixed bottom-28 right-6 z-40">
-        <Button asChild className="w-14 h-14 rounded-2xl shadow-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all p-0">
-          <Link href="/compartir">
-            <Plus className="h-8 w-8" />
-          </Link>
-        </Button>
       </div>
     </div>
   );
