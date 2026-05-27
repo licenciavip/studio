@@ -54,7 +54,7 @@ export default function CompartirCategoryPage() {
                 >
                   <div className="space-y-1">
                     <h3 className={cn(
-                      "font-sora font-black text-xl uppercase tracking-tighter leading-[0.9]",
+                      "font-sora font-black text-[1.5rem] uppercase tracking-tighter leading-[0.9]",
                       isWhiteBg ? "text-on-surface" : "text-white"
                     )}>
                       {service.name}
@@ -69,11 +69,19 @@ export default function CompartirCategoryPage() {
 
                   <div className="space-y-0.5">
                     <p className={cn(
-                      "text-[8px] font-black uppercase tracking-[0.1em] text-right",
-                      isWhiteBg ? "text-primary" : "text-white"
+                      "text-[8px] font-black uppercase tracking-[0.1em] opacity-60",
+                      isWhiteBg ? "text-on-surface-variant" : "text-white"
                     )}>
-                      PUBLICAR &gt;
+                      PUBLICAR
                     </p>
+                    <div className="flex items-baseline gap-1">
+                      <span className={cn(
+                        "text-[1.25rem] font-sora font-black tracking-tighter",
+                        isWhiteBg ? "text-on-surface" : "text-white"
+                      )}>
+                        RECIBE &gt;
+                      </span>
+                    </div>
                   </div>
                 </div>
               </Link>

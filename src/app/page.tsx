@@ -113,55 +113,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Novedades y Mis Grupos */}
-        <section className="mt-6 px-4 space-y-6">
-          <div className="space-y-3">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant px-1 opacity-60">NOVEDADES</h2>
-            <div className="relative overflow-hidden rounded-3xl border border-outline-variant/30 bg-white shadow-sm transition-transform active:scale-[0.98]">
-              <div className="p-4 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center">
-                    <Image src="https://picsum.photos/seed/novedades/100/100" alt="Novedad" width={32} height={32} className="rounded-md" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-black text-on-surface leading-tight uppercase">Lank Mundial 2026</h3>
-                    <p className="text-[10px] font-medium text-on-surface-variant">Prode, resultados y más</p>
-                  </div>
-                </div>
-                <ChevronRight className="h-4 w-4 text-outline-variant" />
-              </div>
-              <div className="bg-[#ff4d00] py-1 px-4 text-center">
-                <p className="text-[8px] font-black text-white uppercase tracking-widest">El mejor lugar para vivir el mundial</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            <div className="flex justify-between items-center px-1">
-              <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant opacity-60">MIS GRUPOS</h2>
-              <Link href="/mis-grupos" className="text-[9px] font-black text-primary hover:opacity-70 transition-colors uppercase tracking-widest">VER TODO</Link>
-            </div>
-            {groups.slice(0, 1).map((group) => (
-              <Link href={`/mis-grupos/${group.id}`} key={group.id} className="block">
-                <div className="p-4 flex items-center justify-between rounded-3xl border border-outline-variant/30 bg-white shadow-sm active:scale-[0.98] transition-transform">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center">
-                      <Image src={`https://picsum.photos/seed/${group.id}/100/100`} alt={group.service} width={24} height={24} className="object-contain" />
-                    </div>
-                    <div>
-                      <h3 className="text-sm font-black text-on-surface leading-tight uppercase">{group.service}</h3>
-                      <p className="text-[10px] font-medium text-on-surface-variant">{group.slots.filled} cupos compartidos</p>
-                    </div>
-                  </div>
-                  <ChevronRight className="h-4 w-4 text-outline-variant" />
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-
         {/* Galería de Servicios IA */}
-        <section className="mt-10 px-4 space-y-8">
+        <section className="mt-8 px-4 space-y-8">
           <div className="flex gap-2 overflow-x-auto no-scrollbar py-1">
             {categories.map((cat) => (
               <Button 
@@ -202,7 +155,7 @@ export default function Home() {
                         >
                           <div className="space-y-1">
                             <h3 className={cn(
-                              "font-sora font-black text-xl uppercase tracking-tighter leading-[0.9]",
+                              "font-sora font-black text-[1.5rem] uppercase tracking-tighter leading-[0.9]",
                               isWhiteBg ? "text-on-surface" : "text-white"
                             )}>
                               {service.name}
@@ -249,6 +202,53 @@ export default function Home() {
               SIN RESULTADOS
             </div>
           )}
+        </section>
+
+        {/* Novedades y Mis Grupos */}
+        <section className="mt-12 px-4 space-y-6">
+          <div className="space-y-3">
+            <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant px-1 opacity-60">NOVEDADES</h2>
+            <div className="relative overflow-hidden rounded-3xl border border-outline-variant/30 bg-white shadow-sm transition-transform active:scale-[0.98]">
+              <div className="p-4 flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center">
+                    <Image src="https://picsum.photos/seed/novedades/100/100" alt="Novedad" width={32} height={32} className="rounded-md" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-black text-on-surface leading-tight uppercase">Lank Mundial 2026</h3>
+                    <p className="text-[10px] font-medium text-on-surface-variant">Prode, resultados y más</p>
+                  </div>
+                </div>
+                <ChevronRight className="h-4 w-4 text-outline-variant" />
+              </div>
+              <div className="bg-[#ff4d00] py-1 px-4 text-center">
+                <p className="text-[8px] font-black text-white uppercase tracking-widest">El mejor lugar para vivir el mundial</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex justify-between items-center px-1">
+              <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant opacity-60">MIS GRUPOS</h2>
+              <Link href="/mis-grupos" className="text-[9px] font-black text-primary hover:opacity-70 transition-colors uppercase tracking-widest">VER TODO</Link>
+            </div>
+            {groups.slice(0, 1).map((group) => (
+              <Link href={`/mis-grupos/${group.id}`} key={group.id} className="block">
+                <div className="p-4 flex items-center justify-between rounded-3xl border border-outline-variant/30 bg-white shadow-sm active:scale-[0.98] transition-transform">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center">
+                      <Image src={`https://picsum.photos/seed/${group.id}/100/100`} alt={group.service} width={24} height={24} className="object-contain" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-black text-on-surface leading-tight uppercase">{group.service}</h3>
+                      <p className="text-[10px] font-medium text-on-surface-variant">{group.slots.filled} cupos compartidos</p>
+                    </div>
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-outline-variant" />
+                </div>
+              </Link>
+            ))}
+          </div>
         </section>
 
         {/* Sección de Recomendaciones */}

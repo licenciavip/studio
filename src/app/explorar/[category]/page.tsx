@@ -61,7 +61,7 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
               >
                 <div className="space-y-1">
                   <h3 className={cn(
-                    "font-sora font-black text-xl uppercase tracking-tighter leading-[0.9]",
+                    "font-sora font-black text-[1.5rem] uppercase tracking-tighter leading-[0.9]",
                     isWhiteBg ? "text-on-surface" : "text-white"
                   )}>
                     {service.name}
