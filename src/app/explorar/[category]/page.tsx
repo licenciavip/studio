@@ -37,7 +37,7 @@ export default function CategoryPage({ params: paramsPromise }: { params: Promis
   return (
     <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-[#F5F5F9] min-h-screen">
       <div className="flex items-center gap-4 mb-10">
-        <Button asChild variant="ghost" className="rounded-full h-12 w-12 p-0 hover:bg-white">
+        <Button asChild variant="ghost" className="rounded-full h-12 w-12 p-0 hover:bg-white transition-all active:scale-95">
           <Link href="/">
             <ArrowLeft className="h-6 w-6 text-on-surface" />
           </Link>

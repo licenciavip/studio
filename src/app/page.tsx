@@ -84,12 +84,12 @@ export default function Home() {
         <section className="pt-6">
           <div className="relative flex items-center group">
             <div className="absolute left-4 flex items-center justify-center pointer-events-none">
-              <span className="material-symbols-outlined text-outline/70 group-focus-within:text-primary transition-colors text-lg">
+              <span className="material-symbols-outlined text-on-surface-variant/40 group-focus-within:text-primary transition-colors text-lg">
                 search
               </span>
             </div>
             <Input 
-              className="w-full pl-10 pr-4 py-3 bg-white border-none rounded-2xl focus-visible:ring-primary transition-all text-xs placeholder:text-outline/40 shadow-sm h-12 font-sans" 
+              className="w-full pl-10 pr-4 py-3 bg-white border-none rounded-2xl focus-visible:ring-primary transition-all text-[11px] placeholder:text-on-surface-variant/20 shadow-sm h-12 font-sans" 
               placeholder="¿Qué servicio de IA buscas?" 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -166,7 +166,7 @@ export default function Home() {
               </div>
             ))
           ) : (
-            <div className="py-20 text-center text-muted-foreground text-[10px] font-normal uppercase tracking-widest border-2 border-dashed rounded-[3rem] border-outline-variant/30">
+            <div className="py-20 text-center text-on-surface-variant/20 text-[9px] font-normal uppercase tracking-[0.3em] border-2 border-dashed rounded-[3rem] border-outline-variant/30">
               SIN RESULTADOS
             </div>
           )}
@@ -182,14 +182,14 @@ export default function Home() {
                     <Image src="https://picsum.photos/seed/novedades/100/100" alt="Novedad" width={40} height={40} className="rounded-lg" />
                   </div>
                   <div>
-                    <h3 className="text-xs font-normal text-on-surface leading-tight uppercase tracking-tight">Lank Mundial 2026</h3>
-                    <p className="text-[9px] font-normal text-on-surface-variant opacity-60">Prode, resultados y más</p>
+                    <h3 className="text-[11px] font-normal text-on-surface leading-tight uppercase tracking-tight">Lank Mundial 2026</h3>
+                    <p className="text-[9px] font-normal text-on-surface-variant opacity-40">Prode, resultados y más</p>
                   </div>
                 </div>
-                <ChevronRight className="h-5 w-5 text-outline-variant/50" />
+                <ChevronRight className="h-5 w-5 text-on-surface-variant/20" />
               </div>
-              <div className="bg-[#ff4d00] py-1 px-4 text-center">
-                <p className="text-[7px] font-normal text-white uppercase tracking-widest">El mejor lugar para vivir el mundial</p>
+              <div className="bg-[#ff4d00] py-1.5 px-4 text-center">
+                <p className="text-[7px] font-normal text-white uppercase tracking-[0.2em]">El mejor lugar para vivir el mundial</p>
               </div>
             </div>
           </div>
@@ -197,7 +197,7 @@ export default function Home() {
           <div className="space-y-4">
             <div className="flex justify-between items-center px-2">
               <h2 className="text-[9px] font-normal uppercase tracking-[0.3em] text-on-surface-variant/40 font-sans">MIS GRUPOS</h2>
-              <Link href="/mis-grupos" className="text-[9px] font-normal text-primary hover:opacity-70 transition-colors uppercase tracking-widest">VER TODO</Link>
+              <Link href="/mis-grupos" className="text-[8px] font-normal text-primary hover:opacity-70 transition-colors uppercase tracking-[0.2em]">VER TODO</Link>
             </div>
             {groups.slice(0, 1).map((group) => (
               <Link href={`/mis-grupos/${group.id}`} key={group.id} className="block">
@@ -207,11 +207,11 @@ export default function Home() {
                       <Image src={`https://picsum.photos/seed/${group.id}/100/100`} alt={group.service} width={28} height={28} className="object-contain" />
                     </div>
                     <div>
-                      <h3 className="text-xs font-normal text-on-surface leading-tight uppercase tracking-tight">{group.service}</h3>
-                      <p className="text-[9px] font-normal text-on-surface-variant opacity-60">{group.slots.filled} cupos compartidos</p>
+                      <h3 className="text-[11px] font-normal text-on-surface leading-tight uppercase tracking-tight">{group.service}</h3>
+                      <p className="text-[9px] font-normal text-on-surface-variant opacity-40">{group.slots.filled} cupos compartidos</p>
                     </div>
                   </div>
-                  <ChevronRight className="h-5 w-5 text-outline-variant/50" />
+                  <ChevronRight className="h-5 w-5 text-on-surface-variant/20" />
                 </div>
               </Link>
             ))}
@@ -220,23 +220,23 @@ export default function Home() {
 
         <section className="mt-16 py-14 text-center space-y-7 bg-white/50 rounded-[3rem] border border-white shadow-inner">
           <div className="space-y-2">
-            <h2 className="text-lg font-sans font-normal text-on-surface leading-tight uppercase tracking-tighter">
+            <h2 className="text-[14px] font-sans font-normal text-on-surface leading-tight uppercase tracking-tight">
               ¿BUSCAS OTRA HERRAMIENTA?
             </h2>
-            <p className="text-[8px] text-on-surface-variant/50 font-normal uppercase tracking-widest max-w-[240px] mx-auto">
+            <p className="text-[8px] text-on-surface-variant/40 font-normal uppercase tracking-[0.2em] max-w-[240px] mx-auto">
               Dinos qué IA necesitas y la traeremos para ti.
             </p>
           </div>
           <div className="max-w-xs mx-auto px-4">
             <Input 
-              className="w-full bg-white border-none rounded-2xl h-12 text-[10px] font-normal shadow-sm focus-visible:ring-primary px-6 placeholder:font-normal placeholder:opacity-20 text-center font-sans" 
+              className="w-full bg-white border-none rounded-2xl h-12 text-[10px] font-normal shadow-sm focus-visible:ring-primary px-6 placeholder:opacity-20 text-center font-sans" 
               placeholder="EJ: MIDJOURNEY, FIREFLY..."
               value={recommendation}
               onChange={(e) => setRecommendation(e.target.value)}
               onKeyDown={handleRecommendSubmit}
               disabled={isSubmittingRecLocal}
             />
-            <p className="mt-5 text-[7px] text-muted-foreground/40 font-normal uppercase tracking-[0.25em]">PRESIONA ENTER PARA ENVIAR</p>
+            <p className="mt-5 text-[7px] text-on-surface-variant/20 font-normal uppercase tracking-[0.3em]">PRESIONA ENTER PARA ENVIAR</p>
           </div>
         </section>
       </main>

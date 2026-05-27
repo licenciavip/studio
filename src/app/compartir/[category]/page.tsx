@@ -28,7 +28,7 @@ export default function CompartirCategoryPage() {
     <div className="min-h-screen bg-[#F5F5F9] -mx-4 -mt-6 pb-24">
       <div className="container mx-auto py-8 px-6 max-w-5xl">
         <div className="flex items-center mb-10">
-          <Button asChild variant="ghost" size="icon" className="rounded-full mr-2 hover:bg-white">
+          <Button asChild variant="ghost" size="icon" className="rounded-full mr-2 hover:bg-white transition-all active:scale-95">
             <Link href="/compartir">
               <ArrowLeft className="h-6 w-6 text-on-surface" />
             </Link>
