@@ -1,3 +1,4 @@
+
 'use client';
 
 import { servicesByCategory } from "@/lib/data";
@@ -35,7 +36,7 @@ export default function CompartirCategoryPage() {
             </Link>
           </Button>
           <div className="flex-1 text-center pr-10">
-            <h1 className="text-sm font-black text-on-surface uppercase tracking-widest opacity-60">
+            <h1 className="text-[10px] font-black text-on-surface uppercase tracking-[0.2em] opacity-40">
               {categoryName}
             </h1>
           </div>
@@ -46,10 +47,10 @@ export default function CompartirCategoryPage() {
             const logo = PlaceHolderImages.find((img) => img.id === service.logoId);
             return (
               <Link href={`/publicar?category=${category}&service=${service.id}`} key={service.id}>
-                <Card className="relative flex items-center h-44 p-8 bg-white rounded-[2.5rem] border-none shadow-[0_10px_40px_-15px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.12)] hover:-translate-y-1 group cursor-pointer overflow-hidden">
-                  <div className="flex items-center gap-5">
+                <Card className="relative flex items-center h-40 p-6 bg-white rounded-[3.5rem] border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300 hover:shadow-[0_15px_45px_rgb(0,0,0,0.08)] hover:-translate-y-1 group cursor-pointer overflow-hidden">
+                  <div className="flex items-center gap-6 w-full">
                     {logo && (
-                      <div className="relative w-20 h-20 overflow-hidden rounded-3xl shadow-sm shrink-0 border border-outline-variant/10">
+                      <div className="relative w-20 h-20 overflow-hidden rounded-[1.8rem] shadow-sm shrink-0 border border-outline-variant/10">
                         <Image
                           src={logo.imageUrl}
                           alt={logo.description}
@@ -59,13 +60,13 @@ export default function CompartirCategoryPage() {
                         />
                       </div>
                     )}
-                    <h2 className="font-sora text-2xl font-black text-on-surface tracking-tighter">
+                    <h2 className="font-sora text-2xl font-black text-[#131b2e] tracking-tighter">
                       {service.name}
                     </h2>
                   </div>
                   
-                  <div className="absolute bottom-8 right-10 flex items-center text-[10px] font-black text-primary tracking-[0.2em] uppercase transition-all group-hover:gap-1">
-                    Publicar <ChevronRight className="h-3.5 w-3.5 ml-1" />
+                  <div className="absolute bottom-6 right-10 flex items-center text-[10px] font-black text-primary tracking-[0.2em] uppercase transition-all group-hover:gap-1">
+                    Publicar <ChevronRight className="h-3 w-3 ml-0.5" />
                   </div>
                 </Card>
               </Link>
