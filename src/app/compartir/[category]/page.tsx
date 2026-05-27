@@ -15,60 +15,43 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-const categoryNames: Record<CategorySlug, string> = {
-  streaming: "Películas y Series",
-  musica: "Música",
-  educacion: "Educación",
-  gaming: "Gaming",
-  diseno: "Diseño",
-  seguridad: "VPNs y Seguridad",
+const categoryNames: Record<string, string> = {
   ia: "Inteligencia Artificial",
-  deportes: "Deportes",
-  bienestar: "Bienestar",
-  software: "Software",
 };
 
 export default function CompartirCategoryPage() {
   const params = useParams();
-  const category = params.category as CategorySlug;
+  const category = params.category as string;
 
-  if (!category || !servicesByCategory[category]) {
+  if (!category || !servicesByCategory[category as CategorySlug]) {
     notFound();
   }
 
-  const services = servicesByCategory[category];
-  const categoryName = categoryNames[category];
+  const services = servicesByCategory[category as CategorySlug];
+  const categoryName = categoryNames[category] || "Servicios";
 
   return (
-    <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
-      <div className="flex items-center justify-between mb-10">
-        <div className="flex-1">
-          <Button asChild variant="outline">
-            <Link href="/compartir">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Regresar
-            </Link>
-          </Button>
+    <div className="container mx-auto py-8 px-4 max-w-4xl">
+      <div className="flex items-center mb-8">
+        <Button asChild variant="ghost" size="icon" className="rounded-full mr-2">
+          <Link href="/compartir">
+            <ArrowLeft className="h-5 w-5" />
+          </Link>
+        </Button>
+        <div className="flex-1 text-center pr-10">
+          <p className="text-sm font-medium text-muted-foreground">Categoría: {categoryName}</p>
         </div>
-        <div className="flex-[2] text-center">
-          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Selecciona un servicio
-          </h1>
-          <p className="mt-2 text-muted-foreground">
-            Categoría: {categoryName}
-          </p>
-        </div>
-        <div className="flex-1"></div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {services.map((service) => {
           const logo = PlaceHolderImages.find((img) => img.id === service.logoId);
           return (
             <Link href={`/publicar?category=${category}&service=${service.id}`} key={service.id}>
-              <Card className="flex flex-col h-full justify-between p-4 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg cursor-pointer border-none shadow-sm bg-card">
-                <CardHeader className="flex-row items-center gap-4 p-0">
+              <Card className="flex flex-col h-32 justify-between p-4 transition-all duration-200 hover:shadow-md cursor-pointer border border-outline-variant/30 bg-white rounded-2xl group">
+                <div className="flex items-center gap-3">
                   {logo && (
-                    <div className="relative w-12 h-12 overflow-hidden rounded-xl border">
+                    <div className="relative w-12 h-12 overflow-hidden rounded-xl border border-outline-variant/10 shadow-sm shrink-0">
                       <Image
                         src={logo.imageUrl}
                         alt={logo.description}
@@ -78,12 +61,12 @@ export default function CompartirCategoryPage() {
                       />
                     </div>
                   )}
-                  <CardTitle className="font-sans text-lg font-semibold">
+                  <CardTitle className="font-sora text-sm font-bold truncate">
                     {service.name}
                   </CardTitle>
-                </CardHeader>
-                <div className="flex items-center justify-end text-sm text-primary font-semibold pt-4">
-                  Publicar <ChevronRight className="h-4 w-4 ml-1" />
+                </div>
+                <div className="flex items-center justify-end text-[10px] text-primary font-black uppercase tracking-tighter group-hover:gap-1.5 transition-all">
+                  Publicar <ChevronRight className="h-3 w-3 ml-0.5" />
                 </div>
               </Card>
             </Link>
