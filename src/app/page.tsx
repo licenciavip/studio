@@ -10,28 +10,11 @@ import type { CategorySlug, Service } from "@/lib/types";
 
 const categories = [
   { label: "Todo", slug: "all" },
-  { label: "Streaming", slug: "streaming" },
-  { label: "Música", slug: "musica" },
   { label: "IA", slug: "ia" },
-  { label: "VPN", slug: "seguridad" },
-  { label: "Diseño", slug: "diseno" },
-  { label: "Software", slug: "software" },
-  { label: "Deportes", slug: "deportes" },
-  { label: "Educación", slug: "educacion" },
-  { label: "Gaming", slug: "gaming" }
 ];
 
 const categoryLabels: Record<string, string> = {
-  streaming: "Películas y Series",
-  musica: "Música",
   ia: "Inteligencia Artificial",
-  gaming: "Gaming",
-  educacion: "Educación",
-  diseno: "Diseño",
-  seguridad: "VPN",
-  deportes: "Deportes",
-  bienestar: "Bienestar",
-  software: "Software",
 };
 
 export default function Home() {
@@ -74,7 +57,7 @@ export default function Home() {
             </div>
             <Input 
               className="w-full pl-10 pr-4 py-3 bg-white border-outline-variant/60 rounded-xl focus-visible:ring-primary focus-visible:border-primary transition-all text-xs placeholder:text-outline/50 shadow-sm h-10" 
-              placeholder="¿Qué servicio buscas?" 
+              placeholder="¿Qué servicio de IA buscas?" 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -104,7 +87,7 @@ export default function Home() {
             Object.entries(groupedServices).map(([slug, services]) => (
               <div key={slug} className="space-y-3">
                 <div className="flex justify-between items-center px-1">
-                  <h2 className="text-base font-sora font-black uppercase tracking-tight text-on-surface">
+                  <h2 className="text-sm font-sora font-black uppercase tracking-tight text-on-surface">
                     {categoryLabels[slug] || slug}
                   </h2>
                 </div>
@@ -170,7 +153,7 @@ export default function Home() {
             ))
           ) : (
             <div className="py-12 text-center text-muted-foreground text-xs italic border border-dashed rounded-xl">
-              No se encontraron servicios que coincidan con tu búsqueda.
+              No se encontraron servicios de IA que coincidan con tu búsqueda.
             </div>
           )}
         </section>
@@ -178,17 +161,17 @@ export default function Home() {
         {/* Sección de Contacto al final */}
         <section className="mt-16 px-4 py-8 text-center space-y-6">
           <div className="space-y-2">
-            <h2 className="text-2xl font-sora font-black text-on-surface leading-tight">
-              ¿No encontraste lo que buscabas?
+            <h2 className="text-xl font-sora font-black text-on-surface leading-tight">
+              ¿Buscas otra IA?
             </h2>
-            <p className="text-sm text-on-surface-variant font-medium">
-              Cuéntanos que servicio necesitas y lo conseguimos para ti
+            <p className="text-xs text-on-surface-variant font-medium">
+              Cuéntanos qué herramienta necesitas y la conseguiremos para ti.
             </p>
           </div>
           <div className="max-w-md mx-auto">
             <Input 
-              className="w-full bg-white border-outline-variant rounded-xl h-11 text-sm shadow-sm" 
-              placeholder="Nombre del servicio (ej: Canva Pro, Link...)"
+              className="w-full bg-white border-outline-variant rounded-xl h-10 text-xs shadow-sm" 
+              placeholder="Ej: Midjourney, Adobe Firefly..."
             />
           </div>
         </section>

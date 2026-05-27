@@ -1,70 +1,21 @@
 import type { CategorySlug, Subscription, OrderStatus, Service, Group, Order } from "@/lib/types";
 
 export const servicesByCategory: Record<CategorySlug, Service[]> = {
-  streaming: [
-    { id: "netflix", name: "NETFLIX", logoId: "netflix-logo", color: "#e50914", discount: "-58%", pricePerMonth: "23.90", planName: "Netflix Premium" },
-    { id: "disney-plus", name: "Disney+", logoId: "disney-plus-logo", color: "#1a364e", discount: "-57%", pricePerMonth: "22.90", planName: "Disney+ Premium" },
-    { id: "hbo-max", name: "HBO max", logoId: "hbo-logo", color: "#000000", discount: "-63%", pricePerMonth: "20.90", planName: "HBO Max Platino" },
-    { id: "youtube", name: "YouTube", logoId: "youtube-premium-logo", color: "#ff0000", discount: "-66%", pricePerMonth: "13.90", planName: "YouTube Premium" },
-    { id: "prime-video", name: "prime video", logoId: "prime-video-logo", color: "#1e4a7a", discount: "-47%", pricePerMonth: "11.90", planName: "Prime Video" },
-    { id: "paramount-plus", name: "Paramount+", logoId: "paramount-plus-logo", color: "#0064ff", discount: "-23%", pricePerMonth: "14.90", planName: "Paramount+" },
-    { id: "crunchyroll", name: "crunchyroll", logoId: "crunchyroll-logo", color: "#f47521", discount: "-40%", pricePerMonth: "11.90", planName: "Crunchyroll" },
-    { id: "apple-tv-plus", name: "Apple TV+", logoId: "apple-tv-plus-logo", color: "#000000", discount: "-64%", pricePerMonth: "13.90", planName: "Apple TV+" },
-    { id: "universal-plus", name: "UNIVERSAL+", logoId: "hbo-logo", color: "#000000", discount: "-45%", pricePerMonth: "11.90", planName: "Universal+ Premium" },
-    { id: "viki", name: "VIKI", logoId: "viki-logo", color: "#25d1da", discount: "-35%", pricePerMonth: "12.90", planName: "VIKI Pass" },
-    { id: "vix", name: "VIX", logoId: "vix-logo", color: "#ff6600", discount: "-65%", pricePerMonth: "11.90", planName: "VIX Premium" },
-    { id: "wow", name: "WOW", logoId: "hbo-logo", color: "#ff0080", discount: "-21%", pricePerMonth: "11.90", planName: "WOW Presents Plus" },
-    { id: "mubi", name: "MUBI", logoId: "hbo-logo", color: "#000000", discount: "-50%", pricePerMonth: "14.90", planName: "MUBI" },
-  ],
-  musica: [
-    { id: "spotify", name: "Spotify", logoId: "spotify-logo", color: "#121212", discount: "-67%", pricePerMonth: "13.90", planName: "Spotify Premium" },
-    { id: "amazon-music", name: "Amazon Mus", logoId: "prime-video-logo", color: "#25d1da", discount: "-53%", pricePerMonth: "10.90", planName: "Amazon Music" },
-    { id: "apple-music", name: "Apple Music", logoId: "apple-music-logo", color: "#fb233b", discount: "-70%", pricePerMonth: "13.90", planName: "Apple Music" },
-    { id: "apple-one", name: "Apple One", logoId: "apple-tv-plus-logo", color: "#000000", discount: "-81%", pricePerMonth: "18.90", planName: "Apple One" },
-    { id: "deezer", name: "Deezer", logoId: "viki-logo", color: "#121212", discount: "-74%", pricePerMonth: "10.90", planName: "Deezer Premium" },
-    { id: "tidal", name: "TIDAL", logoId: "tidal-logo", color: "#000000", discount: "-70%", pricePerMonth: "11.90", planName: "Tidal HiFi" },
-    { id: "youtube-music", name: "YT Music", logoId: "youtube-music-logo", color: "#ff0000", discount: "-78%", pricePerMonth: "9.90", planName: "YouTube Music" },
-  ],
   ia: [
     { id: "chatgpt", name: "ChatGPT", logoId: "chatgpt-logo", color: "#10a37f", discount: "-58%", pricePerMonth: "26.90", planName: "ChatGPT Plus" },
     { id: "claude", name: "Claude", logoId: "chatgpt-logo", color: "#d97757", discount: "-46%", pricePerMonth: "47.90", planName: "Claude Pro" },
     { id: "gemini", name: "Gemini", logoId: "chatgpt-logo", color: "#ffffff", discount: "-65%", pricePerMonth: "16.90", planName: "Gemini AI" },
     { id: "perplexity", name: "Perplexity", logoId: "chatgpt-logo", color: "#005a5a", discount: "-46%", pricePerMonth: "47.90", planName: "Perplexity Pro" },
   ],
-  software: [
-    { id: "google-one", name: "Google One", logoId: "chatgpt-logo", color: "#ffffff", discount: "-67%", pricePerMonth: "11.90", planName: "Google One 2TB" },
-    { id: "microsoft-365", name: "Microsoft", logoId: "microsoft-365-logo", color: "#f25022", discount: "-74%", pricePerMonth: "11.90", planName: "Microsoft 365" },
-    { id: "dropbox", name: "Dropbox", logoId: "setapp-logo", color: "#0061ff", discount: "-52%", pricePerMonth: "16.90", planName: "Dropbox Plus" },
-  ],
-  deportes: [
-    { id: "f1-tv", name: "F1 TV", logoId: "paramount-plus-logo", color: "#e10600", discount: "-67%", pricePerMonth: "13.90", planName: "F1 TV Pro" },
-    { id: "nba", name: "NBA", logoId: "nba-league-pass-logo", color: "#17408b", discount: "-37%", pricePerMonth: "28.90", planName: "NBA League Pass" },
-    { id: "dazn", name: "DAZN", logoId: "vix-logo", color: "#000000", discount: "-11%", pricePerMonth: "23.90", planName: "DAZN Estándar" },
-  ],
-  educacion: [
-    { id: "duolingo", name: "Duolingo", logoId: "duolingo-logo", color: "#58cc02", discount: "-76%", pricePerMonth: "18.90", planName: "Duolingo Plus" },
-    { id: "platzi", name: "Platzi", logoId: "platzi-logo", color: "#00223e", discount: "-61%", pricePerMonth: "36.90", planName: "Platzi" },
-    { id: "scribd", name: "Scribd", logoId: "coursera-logo", color: "#1a1a1a", discount: "-67%", pricePerMonth: "11.90", planName: "Scribd" },
-  ],
-  diseno: [
-    { id: "canva", name: "Canva Pro", logoId: "canva-logo", color: "#7d2ae8", discount: "-48%", pricePerMonth: "14.90", planName: "Canva Pro" },
-    { id: "capcut", name: "CapCut", logoId: "midjourney-logo", color: "#000000", discount: "-51%", pricePerMonth: "17.90", planName: "CapCut Pro" },
-  ],
-  gaming: [
-    { id: "ps-plus", name: "PS Plus", logoId: "ps-plus-logo", color: "#003791", pricePerMonth: "39.90" },
-    { id: "xbox-game-pass", name: "Xbox Game Pass", logoId: "xbox-game-pass-logo", color: "#107c10", pricePerMonth: "29.90" },
-    { id: "nintendo-switch-online", name: "Nintendo Switch Online", logoId: "nintendo-switch-online-logo", color: "#e60012", pricePerMonth: "15.00" },
-  ],
-  seguridad: [
-    { id: "cyberghost", name: "CyberGhost", logoId: "nordvpn-logo", color: "#ffea00", discount: "-61%", pricePerMonth: "16.90", planName: "CyberGhost" },
-    { id: "expressvpn", name: "ExpressVPN", logoId: "nordvpn-logo", color: "#e10600", discount: "-71%", pricePerMonth: "21.90", planName: "ExpressVPN" },
-    { id: "nordvpn", name: "NordVPN", logoId: "nordvpn-logo", color: "#4682b4", discount: "-64%", pricePerMonth: "18.90", planName: "NordVPN" },
-    { id: "protonvpn", name: "Proton VPN", logoId: "nordvpn-logo", color: "#1a1b2e", discount: "-62%", pricePerMonth: "13.90", planName: "ProtonVPN" },
-    { id: "tunnelbear", name: "TunnelBear", logoId: "nordvpn-logo", color: "#ffcc00", discount: "-48%", pricePerMonth: "7.90", planName: "TunnelBear" },
-  ],
-  bienestar: [
-    { id: "calm", name: "Calm", logoId: "calm-logo", color: "#45b1e8", pricePerMonth: "5.90" },
-  ],
+  streaming: [],
+  musica: [],
+  educacion: [],
+  gaming: [],
+  diseno: [],
+  seguridad: [],
+  deportes: [],
+  bienestar: [],
+  software: [],
 };
 
 export const currentUser = {
@@ -75,50 +26,37 @@ export const currentUser = {
 
 export const subscriptions: Subscription[] = [
   {
-    id: "1",
-    service: "Disney+ Premium",
-    host: "Juanca10",
-    price: 2.99,
-    currency: "$",
-    rating: 4.8,
+    id: "ia-1",
+    service: "ChatGPT Plus",
+    host: "IA_Master",
+    price: 26.90,
+    currency: "S/",
+    rating: 4.9,
     availableSlots: 2,
     totalSlots: 5,
-    logoId: "disney-plus-logo",
+    logoId: "chatgpt-logo",
     country: "Global",
-    avatarUrl: "https://picsum.photos/seed/avatar1/100/100"
-  },
-  {
-    id: "2",
-    service: "Netflix 4K HDR",
-    host: "SeriesFan",
-    price: 4.50,
-    currency: "$",
-    rating: 4.7,
-    availableSlots: 1,
-    totalSlots: 2,
-    logoId: "netflix-logo",
-    country: "Global",
-    avatarUrl: "https://picsum.photos/seed/avatar3/100/100"
+    avatarUrl: "https://picsum.photos/seed/ai1/100/100"
   },
 ];
 
 export const groups: Group[] = [
   { 
     id: '1', 
-    service: 'Netflix Premium', 
-    host: 'Alex Chen',
+    service: 'ChatGPT Plus', 
+    host: 'Alex Thompson',
     userRole: 'Anfitrión',
     slots: { filled: 3, total: 5 }, 
-    publicPrice: 4.50, 
-    netEarning: 4.05, 
+    publicPrice: 26.90, 
+    netEarning: 24.20, 
     status: 'Activo',
-    credentials: { email: "netflix-fam@poolera.com", pass: "SecurePass123!" },
-    nextBill: "24 Oct"
+    credentials: { email: "ai-plus@subshare.com", pass: "AIsecure123!" },
+    nextBill: "15 Ago"
   },
 ];
 
 export const orders: Order[] = [
-  { id: 'order-1', service: 'Netflix Premium', host: 'Juanca10', price: 4.50, status: 'Activo', expires: '2024-08-15' },
+  { id: 'order-1', service: 'ChatGPT Plus', host: 'IA_Master', price: 26.90, status: 'Activo', expires: '2024-09-15' },
 ];
 
 export const getSubscriptionById = (id: string) => subscriptions.find(s => s.id === id);
