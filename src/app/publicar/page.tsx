@@ -1,8 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
-
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -16,7 +14,7 @@ import {
 
 type PublicarStep = "config" | "credentials" | "preview" | "success";
 
-function PublicarContent() {
+function PublicarForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { toast } = useToast();
@@ -27,7 +25,7 @@ function PublicarContent() {
 
   const [step, setStep] = useState<PublicarStep>("config");
   const [slots, setSlots] = useState(3);
-  const [customPrice, setCustomPrice] = useState(service?.pricePerMonth || "");
+  const [customPrice, setCustomPrice] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
@@ -46,15 +44,13 @@ function PublicarContent() {
     );
   }
 
-  const hostEarnings = service.hostEarnings || (parseFloat(customPrice) * slots * 0.85).toFixed(2);
+  const priceNum = parseFloat(customPrice || "0");
+  const earnings = (priceNum * slots * 0.85).toFixed(2);
   const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
 
   const handlePublish = () => {
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      setStep("success");
-    }, 1200);
+    setTimeout(() => { setIsLoading(false); setStep("success"); }, 1200);
   };
 
   if (step === "success") {
@@ -66,30 +62,17 @@ function PublicarContent() {
         <div className="space-y-2">
           <h2 className="text-xl font-extrabold tracking-tight">¡Grupo publicado!</h2>
           <p className="text-[11px] text-on-surface/40 leading-relaxed max-w-xs mx-auto">
-            Tu grupo de <span className="font-bold text-on-surface/60">{service.name}</span> ya está visible para miembros. Te notificaremos cuando alguien se una.
+            Tu grupo de <span className="font-bold text-on-surface/60">{service.name}</span> ya está visible. Te notificaremos cuando alguien se una.
           </p>
         </div>
         <div className="glass-card p-4 rounded-[2rem] w-full max-w-xs space-y-3">
-          <div className="flex justify-between items-center">
-            <span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Cupos</span>
-            <span className="text-sm font-bold">{slots} disponibles</span>
-          </div>
-          <div className="flex justify-between items-center">
-            <span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Precio por cupo</span>
-            <span className="text-sm font-bold text-primary">S/ {customPrice}/mes</span>
-          </div>
-          <div className="flex justify-between items-center border-t border-white/10 pt-3">
-            <span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Tus ganancias</span>
-            <span className="text-sm font-bold text-green-500">S/ {hostEarnings}/mes</span>
-          </div>
+          <div className="flex justify-between"><span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Cupos</span><span className="text-sm font-bold">{slots} disponibles</span></div>
+          <div className="flex justify-between"><span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Precio/cupo</span><span className="text-sm font-bold text-primary">S/ {customPrice}/mes</span></div>
+          <div className="flex justify-between border-t border-white/10 pt-3"><span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Ganancias</span><span className="text-sm font-bold text-green-500">S/ {earnings}/mes</span></div>
         </div>
         <div className="flex gap-3 w-full max-w-xs">
-          <Button asChild variant="outline" className="flex-1 rounded-2xl h-10 text-[11px] font-bold">
-            <Link href="/mis-grupos">Ver mis grupos</Link>
-          </Button>
-          <Button asChild className="flex-1 rounded-2xl h-10 text-[11px] font-bold">
-            <Link href="/">Ir al inicio</Link>
-          </Button>
+          <Button asChild variant="outline" className="flex-1 rounded-2xl h-10 text-[11px] font-bold"><Link href="/mis-grupos">Mis grupos</Link></Button>
+          <Button asChild className="flex-1 rounded-2xl h-10 text-[11px] font-bold"><Link href="/">Inicio</Link></Button>
         </div>
       </div>
     );
@@ -97,12 +80,9 @@ function PublicarContent() {
 
   return (
     <div className="max-w-xl mx-auto pt-10 pb-32 px-4 space-y-5">
-      {/* Header */}
       <div className="flex items-center gap-3 px-1">
         <Button asChild variant="ghost" size="icon" className="h-8 w-8 rounded-full bg-white/40 hover:bg-white/60 active:scale-95 transition-all">
-          <Link href={`/compartir/${category}`}>
-            <ArrowLeft className="h-4 w-4 text-primary" />
-          </Link>
+          <Link href={`/compartir/${category}`}><ArrowLeft className="h-4 w-4 text-primary" /></Link>
         </Button>
         <div>
           <h1 className="text-base font-extrabold tracking-tight text-on-surface">Publicar cupo</h1>
@@ -112,26 +92,23 @@ function PublicarContent() {
 
       {/* Stepper */}
       <div className="flex items-center gap-2 px-1">
-        {(["config", "credentials", "preview"] as PublicarStep[]).map((s, i) => (
-          <div key={s} className="flex items-center gap-2 flex-1">
-            <div className={cn(
-              "w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-black transition-all",
-              step === s ? "bg-primary text-white" :
-              ["config","credentials","preview","success"].indexOf(step) > i ? "bg-green-500 text-white" :
-              "bg-white/20 text-on-surface/30"
-            )}>
-              {["config","credentials","preview","success"].indexOf(step) > i ? "✓" : i + 1}
+        {(["config", "credentials", "preview"] as PublicarStep[]).map((s, i) => {
+          const steps = ["config", "credentials", "preview", "success"];
+          const currentIdx = steps.indexOf(step);
+          const stepIdx = steps.indexOf(s);
+          return (
+            <div key={s} className="flex items-center gap-2 flex-1">
+              <div className={cn("w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-black transition-all",
+                step === s ? "bg-primary text-white" : currentIdx > stepIdx ? "bg-green-500 text-white" : "bg-white/20 text-on-surface/30"
+              )}>{currentIdx > stepIdx ? "✓" : i + 1}</div>
+              {i < 2 && <div className={cn("flex-1 h-0.5 rounded-full", currentIdx > stepIdx ? "bg-green-500" : "bg-white/10")} />}
             </div>
-            {i < 2 && <div className={cn("flex-1 h-0.5 rounded-full", ["config","credentials","preview","success"].indexOf(step) > i ? "bg-green-500" : "bg-white/10")} />}
-          </div>
-        ))}
+          );
+        })}
       </div>
 
-      {/* Service Card */}
-      <div
-        className={cn("p-4 rounded-[1.8rem] flex items-center gap-4", isWhiteBg ? "glass-card" : "shadow-lg")}
-        style={{ backgroundColor: !isWhiteBg ? (service.color || "#4343d5") : undefined }}
-      >
+      {/* Service card */}
+      <div className={cn("p-4 rounded-[1.8rem] flex items-center gap-4", isWhiteBg ? "glass-card" : "shadow-lg")} style={{ backgroundColor: !isWhiteBg ? (service.color || "#4343d5") : undefined }}>
         <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
           <Sparkles className={cn("h-6 w-6", isWhiteBg ? "text-primary" : "text-white")} />
         </div>
@@ -141,39 +118,25 @@ function PublicarContent() {
         </div>
         <div className="ml-auto text-right">
           <p className={cn("text-[8px] font-black uppercase opacity-40", isWhiteBg ? "text-on-surface" : "text-white")}>RECIBES</p>
-          <p className={cn("text-base font-extrabold", isWhiteBg ? "text-primary" : "text-white")}>S/ {hostEarnings}</p>
+          <p className={cn("text-base font-extrabold", isWhiteBg ? "text-primary" : "text-white")}>S/ {service.hostEarnings}</p>
         </div>
       </div>
 
-      {/* PASO 1: Configuración */}
+      {/* PASO 1: Config */}
       {step === "config" && (
         <div className="space-y-4">
           <div className="glass-card p-5 rounded-[2rem] space-y-5">
-            {/* Cupos */}
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <Users className="h-4 w-4 text-primary" />
                 <h3 className="text-[11px] font-black uppercase tracking-widest text-on-surface/50">Cupos disponibles</h3>
               </div>
-              <div className="flex items-center justify-between gap-3">
-                <button onClick={() => setSlots(Math.max(1, slots - 1))} className="w-9 h-9 rounded-xl bg-white/30 text-on-surface font-black text-lg flex items-center justify-center active:scale-90 transition-all">−</button>
-                <div className="flex-1 flex gap-1.5">
-                  {[1, 2, 3, 4, 5].map(n => (
-                    <button
-                      key={n}
-                      onClick={() => setSlots(n)}
-                      className={cn(
-                        "flex-1 h-9 rounded-xl text-[11px] font-black transition-all",
-                        slots === n ? "bg-primary text-white" : "bg-white/20 text-on-surface/40 hover:bg-white/40"
-                      )}
-                    >{n}</button>
-                  ))}
-                </div>
-                <button onClick={() => setSlots(Math.min(5, slots + 1))} className="w-9 h-9 rounded-xl bg-white/30 text-on-surface font-black text-lg flex items-center justify-center active:scale-90 transition-all">+</button>
+              <div className="flex gap-1.5">
+                {[1,2,3,4,5].map(n => (
+                  <button key={n} onClick={() => setSlots(n)} className={cn("flex-1 h-9 rounded-xl text-[11px] font-black transition-all", slots === n ? "bg-primary text-white" : "bg-white/20 text-on-surface/40 hover:bg-white/40")}>{n}</button>
+                ))}
               </div>
             </div>
-
-            {/* Precio */}
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <DollarSign className="h-4 w-4 text-primary" />
@@ -181,27 +144,16 @@ function PublicarContent() {
               </div>
               <div className="flex items-center gap-2 glass-card p-3 rounded-xl">
                 <span className="text-sm font-black text-on-surface/30">S/</span>
-                <input
-                  type="number"
-                  value={customPrice}
-                  onChange={(e) => setCustomPrice(e.target.value)}
-                  className="flex-1 bg-transparent text-base font-extrabold text-primary outline-none"
-                  placeholder={service.pricePerMonth}
-                />
+                <input type="number" value={customPrice} onChange={(e) => setCustomPrice(e.target.value)} className="flex-1 bg-transparent text-base font-extrabold text-primary outline-none" placeholder={service.pricePerMonth} />
                 <span className="text-[9px] font-black text-on-surface/20 uppercase">/mes</span>
               </div>
             </div>
-
-            {/* Earnings preview */}
             <div className="flex items-center gap-2 p-3 bg-green-500/5 rounded-xl border border-green-500/10">
               <TrendingUp className="h-4 w-4 text-green-500 shrink-0" />
-              <p className="text-[10px] font-bold text-green-600">Ganarías <span className="font-black">S/ {(parseFloat(customPrice || "0") * slots * 0.85).toFixed(2)}/mes</span> con {slots} cupos vendidos</p>
+              <p className="text-[10px] font-bold text-green-600">Ganarías <span className="font-black">S/ {earnings}/mes</span> con {slots} cupos vendidos</p>
             </div>
           </div>
-
-          <Button className="w-full h-11 rounded-2xl font-bold" onClick={() => setStep("credentials")}>
-            Continuar → Credenciales
-          </Button>
+          <Button className="w-full h-11 rounded-2xl font-bold" onClick={() => setStep("credentials")}>Continuar → Credenciales</Button>
         </div>
       )}
 
@@ -211,80 +163,54 @@ function PublicarContent() {
           <div className="glass-card p-5 rounded-[2rem] space-y-4">
             <div className="flex items-center gap-2 p-3 bg-primary/5 rounded-xl border border-primary/10">
               <Info className="h-4 w-4 text-primary shrink-0" />
-              <p className="text-[9px] font-medium text-primary/70">Las credenciales solo serán visibles para miembros verificados tras pagar.</p>
+              <p className="text-[9px] font-medium text-primary/70">Solo visibles para miembros verificados tras pagar.</p>
             </div>
-
             <div className="space-y-2">
               <label className="text-[9px] font-black uppercase tracking-widest text-on-surface/40">Email de la cuenta</label>
-              <input
-                type="email"
-                placeholder="cuenta@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="glass-input w-full h-10 text-sm font-bold px-4"
-              />
+              <input type="email" placeholder="cuenta@email.com" value={email} onChange={(e) => setEmail(e.target.value)} className="glass-input w-full h-10 text-sm font-bold px-4" />
             </div>
-
             <div className="space-y-2">
               <label className="text-[9px] font-black uppercase tracking-widest text-on-surface/40">Contraseña</label>
               <div className="flex gap-2">
-                <input
-                  type={showPass ? "text" : "password"}
-                  placeholder="Contraseña de la cuenta"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="glass-input flex-1 h-10 text-sm font-bold px-4"
-                />
+                <input type={showPass ? "text" : "password"} placeholder="Contraseña de la cuenta" value={password} onChange={(e) => setPassword(e.target.value)} className="glass-input flex-1 h-10 text-sm font-bold px-4" />
                 <button onClick={() => setShowPass(!showPass)} className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
                   {showPass ? <EyeOff className="h-4 w-4 text-on-surface/50" /> : <Eye className="h-4 w-4 text-on-surface/50" />}
                 </button>
               </div>
             </div>
           </div>
-
           <div className="flex gap-3">
             <Button variant="outline" className="flex-1 h-11 rounded-2xl font-bold" onClick={() => setStep("config")}>← Volver</Button>
-            <Button className="flex-1 h-11 rounded-2xl font-bold" onClick={() => setStep("preview")} disabled={!email || !password}>
-              Continuar → Vista previa
-            </Button>
+            <Button className="flex-1 h-11 rounded-2xl font-bold" onClick={() => setStep("preview")} disabled={!email || !password}>Vista previa →</Button>
           </div>
         </div>
       )}
 
-      {/* PASO 3: Vista previa */}
+      {/* PASO 3: Preview */}
       {step === "preview" && (
         <div className="space-y-4">
           <div className="glass-card p-5 rounded-[2rem] space-y-4">
             <h3 className="text-[10px] font-black uppercase tracking-widest text-on-surface/30">Resumen del grupo</h3>
             <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-[10px] font-bold text-on-surface/50">Servicio</span>
-                <span className="text-sm font-bold">{service.name}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-[10px] font-bold text-on-surface/50">Cupos</span>
-                <span className="text-sm font-bold">{slots} cupos</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-[10px] font-bold text-on-surface/50">Precio por cupo</span>
-                <span className="text-sm font-bold text-primary">S/ {customPrice}/mes</span>
-              </div>
+              {[["Servicio", service.name], ["Cupos", `${slots} cupos`], ["Precio/cupo", `S/ ${customPrice}/mes`]].map(([label, value]) => (
+                <div key={label} className="flex justify-between items-center">
+                  <span className="text-[10px] font-bold text-on-surface/50">{label}</span>
+                  <span className="text-sm font-bold">{value}</span>
+                </div>
+              ))}
               <div className="flex justify-between items-center border-t border-white/10 pt-3">
-                <span className="text-[10px] font-bold text-on-surface/50">Tus ganancias (85%)</span>
-                <span className="text-sm font-extrabold text-green-500">S/ {(parseFloat(customPrice || "0") * slots * 0.85).toFixed(2)}/mes</span>
+                <span className="text-[10px] font-bold text-on-surface/50">Ganancias (85%)</span>
+                <span className="text-sm font-extrabold text-green-500">S/ {earnings}/mes</span>
               </div>
             </div>
             <div className="flex items-center gap-2 p-3 bg-amber-500/5 rounded-xl border border-amber-500/10">
               <Key className="h-4 w-4 text-amber-500 shrink-0" />
-              <p className="text-[9px] font-medium text-amber-600/70">Credenciales guardadas y encriptadas. Solo miembros activos pueden verlas.</p>
+              <p className="text-[9px] font-medium text-amber-600/70">Credenciales encriptadas. Solo miembros activos pueden verlas.</p>
             </div>
           </div>
-
           <div className="flex gap-3">
             <Button variant="outline" className="flex-1 h-11 rounded-2xl font-bold" onClick={() => setStep("credentials")}>← Volver</Button>
-            <Button className="flex-1 h-11 rounded-2xl font-bold" onClick={handlePublish} disabled={isLoading}>
-              {isLoading ? "Publicando..." : "✓ Publicar grupo"}
-            </Button>
+            <Button className="flex-1 h-11 rounded-2xl font-bold" onClick={handlePublish} disabled={isLoading}>{isLoading ? "Publicando..." : "✓ Publicar grupo"}</Button>
           </div>
         </div>
       )}
@@ -292,11 +218,14 @@ function PublicarContent() {
   );
 }
 
-
 export default function PublicarPage() {
   return (
-    <Suspense fallback={<div className="max-w-xl mx-auto pt-20 px-4 text-center text-[10px] text-on-surface/30 font-bold uppercase tracking-widest">Cargando...</div>}>
-      <PublicarContent />
+    <Suspense fallback={
+      <div className="max-w-xl mx-auto pt-20 px-4 text-center">
+        <p className="text-[10px] text-on-surface/30 font-bold uppercase tracking-widest">Cargando...</p>
+      </div>
+    }>
+      <PublicarForm />
     </Suspense>
   );
 }
