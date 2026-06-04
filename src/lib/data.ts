@@ -141,6 +141,30 @@ export const groups: Group[] = [
     credentials: { email: "ai-plus@subshare.com", pass: "AIsecure123!" },
     nextBill: "15 Ago"
   },
+  {
+    id: '2',
+    service: 'Claude Pro',
+    host: 'ClaudeHost',
+    userRole: 'Miembro',
+    slots: { filled: 2, total: 3 },
+    publicPrice: 47.90,
+    netEarning: 0,
+    status: 'Activo',
+    credentials: { email: "claude-share@poolera.com", pass: "Claude2024!" },
+    nextBill: "20 Ago"
+  },
+  {
+    id: '3',
+    service: 'Gemini AI',
+    host: 'GoogleFan',
+    userRole: 'Miembro',
+    slots: { filled: 4, total: 5 },
+    publicPrice: 16.90,
+    netEarning: 0,
+    status: 'Incompleto',
+    credentials: { email: "gemini-pool@poolera.com", pass: "Gemini2024!" },
+    nextBill: "25 Ago"
+  },
 ];
 
 export const orders: Order[] = [
