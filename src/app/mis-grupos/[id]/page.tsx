@@ -25,6 +25,7 @@ import {
 import { groups, currentUser } from "@/lib/data";
 import { notFound } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 export default function GroupDetailPage({ params: paramsPromise }: { params: Promise<{ id: string }> }) {
   const params = use(paramsPromise);
