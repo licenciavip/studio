@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/firebase";
+// Firebase auth - will be connected later
 import { 
   Lock, 
   Fingerprint, 
@@ -18,8 +18,8 @@ import {
 import { cn } from "@/lib/utils";
 
 export default function PerfilPage() {
-  const auth = useAuth();
-  const user = auth?.currentUser;
+  
+  const user = { displayName: "Deyvid Poolera", email: "deyvid@poolera.com", photoURL: null };
 
   const SettingRow = ({ 
     icon: Icon, 
