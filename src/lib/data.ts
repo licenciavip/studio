@@ -74,6 +74,58 @@ export const subscriptions: Subscription[] = [
     country: "Global",
     avatarUrl: "https://picsum.photos/seed/ai1/100/100"
   },
+  {
+    id: "ia-2",
+    service: "ChatGPT Plus",
+    host: "TechPro_PE",
+    price: 24.90,
+    currency: "S/",
+    rating: 4.7,
+    availableSlots: 3,
+    totalSlots: 5,
+    logoId: "chatgpt-logo",
+    country: "Peru",
+    avatarUrl: "https://picsum.photos/seed/ai2/100/100"
+  },
+  {
+    id: "ia-3",
+    service: "Claude Pro",
+    host: "ClaudeHost",
+    price: 47.90,
+    currency: "S/",
+    rating: 4.8,
+    availableSlots: 1,
+    totalSlots: 3,
+    logoId: "chatgpt-logo",
+    country: "Global",
+    avatarUrl: "https://picsum.photos/seed/ai3/100/100"
+  },
+  {
+    id: "ia-4",
+    service: "Gemini AI",
+    host: "GoogleFan",
+    price: 16.90,
+    currency: "S/",
+    rating: 4.6,
+    availableSlots: 4,
+    totalSlots: 5,
+    logoId: "chatgpt-logo",
+    country: "Global",
+    avatarUrl: "https://picsum.photos/seed/ai4/100/100"
+  },
+  {
+    id: "ia-5",
+    service: "Perplexity Pro",
+    host: "SearchMaster",
+    price: 47.90,
+    currency: "S/",
+    rating: 4.9,
+    availableSlots: 2,
+    totalSlots: 4,
+    logoId: "chatgpt-logo",
+    country: "Global",
+    avatarUrl: "https://picsum.photos/seed/ai5/100/100"
+  },
 ];
 
 export const groups: Group[] = [
