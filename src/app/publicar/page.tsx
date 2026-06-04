@@ -1,5 +1,7 @@
 "use client";
 
+import { Suspense } from "react";
+
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -14,7 +16,7 @@ import {
 
 type PublicarStep = "config" | "credentials" | "preview" | "success";
 
-export default function PublicarPage() {
+function PublicarContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { toast } = useToast();
@@ -287,5 +289,14 @@ export default function PublicarPage() {
         </div>
       )}
     </div>
+  );
+}
+
+
+export default function PublicarPage() {
+  return (
+    <Suspense fallback={<div className="max-w-xl mx-auto pt-20 px-4 text-center text-[10px] text-on-surface/30 font-bold uppercase tracking-widest">Cargando...</div>}>
+      <PublicarContent />
+    </Suspense>
   );
 }
