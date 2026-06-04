@@ -1,5 +1,7 @@
 "use client";
 
+import { BCP_ACCOUNT } from "@/lib/constants";
+
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -16,11 +18,7 @@ import {
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import type { PaymentOrder, Wallet } from "@/lib/types";
 
-const BCP_ACCOUNT = {
-  number: "191-987654321-0-12",
-  holder: "Poolera SAC",
-  bank: "BCP"
-};
+
 
 export default function BilleteraPage() {
   const auth = useAuth();
