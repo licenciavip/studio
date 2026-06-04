@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/", label: "Inicio", icon: "home" },
-  { href: "/explorar", label: "Explorar", icon: "explore" },
   { href: "/mis-grupos", label: "Grupos", icon: "grid_view" },
   { href: "/billetera", label: "Wallet", icon: "wallet" },
   { href: "/perfil", label: "Perfil", icon: "person" },
@@ -25,8 +24,8 @@ export function BottomNav() {
   if (HIDDEN_PATHS.includes(pathname)) return null;
 
   return (
-    <div className="fixed bottom-4 left-0 right-0 z-[200] px-4 pointer-events-none">
-      <nav className="max-w-[280px] mx-auto vision-dock flex justify-around items-center h-10 rounded-full px-1 pointer-events-auto">
+    <div className="fixed bottom-4 left-0 right-0 z-[200] px-8 pointer-events-none">
+      <nav className="max-w-[220px] mx-auto vision-dock flex justify-around items-center h-10 rounded-full px-1 pointer-events-auto">
         {navItems.map((item) => {
           const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
           return (
