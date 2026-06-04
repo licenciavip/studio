@@ -1,0 +1,199 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { Eye, EyeOff, Sparkles } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+export default function LoginPage() {
+  const router = useRouter();
+  const { toast } = useToast();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPass, setShowPass] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [tab, setTab] = useState<"login" | "registro">("login");
+
+  // Registro fields
+  const [nombre, setNombre] = useState("");
+  const [confirmPass, setConfirmPass] = useState("");
+
+  const handleLogin = () => {
+    if (!email || !password) return;
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      toast({ title: "¡Bienvenido!", description: "Sesión iniciada correctamente." });
+      router.push("/");
+    }, 1000);
+  };
+
+  const handleRegistro = () => {
+    if (!nombre || !email || !password || !confirmPass) return;
+    if (password !== confirmPass) {
+      toast({ title: "Error", description: "Las contraseñas no coinciden.", variant: "destructive" });
+      return;
+    }
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      toast({ title: "¡Cuenta creada!", description: "Bienvenido a Poolera Digital." });
+      router.push("/");
+    }, 1200);
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12">
+      <div className="w-full max-w-sm space-y-6">
+
+        {/* Logo */}
+        <div className="text-center space-y-2">
+          <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center mx-auto shadow-xl shadow-primary/20">
+            <Sparkles className="h-6 w-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-xl font-extrabold tracking-tight text-on-surface">Poolera Digital</h1>
+            <p className="text-[9px] font-bold text-on-surface/30 uppercase tracking-widest">Suscripciones de IA compartidas</p>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div className="p-1 bg-white/20 backdrop-blur-xl border border-white/30 rounded-2xl flex">
+          <button
+            onClick={() => setTab("login")}
+            className={cn(
+              "flex-1 py-2 text-[11px] font-black uppercase tracking-widest rounded-xl transition-all",
+              tab === "login" ? "bg-white text-primary shadow-sm" : "text-on-surface/40"
+            )}
+          >
+            Entrar
+          </button>
+          <button
+            onClick={() => setTab("registro")}
+            className={cn(
+              "flex-1 py-2 text-[11px] font-black uppercase tracking-widest rounded-xl transition-all",
+              tab === "registro" ? "bg-white text-primary shadow-sm" : "text-on-surface/40"
+            )}
+          >
+            Registrarse
+          </button>
+        </div>
+
+        {/* Login Form */}
+        {tab === "login" && (
+          <div className="glass-card p-6 rounded-[2rem] space-y-4">
+            <div className="space-y-2">
+              <label className="text-[9px] font-black uppercase tracking-widest text-on-surface/40">Email</label>
+              <input
+                type="email"
+                placeholder="tu@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="glass-input w-full h-11 text-sm font-bold px-4"
+              />
+            </div>
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <label className="text-[9px] font-black uppercase tracking-widest text-on-surface/40">Contraseña</label>
+                <button className="text-[9px] font-bold text-primary/60 uppercase tracking-widest">¿Olvidaste?</button>
+              </div>
+              <div className="flex gap-2">
+                <input
+                  type={showPass ? "text" : "password"}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="glass-input flex-1 h-11 text-sm font-bold px-4"
+                />
+                <button onClick={() => setShowPass(!showPass)} className="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center">
+                  {showPass ? <EyeOff className="h-4 w-4 text-on-surface/40" /> : <Eye className="h-4 w-4 text-on-surface/40" />}
+                </button>
+              </div>
+            </div>
+            <Button
+              className="w-full h-11 rounded-2xl font-bold mt-2"
+              onClick={handleLogin}
+              disabled={isLoading || !email || !password}
+            >
+              {isLoading ? "Entrando..." : "Entrar"}
+            </Button>
+
+            {/* Demo hint */}
+            <p className="text-center text-[8px] text-on-surface/20 font-bold uppercase tracking-widest">
+              Demo — cualquier email y contraseña funciona
+            </p>
+          </div>
+        )}
+
+        {/* Registro Form */}
+        {tab === "registro" && (
+          <div className="glass-card p-6 rounded-[2rem] space-y-4">
+            <div className="space-y-2">
+              <label className="text-[9px] font-black uppercase tracking-widest text-on-surface/40">Nombre completo</label>
+              <input
+                type="text"
+                placeholder="Tu nombre"
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                className="glass-input w-full h-11 text-sm font-bold px-4"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-[9px] font-black uppercase tracking-widest text-on-surface/40">Email</label>
+              <input
+                type="email"
+                placeholder="tu@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="glass-input w-full h-11 text-sm font-bold px-4"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-[9px] font-black uppercase tracking-widest text-on-surface/40">Contraseña</label>
+              <div className="flex gap-2">
+                <input
+                  type={showPass ? "text" : "password"}
+                  placeholder="Mínimo 8 caracteres"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="glass-input flex-1 h-11 text-sm font-bold px-4"
+                />
+                <button onClick={() => setShowPass(!showPass)} className="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center">
+                  {showPass ? <EyeOff className="h-4 w-4 text-on-surface/40" /> : <Eye className="h-4 w-4 text-on-surface/40" />}
+                </button>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <label className="text-[9px] font-black uppercase tracking-widest text-on-surface/40">Confirmar contraseña</label>
+              <input
+                type="password"
+                placeholder="Repite la contraseña"
+                value={confirmPass}
+                onChange={(e) => setConfirmPass(e.target.value)}
+                className="glass-input w-full h-11 text-sm font-bold px-4"
+              />
+            </div>
+            <Button
+              className="w-full h-11 rounded-2xl font-bold mt-2"
+              onClick={handleRegistro}
+              disabled={isLoading || !nombre || !email || !password || !confirmPass}
+            >
+              {isLoading ? "Creando cuenta..." : "Crear cuenta"}
+            </Button>
+            <p className="text-center text-[8px] text-on-surface/20 font-bold uppercase tracking-widest">
+              Demo — sin validación real
+            </p>
+          </div>
+        )}
+
+        <p className="text-center text-[9px] text-on-surface/20">
+          Al continuar aceptas los{" "}
+          <span className="text-primary/50 font-bold">Términos de uso</span>
+        </p>
+      </div>
+    </div>
+  );
+}
