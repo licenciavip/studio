@@ -1,15 +1,11 @@
-
 "use client";
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { servicesByCategory, groups } from "@/lib/data";
 import { cn } from "@/lib/utils";
-import { useAuth, useFirestore } from "@/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useToast } from "@/hooks/use-toast";
-import { ChevronRight, PlusCircle, Sparkles, Zap } from "lucide-react";
+import { ChevronRight, PlusCircle, Sparkles, Zap, Users, TrendingDown, LogIn } from "lucide-react";
 import type { CategorySlug, Service } from "@/lib/types";
 
 const categoryLabels: Record<string, string> = {
@@ -33,14 +29,16 @@ const NOVEDADES = [
   },
 ];
 
+// Mock: simulate no logged-in user for demo
+const MOCK_USER = { displayName: "Deyvid" };
+
 export default function Home() {
   const [recommendation, setRecommendation] = useState("");
-  const [isSubmittingRecLocal, setIsSubmittingRecLocal] = useState(false);
-
-  const auth = useAuth();
-  const firestore = useFirestore();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
-  const user = auth?.currentUser;
+
+  // Mock user — replace with real auth when Firebase is connected
+  const user = MOCK_USER;
 
   const groupedServices = useMemo(() => {
     return Object.fromEntries(
@@ -48,42 +46,69 @@ export default function Home() {
     ) as Record<CategorySlug, Service[]>;
   }, []);
 
-  const handleRecommendSubmit = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && recommendation.trim()) {
-      if (!auth.currentUser) {
-        toast({ title: "Inicia sesión", description: "Debes estar conectado.", variant: "destructive" });
-        return;
-      }
-      setIsSubmittingRecLocal(true);
-      try {
-        await addDoc(collection(firestore, "serviceRecommendations"), {
-          userId: auth.currentUser.uid,
-          serviceName: recommendation.trim(),
-          createdAt: serverTimestamp(),
-        });
+  const handleRecommendSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && recommendation.trim()) {
+      setIsSubmitting(true);
+      setTimeout(() => {
         toast({ title: "¡Gracias!", description: "Sugerencia recibida." });
         setRecommendation("");
-      } catch (error) {
-        toast({ title: "Error", description: "No se pudo guardar.", variant: "destructive" });
-      } finally {
-        setIsSubmittingRecLocal(false);
-      }
+        setIsSubmitting(false);
+      }, 600);
     }
   };
 
   return (
-    <div className="flex flex-col min-h-screen pt-12">
+    <div className="flex flex-col min-h-screen">
       <main className="flex-grow w-full max-w-xl mx-auto pb-24 px-4 space-y-4">
-        
-        {/* SALUDO COMPACTO */}
+
+        {/* HERO — explicación clara para nuevos usuarios */}
+        <section className="glass-card rounded-[2rem] p-4 space-y-3">
+          <div className="space-y-1">
+            <p className="text-[7px] font-black text-on-surface/20 uppercase tracking-[0.4em]">Poolera Digital</p>
+            <h1 className="text-base font-extrabold text-on-surface tracking-tight leading-snug">
+              Accede a IA premium<br />pagando solo tu parte
+            </h1>
+            <p className="text-[10px] text-on-surface/40 font-medium leading-relaxed">
+              Comparte o compra cupos de ChatGPT, Claude, Gemini y más. Hasta <span className="font-bold text-primary">70% más barato</span>.
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <div className="flex-1 flex items-center gap-1.5 p-2 bg-primary/5 rounded-xl border border-primary/10">
+              <TrendingDown className="h-3 w-3 text-primary shrink-0" />
+              <div>
+                <p className="text-[8px] font-black text-primary">Miembro</p>
+                <p className="text-[7px] text-on-surface/40">Úsala pagando menos</p>
+              </div>
+            </div>
+            <div className="flex-1 flex items-center gap-1.5 p-2 bg-green-500/5 rounded-xl border border-green-500/10">
+              <TrendingDown className="h-3 w-3 text-green-500 shrink-0 rotate-180" />
+              <div>
+                <p className="text-[8px] font-black text-green-600">Anfitrión</p>
+                <p className="text-[7px] text-on-surface/40">Vende tus cupos libres</p>
+              </div>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <Link href="/explorar" className="flex-1">
+              <div className="w-full h-9 bg-primary/10 rounded-xl flex items-center justify-center gap-1.5 text-primary font-bold text-[10px] hover:bg-primary/20 transition-all active:scale-95">
+                <Users className="h-3 w-3" /> Explorar cupos
+              </div>
+            </Link>
+            <Link href="/login" className="flex-1">
+              <div className="w-full h-9 bg-white/30 rounded-xl flex items-center justify-center gap-1.5 text-on-surface/60 font-bold text-[10px] hover:bg-white/50 transition-all active:scale-95 border border-white/40">
+                <LogIn className="h-3 w-3" /> Entrar / Registrarse
+              </div>
+            </Link>
+          </div>
+        </section>
+
+        {/* SALUDO + COMPARTIR */}
         <section className="space-y-3">
           <div className="px-1">
-            <h1 className="text-[7px] font-black text-on-surface/20 uppercase tracking-[0.4em] mb-0.5">Poolera Digital</h1>
             <h2 className="text-base font-extrabold text-on-surface tracking-tightest">
-              Hola, {user?.displayName?.split(' ')[0] || 'Deyvid'} 👋
+              Hola, {user?.displayName?.split(" ")[0] || "Deyvid"} 👋
             </h2>
           </div>
-          
           <Link href="/compartir" className="block group">
             <div className="relative overflow-hidden w-full h-10 bg-primary rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-primary/10 hover:scale-[1.01] active:scale-[0.98] transition-all">
               <PlusCircle className="h-3.5 w-3.5 text-white" />
@@ -92,7 +117,7 @@ export default function Home() {
           </Link>
         </section>
 
-        {/* MIS GRUPOS COMPACTOS */}
+        {/* MIS GRUPOS */}
         <section className="space-y-1.5">
           <div className="flex justify-between items-center px-2">
             <h2 className="text-[7px] font-black text-on-surface/20 tracking-widest uppercase">Activos</h2>
@@ -102,8 +127,8 @@ export default function Home() {
             <Link href={`/mis-grupos/${group.id}`} key={group.id} className="block group">
               <div className="glass-card rounded-2xl p-2.5 flex items-center justify-between transition-all active:scale-[0.98]">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-white/40 flex items-center justify-center border border-white/60 shadow-sm">
-                    <Image src={`https://picsum.photos/seed/${group.id}/100/100`} alt={group.service} width={18} height={18} className="object-contain" />
+                  <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/10">
+                    <Sparkles className="h-4 w-4 text-primary" />
                   </div>
                   <div>
                     <h3 className="text-[11px] font-bold text-on-surface tracking-tight leading-none">{group.service}</h3>
@@ -116,7 +141,7 @@ export default function Home() {
           ))}
         </section>
 
-        {/* NOVEDADES - COMPACTO */}
+        {/* NOVEDADES */}
         <section className="space-y-1.5">
           <div className="px-2">
             <h2 className="text-[7px] font-black text-on-surface/20 tracking-widest uppercase">Novedades</h2>
@@ -137,7 +162,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* IA & HERRAMIENTAS - GRID REFINADO 4 COL */}
+        {/* SERVICIOS GRID */}
         <section className="space-y-2">
           {Object.entries(groupedServices).map(([slug, services]) => (
             <div key={slug} className="space-y-1.5">
@@ -150,12 +175,9 @@ export default function Home() {
                   const brandColor = isWhiteBg ? "text-primary" : "text-white";
                   return (
                     <Link href={`/explorar/all/${service.id}`} key={service.id} className="block group">
-                      <div 
-                        className={cn(
-                          "relative rounded-2xl p-2 aspect-square flex flex-col justify-between transition-all duration-500 hover:scale-[1.03] active:scale-[0.98] overflow-hidden border border-white/5", 
-                          isWhiteBg ? "glass-card" : "shadow-lg shadow-black/5"
-                        )} 
-                        style={{ backgroundColor: !isWhiteBg ? (service.color || '#4343d5') : undefined }}
+                      <div
+                        className={cn("relative rounded-2xl p-2 aspect-square flex flex-col justify-between transition-all duration-500 hover:scale-[1.03] active:scale-[0.98] overflow-hidden border border-white/5", isWhiteBg ? "glass-card" : "shadow-lg shadow-black/5")}
+                        style={{ backgroundColor: !isWhiteBg ? (service.color || "#4343d5") : undefined }}
                       >
                         {!isWhiteBg && <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />}
                         <div className="relative z-10 space-y-0.5">
@@ -182,7 +204,14 @@ export default function Home() {
             <p className="text-[8px] text-on-surface-variant/40 font-bold tracking-tight">¿No encuentras lo que buscas?</p>
           </div>
           <div className="max-w-[120px] mx-auto">
-            <input className="glass-input w-full text-[9px] font-bold text-center h-8 placeholder:text-[7px] placeholder:opacity-20" placeholder="EJ: MIDJOURNEY..." value={recommendation} onChange={(e) => setRecommendation(e.target.value)} onKeyDown={handleRecommendSubmit} disabled={isSubmittingRecLocal} />
+            <input
+              className="glass-input w-full text-[9px] font-bold text-center h-8 placeholder:text-[7px] placeholder:opacity-20"
+              placeholder="EJ: MIDJOURNEY..."
+              value={recommendation}
+              onChange={(e) => setRecommendation(e.target.value)}
+              onKeyDown={handleRecommendSubmit}
+              disabled={isSubmitting}
+            />
           </div>
         </section>
       </main>
