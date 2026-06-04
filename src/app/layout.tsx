@@ -28,12 +28,12 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-25..0&display=block" />
       </head>
-      <body className={cn("min-h-screen bg-background text-foreground font-sans antialiased pb-24")} suppressHydrationWarning>
+      <body className={cn("min-h-screen bg-background text-foreground font-sans antialiased")} suppressHydrationWarning>
         <FirebaseClientProvider>
           <FirebaseErrorListener />
           <div className="relative flex flex-col min-h-screen">
             <Header />
-            <main className="flex-1 max-w-xl mx-auto w-full px-4 pt-16 pb-8">
+            <main className="flex-1 max-w-xl mx-auto w-full px-4 pt-20 pb-28">
               {children}
             </main>
             <BottomNav />
