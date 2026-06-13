@@ -8,6 +8,7 @@ import { BottomNav } from "@/components/layout/bottom-nav";
 import { Toaster } from "@/components/ui/toaster";
 import { FirebaseClientProvider } from "@/firebase";
 import { FirebaseErrorListener } from "@/components/FirebaseErrorListener";
+import { AuthGuard } from "@/components/auth-guard";
 
 const sora = Sora({
   subsets: ["latin"],
@@ -48,7 +49,7 @@ export default function RootLayout({
             <div className="lg-scroll-edge" aria-hidden />
             <Header />
             <main className="flex-1 w-full mx-auto max-w-[var(--content-max-width)] px-4 sm:px-6 pb-28 pt-[calc(5rem+env(safe-area-inset-top))]">
-              {children}
+              <AuthGuard>{children}</AuthGuard>
             </main>
             <BottomNav />
           </div>
