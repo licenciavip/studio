@@ -37,7 +37,7 @@ function PublicarForm() {
 
   if (!service) {
     return (
-      <div className="max-w-xl mx-auto pt-20 pb-32 px-4 text-center space-y-4">
+      <div className="pt-10 pb-32 text-center space-y-4">
         <p className="text-on-surface/40 text-sm">Servicio no encontrado</p>
         <Button asChild variant="link"><Link href="/compartir">Volver</Link></Button>
       </div>
@@ -55,7 +55,7 @@ function PublicarForm() {
 
   if (step === "success") {
     return (
-      <div className="max-w-xl mx-auto pt-16 pb-32 px-4 flex flex-col items-center text-center space-y-6">
+      <div className="pt-8 pb-32 flex flex-col items-center text-center space-y-6">
         <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center">
           <CheckCircle2 className="h-8 w-8 text-green-500" />
         </div>
@@ -79,7 +79,7 @@ function PublicarForm() {
   }
 
   return (
-    <div className="max-w-xl mx-auto pt-10 pb-32 px-4 space-y-5">
+    <div className="pb-32 pt-2 space-y-5">
       <div className="flex items-center gap-3 px-1">
         <Button asChild variant="ghost" size="icon" className="h-8 w-8 rounded-full bg-white/40 hover:bg-white/60 active:scale-95 transition-all">
           <Link href={`/compartir/${category}`}><ArrowLeft className="h-4 w-4 text-primary" /></Link>
@@ -221,7 +221,7 @@ function PublicarForm() {
 export default function PublicarPage() {
   return (
     <Suspense fallback={
-      <div className="max-w-xl mx-auto pt-20 px-4 text-center">
+      <div className="pt-10 text-center">
         <p className="text-[10px] text-on-surface/30 font-bold uppercase tracking-widest">Cargando...</p>
       </div>
     }>

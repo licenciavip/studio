@@ -45,6 +45,7 @@ export default function RootLayout({
         <FirebaseClientProvider>
           <FirebaseErrorListener />
           <div className="relative flex flex-col min-h-screen">
+            <div className="lg-scroll-edge" aria-hidden />
             <Header />
             <main className="flex-1 w-full mx-auto max-w-[var(--content-max-width)] px-4 sm:px-6 pb-28 pt-[calc(5rem+env(safe-area-inset-top))]">
               {children}
