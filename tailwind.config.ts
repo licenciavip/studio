@@ -16,16 +16,19 @@ const config: Config = {
       },
     },
     extend: {
+      screens: {
+        xs: '400px',
+      },
       fontFamily: {
         sans: [
-          '-apple-system', 
-          'BlinkMacSystemFont', 
-          '"SF Pro Display"', 
-          '"SF Pro Text"', 
-          '"Inter"', 
-          '"Geist"', 
-          '"Helvetica Neue"', 
-          'Arial', 
+          '-apple-system',
+          'BlinkMacSystemFont',
+          '"SF Pro Display"',
+          '"SF Pro Text"',
+          '"Inter"',
+          '"Geist"',
+          '"Helvetica Neue"',
+          'Arial',
           'sans-serif'
         ],
         sora: ['var(--font-sora)', 'sans-serif'],
@@ -39,8 +42,8 @@ const config: Config = {
         background: '#faf8ff',
         foreground: '#131b2e',
         primary: {
-          DEFAULT: '#4343d5',
-          container: '#5d5fef',
+          DEFAULT: '#0A84FF',
+          container: '#5E5CE6',
           fixed: '#e1e0ff',
           foreground: '#ffffff',
           'fixed-dim': '#c1c1ff',
@@ -89,7 +92,7 @@ const config: Config = {
         'on-error': '#ffffff',
         border: '#c7c4d7',
         input: '#eaedff',
-        ring: '#4343d5',
+        ring: '#0A84FF',
       },
       borderRadius: {
         lg: '0.5rem',
