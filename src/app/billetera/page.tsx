@@ -5,11 +5,13 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { BCP_ACCOUNT } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import { paymentStatusConfig } from "@/lib/status";
 import {
   History, Plus, ArrowUpRight, TrendingUp, Copy,
   ArrowLeft, CheckCircle2, Clock, Landmark, Hash
 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import type { PaymentOrderStatus } from "@/lib/types";
 
 type RechargeStep = "amount" | "bank-details" | "operation-number" | "success";
 
@@ -20,7 +22,7 @@ type MockOrder = {
   type: "wallet_recharge" | "membership_payment";
   paymentCode: string;
   amountExpected: number;
-  status: "pending" | "uploaded" | "approved" | "rejected";
+  status: PaymentOrderStatus;
 };
 
 const MOCK_ORDERS: MockOrder[] = [
@@ -82,19 +84,13 @@ export default function BilleteraPage() {
     toast({ title: "Copiado", description: `${label} copiado.` });
   };
 
-  const getStatusBadge = (status: string) => {
-    const map: Record<string, { label: string; color: string }> = {
-      pending: { label: "Pendiente", color: "text-amber-500/80" },
-      uploaded: { label: "En revisión", color: "text-blue-500/80" },
-      approved: { label: "Aprobado", color: "text-green-500/80" },
-      rejected: { label: "Rechazado", color: "text-red-500/80" },
-    };
-    const s = map[status];
-    return s ? <span className={`text-[7px] font-black uppercase tracking-widest ${s.color}`}>{s.label}</span> : null;
+  const getStatusBadge = (status: PaymentOrderStatus) => {
+    const s = paymentStatusConfig[status];
+    return s ? <span className={`text-[9px] font-black uppercase tracking-widest ${s.text}`}>{s.label}</span> : null;
   };
 
   return (
-    <div className="max-w-xl mx-auto pt-10 pb-24 px-4 space-y-5">
+    <div className="pb-24 pt-2 space-y-5">
       {/* Balance Card */}
       <div className="relative overflow-hidden bg-gradient-to-br from-[#1c1c1e] to-[#2c2c2e] p-6 rounded-[2.2rem] text-white shadow-2xl border border-white/5">
         <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
@@ -102,7 +98,7 @@ export default function BilleteraPage() {
         </div>
         <div className="relative z-10 space-y-4">
           <div>
-            <p className="text-[8px] font-bold opacity-30 uppercase tracking-[0.25em]">Saldo disponible</p>
+            <p className="text-[9px] font-bold opacity-40 uppercase tracking-[0.25em]">Saldo disponible</p>
             <h1 className="text-3xl font-extrabold tracking-tighter">${mockBalance.toFixed(2)}</h1>
           </div>
           <div className="flex gap-2">
@@ -120,7 +116,7 @@ export default function BilleteraPage() {
       <div className="space-y-2">
         <div className="flex items-center gap-1.5 px-2">
           <History className="h-3 w-3 text-on-surface/30" />
-          <h2 className="text-[9px] font-bold text-on-surface/30 tracking-tight uppercase">Actividad</h2>
+          <h2 className="text-[10px] font-bold text-on-surface/30 tracking-tight uppercase">Actividad</h2>
         </div>
         <div className="space-y-1.5">
           {orders.map((order) => (
@@ -133,11 +129,11 @@ export default function BilleteraPage() {
                   <p className="text-[11px] font-bold text-on-surface tracking-tight">
                     {order.type === "wallet_recharge" ? "Recarga" : "Suscripción"}
                   </p>
-                  <p className="text-[8px] text-on-surface-variant/30 font-bold uppercase tracking-widest">{order.paymentCode}</p>
+                  <p className="text-[9px] text-on-surface-variant/30 font-bold uppercase tracking-widest">{order.paymentCode}</p>
                 </div>
               </div>
               <div className="text-right">
-                <p className={cn("text-[11px] font-bold tracking-tight", order.status === "approved" ? "text-green-500" : "text-on-surface")}>
+                <p className={cn("text-[11px] font-bold tracking-tight", order.status === "approved" ? "text-success" : "text-on-surface")}>
                   {order.type === "wallet_recharge" ? "+" : "-"}${order.amountExpected.toFixed(2)}
                 </p>
                 {getStatusBadge(order.status)}
@@ -156,7 +152,7 @@ export default function BilleteraPage() {
             <div className="p-6 space-y-5">
               <DialogHeader className="space-y-1">
                 <DialogTitle className="text-sm font-bold text-center">Recargar Saldo</DialogTitle>
-                <DialogDescription className="text-center text-[9px] opacity-40">¿Cuánto quieres recargar?</DialogDescription>
+                <DialogDescription className="text-center text-[10px] opacity-40">¿Cuánto quieres recargar?</DialogDescription>
               </DialogHeader>
               <div className="text-center">
                 <div className="flex items-center justify-center gap-1">
@@ -199,7 +195,7 @@ export default function BilleteraPage() {
           {/* PASO 2: Datos bancarios */}
           {step === "bank-details" && (
             <div className="p-6 space-y-4">
-              <button onClick={() => setStep("amount")} className="flex items-center gap-1 text-[9px] font-bold text-on-surface/30 uppercase tracking-widest">
+              <button onClick={() => setStep("amount")} className="flex items-center gap-1 text-[10px] font-bold text-on-surface/30 uppercase tracking-widest">
                 <ArrowLeft className="h-3 w-3" /> Volver
               </button>
               <div className="text-center space-y-1">
@@ -207,20 +203,20 @@ export default function BilleteraPage() {
                   <Landmark className="h-5 w-5 text-primary" />
                 </div>
                 <h3 className="text-sm font-bold">Realiza la transferencia</h3>
-                <p className="text-[9px] text-on-surface/30">Transfiere el monto exacto a esta cuenta</p>
+                <p className="text-[10px] text-on-surface/30">Transfiere el monto exacto a esta cuenta</p>
               </div>
               <div className="space-y-2">
                 <div className="glass-card p-3 rounded-2xl space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-[8px] font-black uppercase tracking-widest text-on-surface/30">Banco</span>
+                    <span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Banco</span>
                     <span className="text-[11px] font-bold">{BCP_ACCOUNT.bank}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-[8px] font-black uppercase tracking-widest text-on-surface/30">Titular</span>
+                    <span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Titular</span>
                     <span className="text-[11px] font-bold">{BCP_ACCOUNT.holder}</span>
                   </div>
                   <div className="flex justify-between items-center border-t border-white/10 pt-2">
-                    <span className="text-[8px] font-black uppercase tracking-widest text-on-surface/30">Cuenta</span>
+                    <span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Cuenta</span>
                     <div className="flex items-center gap-1.5">
                       <span className="text-[10px] font-bold font-mono">{BCP_ACCOUNT.number}</span>
                       <button onClick={() => copyText(BCP_ACCOUNT.number, "Cuenta")} className="w-5 h-5 rounded-md bg-primary/10 flex items-center justify-center">
@@ -231,7 +227,7 @@ export default function BilleteraPage() {
                 </div>
                 <div className="glass-card p-3 rounded-2xl space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-[8px] font-black uppercase tracking-widest text-on-surface/30">Monto exacto</span>
+                    <span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Monto exacto</span>
                     <div className="flex items-center gap-1.5">
                       <span className="text-[13px] font-black text-primary">${parseFloat(rechargeAmount).toFixed(2)}</span>
                       <button onClick={() => copyText(parseFloat(rechargeAmount).toFixed(2), "Monto")} className="w-5 h-5 rounded-md bg-primary/10 flex items-center justify-center">
@@ -240,7 +236,7 @@ export default function BilleteraPage() {
                     </div>
                   </div>
                   <div className="flex justify-between items-center border-t border-white/10 pt-2">
-                    <span className="text-[8px] font-black uppercase tracking-widest text-on-surface/30">Código</span>
+                    <span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Código</span>
                     <div className="flex items-center gap-1.5">
                       <span className="text-[11px] font-bold font-mono text-primary">{paymentCode}</span>
                       <button onClick={() => copyText(paymentCode, "Código")} className="w-5 h-5 rounded-md bg-primary/10 flex items-center justify-center">
@@ -250,7 +246,7 @@ export default function BilleteraPage() {
                   </div>
                 </div>
               </div>
-              <p className="text-[8px] text-center text-on-surface/30 font-medium">⚠️ No deposites en agentes BCP. Solo transferencias.</p>
+              <p className="text-[9px] text-center text-on-surface/30 font-medium">⚠️ No deposites en agentes BCP. Solo transferencias.</p>
               <Button className="w-full h-10 rounded-2xl text-[11px] font-bold" onClick={() => setStep("operation-number")}>
                 Ya realicé la transferencia →
               </Button>
@@ -260,7 +256,7 @@ export default function BilleteraPage() {
           {/* PASO 3: Número de operación */}
           {step === "operation-number" && (
             <div className="p-6 space-y-4">
-              <button onClick={() => setStep("bank-details")} className="flex items-center gap-1 text-[9px] font-bold text-on-surface/30 uppercase tracking-widest">
+              <button onClick={() => setStep("bank-details")} className="flex items-center gap-1 text-[10px] font-bold text-on-surface/30 uppercase tracking-widest">
                 <ArrowLeft className="h-3 w-3" /> Volver
               </button>
               <div className="text-center space-y-1">
@@ -268,7 +264,7 @@ export default function BilleteraPage() {
                   <Hash className="h-5 w-5 text-primary" />
                 </div>
                 <h3 className="text-sm font-bold">Número de operación</h3>
-                <p className="text-[9px] text-on-surface/30">Ingresa el número de tu comprobante de transferencia</p>
+                <p className="text-[10px] text-on-surface/30">Ingresa el número de tu comprobante de transferencia</p>
               </div>
               <input
                 type="text"
@@ -277,7 +273,7 @@ export default function BilleteraPage() {
                 onChange={(e) => setOperationNumber(e.target.value)}
                 className="glass-input w-full h-11 text-sm font-bold text-center tracking-widest"
               />
-              <p className="text-[8px] text-center text-on-surface/30">
+              <p className="text-[9px] text-center text-on-surface/30">
                 Encuéntralo en tu comprobante como "N° de operación" o "N° de transacción"
               </p>
               <Button
@@ -293,16 +289,16 @@ export default function BilleteraPage() {
           {/* PASO 4: Éxito */}
           {step === "success" && (
             <div className="p-6 space-y-4 text-center">
-              <div className="w-14 h-14 bg-green-500/10 rounded-full flex items-center justify-center mx-auto">
-                <CheckCircle2 className="h-7 w-7 text-green-500" />
+              <div className="w-14 h-14 bg-success/10 rounded-full flex items-center justify-center mx-auto">
+                <CheckCircle2 className="h-7 w-7 text-success" />
               </div>
               <div className="space-y-1">
                 <h3 className="text-sm font-bold">¡Recarga enviada!</h3>
-                <p className="text-[9px] text-on-surface/40 leading-relaxed">Tu número de operación fue registrado. Validaremos tu pago y acreditaremos el saldo pronto.</p>
+                <p className="text-[10px] text-on-surface/40 leading-relaxed">Tu número de operación fue registrado. Validaremos tu pago y acreditaremos el saldo pronto.</p>
               </div>
               <div className="glass-card p-3 rounded-2xl flex items-center gap-2">
-                <Clock className="h-4 w-4 text-amber-500 shrink-0" />
-                <p className="text-[9px] text-on-surface/50 text-left">Tiempo de validación: <span className="font-bold text-on-surface">2 a 12 horas hábiles</span></p>
+                <Clock className="h-4 w-4 text-warning shrink-0" />
+                <p className="text-[10px] text-on-surface/50 text-left">Tiempo de validación: <span className="font-bold text-on-surface">2 a 12 horas hábiles</span></p>
               </div>
               <Button className="w-full h-10 rounded-2xl text-[11px] font-bold" onClick={() => setShowDialog(false)}>
                 Entendido
