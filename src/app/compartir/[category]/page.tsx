@@ -25,77 +25,75 @@ export default function CompartirCategoryPage() {
   const categoryLabel = categoryLabels[category] || "SERVICIOS";
 
   return (
-    <div className="min-h-screen pt-12 pb-24">
-      <div className="container mx-auto px-4 max-w-xl">
-        <div className="flex items-center gap-3 mb-6">
-          <Button asChild variant="ghost" className="rounded-full h-8 w-8 p-0 bg-white/40 hover:bg-white/60 active:scale-95 transition-all">
-            <Link href="/compartir">
-              <ArrowLeft className="h-4 w-4 text-on-surface" />
-            </Link>
-          </Button>
-          <div>
-            <h1 className="text-base font-sora font-extrabold tracking-tight text-on-surface">
-              {categoryLabel}
-            </h1>
-            <p className="text-[8px] font-bold text-on-surface-variant/30 uppercase tracking-widest">Selecciona plataforma</p>
-          </div>
+    <div className="min-h-screen pb-24">
+      <div className="flex items-center gap-3 mb-6">
+        <Button asChild variant="ghost" className="rounded-full h-8 w-8 p-0 bg-white/40 hover:bg-white/60 active:scale-95 transition-all">
+          <Link href="/compartir">
+            <ArrowLeft className="h-4 w-4 text-on-surface" />
+          </Link>
+        </Button>
+        <div>
+          <h1 className="text-base font-sora font-extrabold tracking-tight text-on-surface">
+            {categoryLabel}
+          </h1>
+          <p className="text-[10px] font-bold text-on-surface-variant/40 uppercase tracking-widest">Selecciona plataforma</p>
         </div>
+      </div>
 
-        <div className="grid grid-cols-4 gap-2">
-          {services.map((service) => {
-            const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
-            const isPerplexity = service.id === 'perplexity';
-            const isGemini = service.id === 'gemini';
-            
-            const brandColor = isPerplexity ? "text-[#1adec5]" : (isGemini ? "text-primary" : (isWhiteBg ? "text-primary" : "text-white"));
-            const planColor = isWhiteBg ? "text-on-surface-variant/60" : "text-white/70";
-            const labelColor = isWhiteBg ? "text-on-surface-variant/40" : "text-white/60";
+      <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-3">
+        {services.map((service) => {
+          const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
+          const isPerplexity = service.id === 'perplexity';
+          const isGemini = service.id === 'gemini';
 
-            return (
-              <Link href={`/publicar?category=${category}&service=${service.id}`} key={service.id} className="block group">
-                <div 
-                  className={cn(
-                    "relative rounded-2xl p-2 aspect-square flex flex-col justify-between transition-all duration-500 hover:scale-[1.03] active:scale-95 overflow-hidden border-none",
-                    isWhiteBg ? "glass-card" : "shadow-lg shadow-black/5"
-                  )}
-                  style={{ backgroundColor: !isWhiteBg ? (service.color || '#4343d5') : undefined }}
-                >
-                  {!isWhiteBg && <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />}
-                  
-                  <div className="relative z-10 space-y-0.5">
-                    <h3 className={cn(
-                      "text-[8px] font-bold tracking-tight leading-none pr-3 truncate",
-                      brandColor
-                    )}>
-                      {service.name}
-                    </h3>
-                    <p className={cn(
-                      "text-[5px] font-medium opacity-80 uppercase tracking-tighter",
-                      planColor
-                    )}>
-                      VENDIENDO
-                    </p>
-                  </div>
+          const brandColor = isPerplexity ? "text-[#1adec5]" : (isGemini ? "text-primary" : (isWhiteBg ? "text-primary" : "text-white"));
+          const planColor = isWhiteBg ? "text-on-surface-variant/60" : "text-white/70";
+          const labelColor = isWhiteBg ? "text-on-surface-variant/40" : "text-white/60";
 
-                  <div className="relative z-10 space-y-0.5">
-                    <p className={cn(
-                      "text-[5px] font-black uppercase tracking-tighter",
-                      labelColor
-                    )}>
-                      RECIBES
-                    </p>
-                    <span className={cn(
-                      "text-[10px] font-sora font-extrabold tracking-tight",
-                      brandColor
-                    )}>
-                      S/ {service.hostEarnings}
-                    </span>
-                  </div>
+          return (
+            <Link href={`/publicar?category=${category}&service=${service.id}`} key={service.id} className="block group">
+              <div
+                className={cn(
+                  "relative rounded-2xl p-3 aspect-square flex flex-col justify-between transition-all duration-500 hover:scale-[1.03] active:scale-95 overflow-hidden border-none",
+                  isWhiteBg ? "glass-card" : "shadow-lg shadow-black/5"
+                )}
+                style={{ backgroundColor: !isWhiteBg ? (service.color || '#4343d5') : undefined }}
+              >
+                {!isWhiteBg && <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />}
+
+                <div className="relative z-10 space-y-0.5">
+                  <h3 className={cn(
+                    "text-xs sm:text-sm font-bold tracking-tight leading-tight truncate",
+                    brandColor
+                  )}>
+                    {service.name}
+                  </h3>
+                  <p className={cn(
+                    "text-[9px] font-medium uppercase tracking-[0.03em]",
+                    planColor
+                  )}>
+                    Vendiendo
+                  </p>
                 </div>
-              </Link>
-            );
-          })}
-        </div>
+
+                <div className="relative z-10 space-y-0.5">
+                  <p className={cn(
+                    "text-[9px] font-bold uppercase tracking-[0.03em]",
+                    labelColor
+                  )}>
+                    Recibes
+                  </p>
+                  <span className={cn(
+                    "text-sm sm:text-base font-sora font-extrabold tracking-tight",
+                    brandColor
+                  )}>
+                    S/ {service.hostEarnings}
+                  </span>
+                </div>
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
