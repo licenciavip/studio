@@ -2,13 +2,16 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-// Firebase auth - will be connected later
-import { 
-  Lock, 
-  Fingerprint, 
-  HelpCircle, 
-  LogOut, 
+import { useUser, useAuth } from "@/firebase";
+import { signOut } from "firebase/auth";
+import { useToast } from "@/hooks/use-toast";
+import {
+  Lock,
+  Fingerprint,
+  HelpCircle,
+  LogOut,
   Edit2,
   ChevronRight,
   ShieldCheck,
@@ -18,35 +21,49 @@ import {
 import { cn } from "@/lib/utils";
 
 export default function PerfilPage() {
-  
-  const user = { displayName: "Deyvid Poolera", email: "deyvid@poolera.com", photoURL: null };
+  const router = useRouter();
+  const { user } = useUser();
+  const auth = useAuth();
+  const { toast } = useToast();
 
-  const SettingRow = ({ 
-    icon: Icon, 
-    label, 
-    value, 
-    href, 
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      toast({ title: "Sesión cerrada" });
+      router.push("/login");
+    } catch {
+      toast({ title: "Error", description: "No se pudo cerrar sesión.", variant: "destructive" });
+    }
+  };
+
+  const SettingRow = ({
+    icon: Icon,
+    label,
+    value,
+    href,
+    onClick,
     destructive,
-    rightElement 
-  }: { 
-    icon: any, 
-    label: string, 
-    value?: string, 
+    rightElement
+  }: {
+    icon: any,
+    label: string,
+    value?: string,
     href?: string,
+    onClick?: () => void,
     destructive?: boolean,
     rightElement?: React.ReactNode
   }) => {
     const content = (
       <div className={cn(
         "flex items-center justify-between py-2 px-3 transition-all active:bg-on-surface/[0.03] cursor-pointer",
-        destructive ? "text-red-500" : "text-on-surface"
+        destructive ? "text-danger" : "text-on-surface"
       )}>
         <div className="flex items-center gap-2.5">
           <div className={cn(
             "w-7 h-7 rounded-lg flex items-center justify-center border border-white/10 shadow-sm",
-            destructive ? "bg-red-500/5" : "bg-white/40"
+            destructive ? "bg-danger/5" : "bg-white/40"
           )}>
-            <Icon className={cn("h-3.5 w-3.5", destructive ? "text-red-500" : "text-primary/60")} />
+            <Icon className={cn("h-3.5 w-3.5", destructive ? "text-danger" : "text-primary/60")} />
           </div>
           <div className="flex flex-col">
             <span className="text-[12px] font-bold tracking-tight">{label}</span>
@@ -61,6 +78,7 @@ export default function PerfilPage() {
     );
 
     if (href) return <Link href={href} className="block">{content}</Link>;
+    if (onClick) return <button onClick={onClick} className="block w-full text-left">{content}</button>;
     return content;
   };
 
@@ -70,19 +88,19 @@ export default function PerfilPage() {
       <section className="flex items-center justify-between px-1 mb-2">
         <div className="flex items-center gap-3">
           <div className="relative w-11 h-11 rounded-full overflow-hidden border border-white/20 shadow-lg">
-            <Image 
-              src={user?.photoURL || "https://picsum.photos/seed/user/200/200"} 
-              alt={user?.displayName || "User"} 
+            <Image
+              src={user?.photoURL || "https://picsum.photos/seed/user/200/200"}
+              alt={user?.displayName || "User"}
               fill
               className="object-cover"
             />
           </div>
           <div>
             <h1 className="text-base font-extrabold tracking-tight leading-none">
-              {user?.displayName || "Deyvid Poolera"}
+              {user?.displayName || "Mi cuenta"}
             </h1>
             <p className="text-[9px] font-bold text-on-surface-variant/30 uppercase tracking-[0.2em] mt-0.5">
-              Premium Member
+              {user?.email || "Premium Member"}
             </p>
           </div>
         </div>
@@ -97,14 +115,14 @@ export default function PerfilPage() {
           <h2 className="text-[9px] font-black text-on-surface-variant/20 uppercase tracking-[0.25em] px-3">Seguridad</h2>
           <div className="glass-card rounded-[2rem] overflow-hidden divide-y divide-white/10">
             <SettingRow icon={Lock} label="Contraseña" href="/perfil/password" />
-            <SettingRow 
-              icon={Fingerprint} 
-              label="Face ID" 
+            <SettingRow
+              icon={Fingerprint}
+              label="Face ID"
               rightElement={
                 <div className="w-6 h-3.5 bg-primary/10 rounded-full relative">
                   <div className="absolute right-0.5 top-0.5 w-2.5 h-2.5 bg-primary rounded-full"></div>
                 </div>
-              } 
+              }
             />
             <SettingRow icon={ShieldCheck} label="2FA" value="Activado" href="/perfil/2fa" />
           </div>
@@ -122,13 +140,9 @@ export default function PerfilPage() {
           <h2 className="text-[9px] font-black text-on-surface-variant/20 uppercase tracking-[0.25em] px-3">Soporte</h2>
           <div className="glass-card rounded-[2rem] overflow-hidden divide-y divide-white/10">
             <SettingRow icon={HelpCircle} label="Ayuda y Soporte" href="/ayuda" />
-            <SettingRow icon={LogOut} label="Cerrar Sesión" destructive href="#" />
+            <SettingRow icon={LogOut} label="Cerrar Sesión" destructive onClick={handleLogout} />
           </div>
         </div>
-      </div>
-
-      <div className="text-center pt-4 opacity-5">
-        <p className="text-[8px] font-black uppercase tracking-[0.5em]">visionOS Framework v26.4</p>
       </div>
     </div>
   );
