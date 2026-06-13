@@ -76,7 +76,7 @@ export default function CheckoutPage({ params: paramsPromise }: { params: Promis
 
   if (step === "instructions") {
     return (
-      <div className="container mx-auto max-w-2xl py-12 px-4">
+      <div className="pb-24 pt-2">
         <Card className="rounded-3xl shadow-xl overflow-hidden">
           <CardHeader className="bg-primary text-white text-center py-8">
             <div className="mx-auto bg-white/20 rounded-full p-4 w-fit mb-4">
@@ -128,7 +128,7 @@ export default function CheckoutPage({ params: paramsPromise }: { params: Promis
   }
 
   return (
-    <div className="container mx-auto max-w-4xl py-12 px-4">
+    <div className="pb-24 pt-2">
       <div className="relative text-center mb-10">
         <Button onClick={() => router.back()} variant="outline" className="absolute left-0 top-1/2 -translate-y-1/2 rounded-full h-12 w-12 p-0">
           <ArrowLeft className="h-5 w-5" />
