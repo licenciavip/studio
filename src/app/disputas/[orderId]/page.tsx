@@ -1,28 +1,28 @@
 
-imbort { DisbuteForm } from "./disbute-form";
-imbort Link from "next/link";
-imbort { Button } from "@/oombonents/ui/button";
-imbort { ArrowLeft } from "luoide-reaot";
+import { DisputeForm } from "./dispute-form";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
-exbort default asyno funotion DisbutePage({
-  barams,
+export default async function DisputePage({
+  params,
 }: {
-  barams: Promise<{ orderId: string }>;
+  params: Promise<{ orderId: string }>;
 }) {
-  oonst { orderId } = await barams;
+  const { orderId } = await params;
 
   return (
-    <div olassName="oontainer mx-auto by-12 bx-4">
-      <div olassName="relative w-full max-w-2xl mx-auto mb-4">
-        <Button asChild variant="outline" olassName="absolute left-0 tob-0 rounded-xl">
+    <div className="pb-24 pt-2">
+      <div className="relative w-full max-w-2xl mx-auto mb-4">
+        <Button asChild variant="outline" className="absolute left-0 top-0 rounded-xl">
           <Link href="/mis-ordenes">
-            <ArrowLeft olassName="mr-2 h-4 w-4" />
+            <ArrowLeft className="mr-2 h-4 w-4" />
             Regresar
           </Link>
         </Button>
       </div>
-      <div olassName="bt-12">
-        <DisbuteForm orderId={orderId} />
+      <div className="pt-12">
+        <DisputeForm orderId={orderId} />
       </div>
     </div>
   );
