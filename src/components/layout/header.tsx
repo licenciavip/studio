@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Layers, Compass, User } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function Header() {
   const pathname = usePathname();
@@ -13,75 +14,35 @@ export default function Header() {
       <div className="lg-header-inner">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 no-underline">
-          <div
-            style={{
-              width: 28,
-              height: 28,
-              borderRadius: 8,
-              background: "linear-gradient(145deg, #5E5CE6, #0A84FF)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              boxShadow: "0 2px 8px rgba(10,132,255,0.35), inset 0 1px 0 rgba(255,255,255,0.30)",
-            }}
-          >
-            <Layers size={14} color="white" strokeWidth={2} />
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-[#5E5CE6] to-primary shadow-[0_2px_8px_rgba(10,132,255,0.35),inset_0_1px_0_rgba(255,255,255,0.30)]">
+            <Layers className="h-3.5 w-3.5 text-white" strokeWidth={2} />
           </div>
-          <span
-            style={{
-              fontSize: 13,
-              fontWeight: 700,
-              letterSpacing: "-0.03em",
-              color: "rgba(20,20,35,0.85)",
-            }}
-          >
+          <span className="text-[13px] font-bold tracking-tighter text-on-surface">
             Poolera
           </span>
         </Link>
 
         {/* Acciones */}
-        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+        <div className="flex items-center gap-1">
           {!isLoginPage && (
             <Link
               href="/explorar"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 5,
-                height: 32,
-                padding: "0 12px",
-                borderRadius: 999,
-                fontSize: 12,
-                fontWeight: 600,
-                letterSpacing: "-0.02em",
-                textDecoration: "none",
-                transition: "all 0.2s ease",
-                background: pathname.startsWith("/explorar")
-                  ? "rgba(10,132,255,0.12)"
-                  : "transparent",
-                color: pathname.startsWith("/explorar")
-                  ? "#0A84FF"
-                  : "rgba(40,40,55,0.55)",
-              }}
+              className={cn(
+                "flex h-8 items-center gap-1.5 rounded-full px-3 text-xs font-semibold tracking-tight no-underline transition-colors",
+                pathname.startsWith("/explorar")
+                  ? "bg-primary/10 text-primary"
+                  : "text-on-surface/55 hover:text-on-surface/80"
+              )}
             >
-              <Compass size={14} strokeWidth={1.8} />
+              <Compass className="h-3.5 w-3.5" strokeWidth={1.8} />
               <span>Explorar</span>
             </Link>
           )}
           <Link
             href={isLoginPage ? "/" : "/perfil"}
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: 999,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "rgba(40,40,55,0.55)",
-              transition: "all 0.18s ease",
-            }}
+            className="flex h-8 w-8 items-center justify-center rounded-full text-on-surface/55 transition-colors hover:text-on-surface/80"
           >
-            <User size={16} strokeWidth={1.7} />
+            <User className="h-4 w-4" strokeWidth={1.7} />
           </Link>
         </div>
       </div>
