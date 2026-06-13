@@ -9,6 +9,7 @@ import {
   TrendingDown, TrendingUp, Search
 } from "lucide-react";
 import type { CategorySlug, Service } from "@/lib/types";
+import { useUser } from "@/firebase";
 
 const categoryLabels: Record<string, string> = {
   ia: "IA & Herramientas",
@@ -31,13 +32,11 @@ const NOVEDADES = [
   },
 ];
 
-const MOCK_USER = { displayName: "Deyvid" };
-
 export default function Home() {
   const [recommendation, setRecommendation] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
-  const user = MOCK_USER;
+  const { user } = useUser();
 
   const groupedServices = useMemo(() =>
     Object.fromEntries(
@@ -91,7 +90,7 @@ export default function Home() {
       {/* ── Saludo + acción principal ── */}
       <section className="flex flex-col gap-3">
         <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tighter text-on-surface">
-          Hola, {user?.displayName?.split(" ")[0] || "Deyvid"} 👋
+          Hola{user?.displayName ? `, ${user.displayName.split(" ")[0]}` : ""} 👋
         </h2>
         <Link href="/compartir" className="no-underline">
           <div className="flex h-12 items-center justify-center gap-2 rounded-2xl bg-primary shadow-[0_4px_18px_rgba(10,132,255,0.35),inset_0_1px_0_rgba(255,255,255,0.20)] transition-transform active:scale-[0.98]">
