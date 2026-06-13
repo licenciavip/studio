@@ -2,9 +2,8 @@
 
 import Link from 'next/link';
 import { orders } from '@/lib/data';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { MoreHorizontal, History, ChevronRight } from 'lucide-react';
+import { MoreHorizontal, History } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,18 +11,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import { orderStatusConfig } from '@/lib/status';
 import type { OrderStatus } from '@/lib/types';
 
 function StatusBadge({ status }: { status: OrderStatus }) {
   return (
     <span className={cn(
-      "text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full",
-      {
-        'bg-green-100 text-green-700': status === 'Activo',
-        'bg-amber-100 text-amber-700': status === 'Pendiente',
-        'bg-red-100 text-red-700': status === 'En disputa',
-        'bg-gray-100 text-gray-500': status === 'Finalizado',
-      }
+      "text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full",
+      orderStatusConfig[status].badge
     )}>
       {status}
     </span>
@@ -32,7 +27,7 @@ function StatusBadge({ status }: { status: OrderStatus }) {
 
 export default function MisOrdenesPage() {
   return (
-    <div className="container mx-auto max-w-xl pt-14 pb-24 px-4 space-y-6">
+    <div className="pb-24 pt-2 space-y-6">
       <div className="space-y-1">
         <h1 className="text-2xl font-bold tracking-tighter">Historial</h1>
         <p className="text-[10px] font-bold text-on-surface/40 uppercase tracking-widest">Tus suscripciones pasadas</p>
@@ -57,9 +52,9 @@ export default function MisOrdenesPage() {
             <div className="flex items-center gap-3">
               <div className="text-right">
                 <p className="text-sm font-bold tracking-tight">${order.price.toFixed(2)}</p>
-                <p className="text-[8px] font-black text-on-surface/30 uppercase tracking-widest">Exp: {order.expires}</p>
+                <p className="text-[9px] font-black text-on-surface/30 uppercase tracking-widest">Exp: {order.expires}</p>
               </div>
-              
+
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="h-8 w-8 rounded-full p-0">
