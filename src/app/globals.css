@@ -10,7 +10,7 @@
     --card-foreground: 224 71% 4%;
     --popover: 0 0% 100%;
     --popover-foreground: 224 71% 4%;
-    --primary: 240 65% 55%;
+    --primary: 211 100% 52%;
     --primary-foreground: 0 0% 100%;
     --secondary: 173 100% 21%;
     --secondary-foreground: 0 0% 100%;
@@ -22,7 +22,7 @@
     --destructive-foreground: 0 0% 98%;
     --border: 224 31.8% 81%;
     --input: 224 31.8% 91%;
-    --ring: 240 65% 55%;
+    --ring: 211 100% 52%;
     --radius: 2rem;
 
     /* iOS 26 Liquid Glass tokens */
@@ -36,12 +36,18 @@
     --lg-active-bg: rgba(20, 20, 30, 0.78);
     --lg-accent: #0A84FF;
     --lg-inactive: rgba(40, 40, 55, 0.62);
+
+    /* Layout — ancho de contenido unificado (header, main, tab bar) */
+    --content-max-width: 576px;
   }
 }
 
 @layer base {
   * {
     @apply border-border/5;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
   }
   body {
     @apply bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary overflow-x-hidden;
@@ -219,6 +225,18 @@
   transform: scale(0.91);
 }
 
+/* En pantallas muy angostas la cápsula activa no se expande tanto */
+@media (max-width: 360px) {
+  .lg-tab-item {
+    padding: 0 9px;
+    min-width: 44px;
+  }
+  .lg-tab-item.active {
+    min-width: 92px;
+    padding: 0 12px;
+  }
+}
+
 /* ─── Header glass iOS 26 ─── */
 .lg-header {
   position: fixed;
@@ -226,12 +244,12 @@
   left: 0;
   right: 0;
   z-index: 150;
-  padding: 12px 16px;
+  padding: calc(8px + env(safe-area-inset-top)) 16px 12px;
   pointer-events: none;
 }
 
 .lg-header-inner {
-  max-width: 560px;
+  max-width: var(--content-max-width);
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
