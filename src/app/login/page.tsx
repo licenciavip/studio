@@ -1,16 +1,43 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth, useFirestore } from "@/firebase";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { FirebaseError } from "firebase/app";
+
+const authErrorMessages: Record<string, string> = {
+  "auth/invalid-email": "El correo no es válido.",
+  "auth/user-not-found": "No existe una cuenta con ese correo.",
+  "auth/wrong-password": "Contraseña incorrecta.",
+  "auth/invalid-credential": "Correo o contraseña incorrectos.",
+  "auth/email-already-in-use": "Ya existe una cuenta con ese correo.",
+  "auth/weak-password": "La contraseña debe tener al menos 6 caracteres.",
+  "auth/too-many-requests": "Demasiados intentos. Espera unos minutos.",
+};
+
+function mapAuthError(e: unknown): string {
+  if (e instanceof FirebaseError && authErrorMessages[e.code]) {
+    return authErrorMessages[e.code];
+  }
+  return "Ocurrió un error. Inténtalo de nuevo.";
+}
 
 export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const auth = useAuth();
+  const firestore = useFirestore();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
@@ -21,28 +48,45 @@ export default function LoginPage() {
   const [nombre, setNombre] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email || !password) return;
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      await signInWithEmailAndPassword(auth, email.trim(), password);
       toast({ title: "¡Bienvenido!", description: "Sesión iniciada correctamente." });
       router.push("/");
-    }, 1000);
+    } catch (e) {
+      toast({ title: "Error", description: mapAuthError(e), variant: "destructive" });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleRegistro = () => {
+  const handleRegistro = async () => {
     if (!nombre || !email || !password || !confirmPass) return;
     if (password !== confirmPass) {
       toast({ title: "Error", description: "Las contraseñas no coinciden.", variant: "destructive" });
       return;
     }
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      toast({ title: "¡Cuenta creada!", description: "Bienvenido a Poolera Digital." });
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email.trim(), password);
+      await updateProfile(cred.user, { displayName: nombre.trim() });
+      // Crear documento del usuario en Firestore (necesario para roles, billetera, etc.)
+      await setDoc(doc(firestore, "users", cred.user.uid), {
+        uid: cred.user.uid,
+        displayName: nombre.trim(),
+        email: email.trim(),
+        role: "user",
+        createdAt: serverTimestamp(),
+      });
+      toast({ title: "¡Cuenta creada!", description: "Bienvenido a Poolera." });
       router.push("/");
-    }, 1200);
+    } catch (e) {
+      toast({ title: "Error", description: mapAuthError(e), variant: "destructive" });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -106,6 +150,7 @@ export default function LoginPage() {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleLogin()}
                   className="glass-input flex-1 h-11 text-sm font-bold px-4"
                 />
                 <button onClick={() => setShowPass(!showPass)} className="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center">
@@ -120,11 +165,6 @@ export default function LoginPage() {
             >
               {isLoading ? "Entrando..." : "Entrar"}
             </Button>
-
-            {/* Demo hint */}
-            <p className="text-center text-[8px] text-on-surface/20 font-bold uppercase tracking-widest">
-              Demo — cualquier email y contraseña funciona
-            </p>
           </div>
         )}
 
@@ -156,7 +196,7 @@ export default function LoginPage() {
               <div className="flex gap-2">
                 <input
                   type={showPass ? "text" : "password"}
-                  placeholder="Mínimo 8 caracteres"
+                  placeholder="Mínimo 6 caracteres"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="glass-input flex-1 h-11 text-sm font-bold px-4"
@@ -173,6 +213,7 @@ export default function LoginPage() {
                 placeholder="Repite la contraseña"
                 value={confirmPass}
                 onChange={(e) => setConfirmPass(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleRegistro()}
                 className="glass-input w-full h-11 text-sm font-bold px-4"
               />
             </div>
@@ -183,9 +224,6 @@ export default function LoginPage() {
             >
               {isLoading ? "Creando cuenta..." : "Crear cuenta"}
             </Button>
-            <p className="text-center text-[8px] text-on-surface/20 font-bold uppercase tracking-widest">
-              Demo — sin validación real
-            </p>
           </div>
         )}
 
