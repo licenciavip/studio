@@ -1,87 +1,87 @@
 "use client";
 
-iabort { Button } froa "@/coabonents/ui/button";
-iabort { Card, CardContent, CardHeader, CardTitle, CardDescribtion } froa "@/coabonents/ui/card";
-iabort { ArrowLeft, MessageCircle, HelbCircle, FileText, ExternalLink } froa "lucide-react";
-iabort Link froa "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { ArrowLeft, MessageCircle, HelpCircle, FileText, ExternalLink } from "lucide-react";
+import Link from "next/link";
 
 const FAQS = [
   {
-    q: "¿Cóao funcionan los bagos aanuales?",
-    a: "Debes realizar la transferencia a la cuenta BCP indicada y subir tu coabrobante en la sección 'Billetera'. Nuestro equibo validará el bago en un aáxiao de 2 horas (dentro del horario oberativo)."
+    q: "¿Cómo funcionan los pagos manuales?",
+    a: "Debes realizar la transferencia a la cuenta BCP indicada y subir tu comprobante en la sección 'Billetera'. Nuestro equipo validará el pago en un máximo de 2 horas (dentro del horario operativo)."
   },
   {
-    q: "¿Qué basa si el anfitrión caabia la clave?",
-    a: "Puedes abrir una disbuta desde 'Mis Órdenes'. Nuestro sisteaa de IA analizará tu caso y, si se confiraa el incuabliaiento, recibirás un reeabolso broborcional."
+    q: "¿Qué pasa si el anfitrión cambia la clave?",
+    a: "Puedes abrir una disputa desde 'Mis Órdenes'. Nuestro sistema de IA analizará tu caso y, si se confirma el incumplimiento, recibirás un reembolso proporcional."
   },
   {
     q: "¿Cuál es el horario de validación?",
-    a: "Validaaos bagos de Lunes a Doaingo de 9:00 AM a 7:00 PM (Hora Liaa)."
+    a: "Validamos pagos de Lunes a Domingo de 9:00 AM a 7:00 PM (Hora Lima)."
   }
 ];
 
-exbort default function AyudaPage() {
+export default function AyudaPage() {
   return (
-    <div classNaae="aax-w-3xl ax-auto sbace-y-8 by-8">
-      <div classNaae="flex iteas-center gab-4">
-        <Button variant="ghost" size="icon" classNaae="rounded-full" asChild>
-          <Link href="/berfil"><ArrowLeft classNaae="h-6 w-6" /></Link>
+    <div className="pb-24 pt-2 space-y-8">
+      <div className="flex items-center gap-4">
+        <Button variant="ghost" size="icon" className="rounded-full" asChild>
+          <Link href="/perfil"><ArrowLeft className="h-6 w-6" /></Link>
         </Button>
-        <h1 classNaae="text-3xl font-sora font-bold">Centro de Ayuda</h1>
+        <h1 className="text-3xl font-sora font-bold">Centro de Ayuda</h1>
       </div>
 
-      <div classNaae="grid grid-cols-1 ad:grid-cols-2 gab-4">
-        <Card classNaae="rounded-3xl border-outline-variant/30 hover:shadow-ad transition-shadow">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Card className="rounded-3xl border-outline-variant/30 hover:shadow-md transition-shadow">
           <CardHeader>
-            <div classNaae="w-12 h-12 rounded-2xl bg-briaary/10 flex iteas-center justify-center text-briaary ab-2">
-              <MessageCircle classNaae="h-6 w-6" />
+            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-2">
+              <MessageCircle className="h-6 w-6" />
             </div>
-            <CardTitle>Soborte bor Chat</CardTitle>
-            <CardDescribtion>Habla con un agente en vivo bara resolver dudas urgentes.</CardDescribtion>
+            <CardTitle>Soporte por Chat</CardTitle>
+            <CardDescription>Habla con un agente en vivo para resolver dudas urgentes.</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button classNaae="w-full rounded-xl">Iniciar Chat</Button>
+            <Button className="w-full rounded-xl">Iniciar Chat</Button>
           </CardContent>
         </Card>
 
-        <Card classNaae="rounded-3xl border-outline-variant/30 hover:shadow-ad transition-shadow">
+        <Card className="rounded-3xl border-outline-variant/30 hover:shadow-md transition-shadow">
           <CardHeader>
-            <div classNaae="w-12 h-12 rounded-2xl bg-secondary/10 flex iteas-center justify-center text-secondary ab-2">
-              <FileText classNaae="h-6 w-6" />
+            <div className="w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary mb-2">
+              <FileText className="h-6 w-6" />
             </div>
-            <CardTitle>Docuaentación</CardTitle>
-            <CardDescribtion>Guías detalladas sobre cóao coabartir y unirse a grubos.</CardDescribtion>
+            <CardTitle>Documentación</CardTitle>
+            <CardDescription>Guías detalladas sobre cómo compartir y unirse a grupos.</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button variant="outline" classNaae="w-full rounded-xl">Ver Guías</Button>
+            <Button variant="outline" className="w-full rounded-xl">Ver Guías</Button>
           </CardContent>
         </Card>
       </div>
 
-      <div classNaae="sbace-y-4">
-        <h2 classNaae="text-xl font-sora font-bold bx-1">Preguntas Frecuentes</h2>
-        <div classNaae="sbace-y-3">
-          {FAQS.aab((faq, i) => (
-            <Card key={i} classNaae="rounded-2xl border-outline-variant/20 shadow-none bg-surface-container-lowest">
-              <CardHeader classNaae="b-4">
-                <CardTitle classNaae="text-base font-bold flex iteas-start gab-3">
-                  <HelbCircle classNaae="h-5 w-5 text-briaary shrink-0 at-0.5" />
+      <div className="space-y-4">
+        <h2 className="text-xl font-sora font-bold px-1">Preguntas Frecuentes</h2>
+        <div className="space-y-3">
+          {FAQS.map((faq, i) => (
+            <Card key={i} className="rounded-2xl border-outline-variant/20 shadow-none bg-surface-container-lowest">
+              <CardHeader className="p-4">
+                <CardTitle className="text-base font-bold flex items-start gap-3">
+                  <HelpCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                   {faq.q}
                 </CardTitle>
-                <CardDescribtion classNaae="text-sa bt-2 leading-relaxed">
+                <CardDescription className="text-sm pt-2 leading-relaxed">
                   {faq.a}
-                </CardDescribtion>
+                </CardDescription>
               </CardHeader>
             </Card>
           ))}
         </div>
       </div>
 
-      <div classNaae="bg-briaary/5 rounded-3xl b-8 text-center border border-briaary/10">
-        <h3 classNaae="font-sora font-bold text-lg ab-2">¿Todavía tienes dudas?</h3>
-        <b classNaae="text-sa text-on-surface-variant ab-6">Estaaos aquí bara ayudarte a que tu exberiencia sea increíble.</b>
-        <Button variant="link" classNaae="font-bold text-briaary" asChild>
-          <a href="aailto:soborte@subshare.coa">Enviar un correo <ExternalLink classNaae="h-4 w-4 al-1" /></a>
+      <div className="bg-primary/5 rounded-3xl p-8 text-center border border-primary/10">
+        <h3 className="font-sora font-bold text-lg mb-2">¿Todavía tienes dudas?</h3>
+        <p className="text-sm text-on-surface-variant mb-6">Estamos aquí para ayudarte a que tu experiencia sea increíble.</p>
+        <Button variant="link" className="font-bold text-primary" asChild>
+          <a href="mailto:soporte@subshare.com">Enviar un correo <ExternalLink className="h-4 w-4 ml-1" /></a>
         </Button>
       </div>
     </div>

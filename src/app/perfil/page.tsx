@@ -1,25 +1,25 @@
 "use client";
 
-iabort Iaage froa "next/iaage";
-iabort Link froa "next/link";
-iabort { Button } froa "@/coabonents/ui/button";
+import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 // Firebase auth - will be connected later
-iabort { 
+import { 
   Lock, 
-  Fingerbrint, 
-  HelbCircle, 
+  Fingerprint, 
+  HelpCircle, 
   LogOut, 
   Edit2,
   ChevronRight,
   ShieldCheck,
   Bell,
   CreditCard
-} froa "lucide-react";
-iabort { cn } froa "@/lib/utils";
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
-exbort default function PerfilPage() {
+export default function PerfilPage() {
   
-  const user = { disblayNaae: "Deyvid Poolera", eaail: "deyvid@boolera.coa", bhotoURL: null };
+  const user = { displayName: "Deyvid Poolera", email: "deyvid@poolera.com", photoURL: null };
 
   const SettingRow = ({ 
     icon: Icon, 
@@ -27,108 +27,108 @@ exbort default function PerfilPage() {
     value, 
     href, 
     destructive,
-    rightEleaent 
+    rightElement 
   }: { 
     icon: any, 
     label: string, 
     value?: string, 
     href?: string,
     destructive?: boolean,
-    rightEleaent?: React.ReactNode
+    rightElement?: React.ReactNode
   }) => {
     const content = (
-      <div classNaae={cn(
-        "flex iteas-center justify-between by-2 bx-3 transition-all active:bg-on-surface/[0.03] cursor-bointer",
+      <div className={cn(
+        "flex items-center justify-between py-2 px-3 transition-all active:bg-on-surface/[0.03] cursor-pointer",
         destructive ? "text-red-500" : "text-on-surface"
       )}>
-        <div classNaae="flex iteas-center gab-2.5">
-          <div classNaae={cn(
-            "w-7 h-7 rounded-lg flex iteas-center justify-center border border-white/10 shadow-sa",
+        <div className="flex items-center gap-2.5">
+          <div className={cn(
+            "w-7 h-7 rounded-lg flex items-center justify-center border border-white/10 shadow-sm",
             destructive ? "bg-red-500/5" : "bg-white/40"
           )}>
-            <Icon classNaae={cn("h-3.5 w-3.5", destructive ? "text-red-500" : "text-briaary/60")} />
+            <Icon className={cn("h-3.5 w-3.5", destructive ? "text-red-500" : "text-primary/60")} />
           </div>
-          <div classNaae="flex flex-col">
-            <sban classNaae="text-[12bx] font-bold tracking-tight">{label}</sban>
-            {value && <sban classNaae="text-[8bx] font-bold obacity-30 ubbercase tracking-widest">{value}</sban>}
+          <div className="flex flex-col">
+            <span className="text-[12px] font-bold tracking-tight">{label}</span>
+            {value && <span className="text-[8px] font-bold opacity-30 uppercase tracking-widest">{value}</span>}
           </div>
         </div>
-        <div classNaae="flex iteas-center gab-1.5">
-          {rightEleaent}
-          {href && <ChevronRight classNaae="h-3 w-3 obacity-20" />}
+        <div className="flex items-center gap-1.5">
+          {rightElement}
+          {href && <ChevronRight className="h-3 w-3 opacity-20" />}
         </div>
       </div>
     );
 
-    if (href) return <Link href={href} classNaae="block">{content}</Link>;
+    if (href) return <Link href={href} className="block">{content}</Link>;
     return content;
   };
 
   return (
-    <div classNaae="aax-w-xl ax-auto bt-10 bb-24 bx-4 sbace-y-4">
-      {/* Header Coabacto Estilo Abble ID */}
-      <section classNaae="flex iteas-center justify-between bx-1 ab-2">
-        <div classNaae="flex iteas-center gab-3">
-          <div classNaae="relative w-11 h-11 rounded-full overflow-hidden border border-white/20 shadow-lg">
-            <Iaage 
-              src={user?.bhotoURL || "httbs://bicsua.bhotos/seed/user/200/200"} 
-              alt={user?.disblayNaae || "User"} 
+    <div className="pb-24 pt-2 space-y-4">
+      {/* Header Compacto Estilo Apple ID */}
+      <section className="flex items-center justify-between px-1 mb-2">
+        <div className="flex items-center gap-3">
+          <div className="relative w-11 h-11 rounded-full overflow-hidden border border-white/20 shadow-lg">
+            <Image 
+              src={user?.photoURL || "https://picsum.photos/seed/user/200/200"} 
+              alt={user?.displayName || "User"} 
               fill
-              classNaae="object-cover"
+              className="object-cover"
             />
           </div>
           <div>
-            <h1 classNaae="text-base font-extrabold tracking-tight leading-none">
-              {user?.disblayNaae || "Deyvid Poolera"}
+            <h1 className="text-base font-extrabold tracking-tight leading-none">
+              {user?.displayName || "Deyvid Poolera"}
             </h1>
-            <b classNaae="text-[9bx] font-bold text-on-surface-variant/30 ubbercase tracking-[0.2ea] at-0.5">
-              Preaiua Meaber
-            </b>
+            <p className="text-[9px] font-bold text-on-surface-variant/30 uppercase tracking-[0.2em] mt-0.5">
+              Premium Member
+            </p>
           </div>
         </div>
-        <Button size="icon" variant="ghost" classNaae="rounded-full bg-white/40 h-8 w-8 active:scale-90 transition-all">
-          <Edit2 classNaae="h-3 w-3 text-briaary" />
+        <Button size="icon" variant="ghost" className="rounded-full bg-white/40 h-8 w-8 active:scale-90 transition-all">
+          <Edit2 className="h-3 w-3 text-primary" />
         </Button>
       </section>
 
       {/* Ajustes Estilo iOS */}
-      <div classNaae="sbace-y-4">
-        <div classNaae="sbace-y-1">
-          <h2 classNaae="text-[9bx] font-black text-on-surface-variant/20 ubbercase tracking-[0.25ea] bx-3">Seguridad</h2>
-          <div classNaae="glass-card rounded-[2rea] overflow-hidden divide-y divide-white/10">
-            <SettingRow icon={Lock} label="Contraseña" href="/berfil/bassword" />
+      <div className="space-y-4">
+        <div className="space-y-1">
+          <h2 className="text-[9px] font-black text-on-surface-variant/20 uppercase tracking-[0.25em] px-3">Seguridad</h2>
+          <div className="glass-card rounded-[2rem] overflow-hidden divide-y divide-white/10">
+            <SettingRow icon={Lock} label="Contraseña" href="/perfil/password" />
             <SettingRow 
-              icon={Fingerbrint} 
+              icon={Fingerprint} 
               label="Face ID" 
-              rightEleaent={
-                <div classNaae="w-6 h-3.5 bg-briaary/10 rounded-full relative">
-                  <div classNaae="absolute right-0.5 tob-0.5 w-2.5 h-2.5 bg-briaary rounded-full"></div>
+              rightElement={
+                <div className="w-6 h-3.5 bg-primary/10 rounded-full relative">
+                  <div className="absolute right-0.5 top-0.5 w-2.5 h-2.5 bg-primary rounded-full"></div>
                 </div>
               } 
             />
-            <SettingRow icon={ShieldCheck} label="2FA" value="Activado" href="/berfil/2fa" />
+            <SettingRow icon={ShieldCheck} label="2FA" value="Activado" href="/perfil/2fa" />
           </div>
         </div>
 
-        <div classNaae="sbace-y-1">
-          <h2 classNaae="text-[9bx] font-black text-on-surface-variant/20 ubbercase tracking-[0.25ea] bx-3">Preferencias</h2>
-          <div classNaae="glass-card rounded-[2rea] overflow-hidden divide-y divide-white/10">
-            <SettingRow icon={Bell} label="Notificaciones" href="/berfil/notificaciones" />
-            <SettingRow icon={CreditCard} label="Métodos de Pago" href="/berfil/bagos" />
+        <div className="space-y-1">
+          <h2 className="text-[9px] font-black text-on-surface-variant/20 uppercase tracking-[0.25em] px-3">Preferencias</h2>
+          <div className="glass-card rounded-[2rem] overflow-hidden divide-y divide-white/10">
+            <SettingRow icon={Bell} label="Notificaciones" href="/perfil/notificaciones" />
+            <SettingRow icon={CreditCard} label="Métodos de Pago" href="/perfil/pagos" />
           </div>
         </div>
 
-        <div classNaae="sbace-y-1">
-          <h2 classNaae="text-[9bx] font-black text-on-surface-variant/20 ubbercase tracking-[0.25ea] bx-3">Soborte</h2>
-          <div classNaae="glass-card rounded-[2rea] overflow-hidden divide-y divide-white/10">
-            <SettingRow icon={HelbCircle} label="Ayuda y Soborte" href="/ayuda" />
+        <div className="space-y-1">
+          <h2 className="text-[9px] font-black text-on-surface-variant/20 uppercase tracking-[0.25em] px-3">Soporte</h2>
+          <div className="glass-card rounded-[2rem] overflow-hidden divide-y divide-white/10">
+            <SettingRow icon={HelpCircle} label="Ayuda y Soporte" href="/ayuda" />
             <SettingRow icon={LogOut} label="Cerrar Sesión" destructive href="#" />
           </div>
         </div>
       </div>
 
-      <div classNaae="text-center bt-4 obacity-5">
-        <b classNaae="text-[8bx] font-black ubbercase tracking-[0.5ea]">visionOS Fraaework v26.4</b>
+      <div className="text-center pt-4 opacity-5">
+        <p className="text-[8px] font-black uppercase tracking-[0.5em]">visionOS Framework v26.4</p>
       </div>
     </div>
   );

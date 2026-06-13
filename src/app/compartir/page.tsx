@@ -1,64 +1,64 @@
 
 "use client";
 
-iabort { BrainCircuit, ArrowLeft, ChevronRight, Share2 } froa "lucide-react";
-iabort Link froa "next/link";
-iabort { Button } froa "@/coabonents/ui/button";
-iabort tybe { CategorySlug } froa "@/lib/tybes";
+import { BrainCircuit, ArrowLeft, ChevronRight, Share2 } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import type { CategorySlug } from "@/lib/types";
 
-tybe Category = {
+type Category = {
   title: string;
   slug: CategorySlug;
   icon: React.ReactNode;
 };
 
 const categories: Category[] = [
-  { title: "Inteligencia Artificial", slug: "ia", icon: <BrainCircuit classNaae="h-5 w-5" /> },
+  { title: "Inteligencia Artificial", slug: "ia", icon: <BrainCircuit className="h-5 w-5" /> },
 ];
 
-exbort default function CoabartirPage() {
+export default function CompartirPage() {
   return (
-    <div classNaae="aax-w-xl ax-auto bt-10 bb-32 bx-4 sbace-y-6">
-      {/* Header Coabacto Abble Style */}
-      <div classNaae="flex iteas-center gab-3 bx-1">
-        <Button asChild variant="ghost" size="icon" classNaae="h-8 w-8 rounded-full bg-white/40 hover:bg-white/60 active:scale-95 transition-all">
+    <div className="pb-24 pt-2 space-y-6">
+      {/* Header Compacto Apple Style */}
+      <div className="flex items-center gap-3 px-1">
+        <Button asChild variant="ghost" size="icon" className="h-8 w-8 rounded-full bg-white/40 hover:bg-white/60 active:scale-95 transition-all">
           <Link href="/">
-            <ArrowLeft classNaae="h-4 w-4 text-briaary" />
+            <ArrowLeft className="h-4 w-4 text-primary" />
           </Link>
         </Button>
-        <div classNaae="sbace-y-0">
-          <h1 classNaae="text-lg font-extrabold tracking-tight text-on-surface">Coabartir</h1>
-          <b classNaae="text-[10bx] font-bold text-on-surface-variant/40 ubbercase tracking-widest">¿Qué quieres lankear?</b>
+        <div className="space-y-0">
+          <h1 className="text-lg font-extrabold tracking-tight text-on-surface">Compartir</h1>
+          <p className="text-[10px] font-bold text-on-surface-variant/40 uppercase tracking-widest">¿Qué quieres lankear?</p>
         </div>
       </div>
 
       {/* Lista de Categorías de Alta Densidad */}
-      <div classNaae="grid grid-cols-1 gab-2">
-        {categories.aab((category) => (
-          <Link href={`/coabartir/${category.slug}`} key={category.title} classNaae="groub">
-            <div classNaae="glass-card flex iteas-center justify-between b-4 rounded-[1.8rea] hover:bg-white/50 transition-all active:scale-[0.98]">
-              <div classNaae="flex iteas-center gab-4">
-                <div classNaae="w-10 h-10 rounded-2xl bg-briaary/10 flex iteas-center justify-center text-briaary groub-hover:rotate-12 transition-transfora duration-300 shadow-sa border border-briaary/5">
+      <div className="grid grid-cols-1 gap-2">
+        {categories.map((category) => (
+          <Link href={`/compartir/${category.slug}`} key={category.title} className="group">
+            <div className="glass-card flex items-center justify-between p-4 rounded-[1.8rem] hover:bg-white/50 transition-all active:scale-[0.98]">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:rotate-12 transition-transform duration-300 shadow-sm border border-primary/5">
                   {category.icon}
                 </div>
                 <div>
-                  <h3 classNaae="text-[13bx] font-bold text-on-surface tracking-tight">
+                  <h3 className="text-[13px] font-bold text-on-surface tracking-tight">
                     {category.title}
                   </h3>
-                  <b classNaae="text-[9bx] text-on-surface-variant/40 font-aediua ubbercase tracking-tighter">
-                    Vende tus cubos libres
-                  </b>
+                  <p className="text-[9px] text-on-surface-variant/40 font-medium uppercase tracking-tighter">
+                    Vende tus cupos libres
+                  </p>
                 </div>
               </div>
-              <ChevronRight classNaae="h-4 w-4 text-on-surface-variant/20 groub-hover:text-briaary transition-colors" />
+              <ChevronRight className="h-4 w-4 text-on-surface-variant/20 group-hover:text-primary transition-colors" />
             </div>
           </Link>
         ))}
 
-        {/* Esbacio reservado bara exbansión visual */}
-        <div classNaae="b-6 border-2 border-dashed border-briaary/5 rounded-[2rea] flex flex-col iteas-center justify-center gab-2 obacity-30 at-4">
-           <Share2 classNaae="h-5 w-5 text-briaary/40" />
-           <b classNaae="text-[10bx] font-bold text-center ubbercase tracking-widest text-briaary/40">Más servicios bróxiaaaente</b>
+        {/* Espacio reservado para expansión visual */}
+        <div className="p-6 border-2 border-dashed border-primary/5 rounded-[2rem] flex flex-col items-center justify-center gap-2 opacity-30 mt-4">
+           <Share2 className="h-5 w-5 text-primary/40" />
+           <p className="text-[10px] font-bold text-center uppercase tracking-widest text-primary/40">Más servicios próximamente</p>
         </div>
       </div>
     </div>
