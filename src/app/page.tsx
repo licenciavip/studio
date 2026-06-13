@@ -57,79 +57,46 @@ export default function Home() {
   };
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 sm:space-y-6">
 
       {/* ── Hero card — propuesta de valor ── */}
-      <section
-        style={{
-          background: "linear-gradient(135deg, #5E5CE6 0%, #0A84FF 100%)",
-          borderRadius: 24,
-          padding: "20px 20px 18px",
-          position: "relative",
-          overflow: "hidden",
-          boxShadow: "0 8px 32px rgba(10,132,255,0.28), inset 0 1px 0 rgba(255,255,255,0.20)",
-        }}
-      >
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#5E5CE6] to-primary p-5 sm:p-6 shadow-[0_8px_32px_rgba(10,132,255,0.28),inset_0_1px_0_rgba(255,255,255,0.20)]">
         {/* Glare */}
-        <div style={{
-          position: "absolute", top: -40, right: -40,
-          width: 160, height: 160,
-          background: "radial-gradient(circle, rgba(255,255,255,0.14) 0%, transparent 70%)",
-          pointerEvents: "none",
-        }} />
+        <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.14)_0%,transparent_70%)]" />
 
-        <p style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.55)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 6 }}>
+        <p className="mb-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.08em] text-white/55">
           Poolera Digital
         </p>
-        <h1 style={{ fontSize: 20, fontWeight: 800, color: "white", letterSpacing: "-0.03em", lineHeight: 1.2, marginBottom: 6 }}>
+        <h1 className="mb-1.5 text-xl sm:text-2xl font-extrabold leading-tight tracking-tighter text-white">
           Accede a IA premium<br />pagando solo tu parte
         </h1>
-        <p style={{ fontSize: 12, color: "rgba(255,255,255,0.70)", fontWeight: 500, lineHeight: 1.5, marginBottom: 16 }}>
-          Comparte o compra cupos de ChatGPT, Claude, Gemini y más. Hasta <strong style={{ color: "white" }}>70% más barato</strong>.
+        <p className="mb-4 text-xs sm:text-sm font-medium leading-relaxed text-white/70">
+          Comparte o compra cupos de ChatGPT, Claude, Gemini y más. Hasta <strong className="text-white">70% más barato</strong>.
         </p>
 
-        <div style={{ display: "flex", gap: 8 }}>
-          <Link href="/explorar" style={{ flex: 1, textDecoration: "none" }}>
-            <div style={{
-              height: 36, borderRadius: 999,
-              background: "rgba(255,255,255,0.95)",
-              display: "flex", alignItems: "center", justifyContent: "center", gap: 5,
-              fontSize: 12, fontWeight: 700, color: "#0A84FF",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.12)",
-            }}>
-              <TrendingDown size={13} /> Explorar cupos
+        <div className="flex gap-2">
+          <Link href="/explorar" className="flex-1 no-underline">
+            <div className="flex h-10 items-center justify-center gap-1.5 rounded-full bg-white/95 text-xs sm:text-sm font-bold text-primary shadow-md transition-transform active:scale-95">
+              <TrendingDown className="h-3.5 w-3.5" /> Explorar cupos
             </div>
           </Link>
-          <Link href="/login" style={{ flex: 1, textDecoration: "none" }}>
-            <div style={{
-              height: 36, borderRadius: 999,
-              background: "rgba(255,255,255,0.18)",
-              border: "1px solid rgba(255,255,255,0.35)",
-              display: "flex", alignItems: "center", justifyContent: "center", gap: 5,
-              fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.90)",
-            }}>
-              <TrendingUp size={13} /> Compartir
+          <Link href="/login" className="flex-1 no-underline">
+            <div className="flex h-10 items-center justify-center gap-1.5 rounded-full border border-white/35 bg-white/[0.18] text-xs sm:text-sm font-bold text-white/90 transition-transform active:scale-95">
+              <TrendingUp className="h-3.5 w-3.5" /> Compartir
             </div>
           </Link>
         </div>
       </section>
 
       {/* ── Saludo + acción principal ── */}
-      <section style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-        <div>
-          <h2 style={{ fontSize: 22, fontWeight: 800, color: "rgba(20,20,35,0.90)", letterSpacing: "-0.03em" }}>
-            Hola, {user?.displayName?.split(" ")[0] || "Deyvid"} 👋
-          </h2>
-        </div>
-        <Link href="/compartir" style={{ textDecoration: "none" }}>
-          <div style={{
-            height: 44, borderRadius: 14,
-            background: "#0A84FF",
-            display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-            boxShadow: "0 4px 18px rgba(10,132,255,0.35), inset 0 1px 0 rgba(255,255,255,0.20)",
-          }}>
-            <Plus size={15} color="white" strokeWidth={2.5} />
-            <span style={{ fontSize: 13, fontWeight: 700, color: "white", letterSpacing: "-0.01em" }}>
+      <section className="flex flex-col gap-3">
+        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tighter text-on-surface">
+          Hola, {user?.displayName?.split(" ")[0] || "Deyvid"} 👋
+        </h2>
+        <Link href="/compartir" className="no-underline">
+          <div className="flex h-12 items-center justify-center gap-2 rounded-2xl bg-primary shadow-[0_4px_18px_rgba(10,132,255,0.35),inset_0_1px_0_rgba(255,255,255,0.20)] transition-transform active:scale-[0.98]">
+            <Plus className="h-4 w-4 text-white" strokeWidth={2.5} />
+            <span className="text-sm font-bold tracking-tight text-white">
               Compartir suscripción
             </span>
           </div>
@@ -137,75 +104,55 @@ export default function Home() {
       </section>
 
       {/* ── Grupos activos ── */}
-      <section style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 2px" }}>
-          <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(40,40,55,0.40)", letterSpacing: "0.04em", textTransform: "uppercase" }}>
+      <section className="flex flex-col gap-2">
+        <div className="flex items-center justify-between px-0.5">
+          <span className="text-[11px] font-bold uppercase tracking-[0.04em] text-on-surface/40">
             Activos
           </span>
-          <Link href="/mis-grupos" style={{ fontSize: 11, fontWeight: 700, color: "#0A84FF", textDecoration: "none" }}>
+          <Link href="/mis-grupos" className="text-[11px] font-bold text-primary no-underline">
             Ver todo
           </Link>
         </div>
 
         {groups.slice(0, 1).map((group) => (
-          <Link key={group.id} href={`/mis-grupos/${group.id}`} style={{ textDecoration: "none" }}>
-            <div style={{
-              background: "rgba(255,255,255,0.88)",
-              border: "1px solid rgba(0,0,0,0.06)",
-              borderRadius: 16,
-              padding: "12px 14px",
-              display: "flex", alignItems: "center", justifyContent: "space-between",
-              boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
-            }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <div style={{
-                  width: 36, height: 36, borderRadius: 10,
-                  background: "rgba(10,132,255,0.08)",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                }}>
-                  <Sparkles size={16} color="#0A84FF" />
+          <Link key={group.id} href={`/mis-grupos/${group.id}`} className="no-underline">
+            <div className="glass-card flex items-center justify-between rounded-2xl px-3.5 py-3 transition-transform active:scale-[0.98]">
+              <div className="flex items-center gap-2.5">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10">
+                  <Sparkles className="h-4 w-4 text-primary" />
                 </div>
                 <div>
-                  <p style={{ fontSize: 13, fontWeight: 600, color: "rgba(20,20,35,0.85)", letterSpacing: "-0.01em" }}>
+                  <p className="text-sm font-semibold tracking-tight text-on-surface">
                     {group.service}
                   </p>
-                  <p style={{ fontSize: 10, color: "rgba(40,40,55,0.40)", fontWeight: 500, marginTop: 1 }}>
+                  <p className="mt-0.5 text-[11px] font-medium text-on-surface/40">
                     {group.slots.filled}/{group.slots.total} cupos
                   </p>
                 </div>
               </div>
-              <ChevronRight size={14} color="rgba(40,40,55,0.25)" />
+              <ChevronRight className="h-3.5 w-3.5 text-on-surface/25" />
             </div>
           </Link>
         ))}
       </section>
 
       {/* ── Novedades ── */}
-      <section style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(40,40,55,0.40)", letterSpacing: "0.04em", textTransform: "uppercase", padding: "0 2px" }}>
+      <section className="flex flex-col gap-2">
+        <span className="px-0.5 text-[11px] font-bold uppercase tracking-[0.04em] text-on-surface/40">
           Novedades
         </span>
-        <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 2 }} className="no-scrollbar">
+        <div className="no-scrollbar flex gap-2 overflow-x-auto pb-0.5 sm:grid sm:grid-cols-2 sm:overflow-visible">
           {NOVEDADES.map(({ id, title, desc, icon: Icon, accent }) => (
-            <div key={id} style={{
-              minWidth: 150,
-              background: "rgba(255,255,255,0.88)",
-              border: "1px solid rgba(0,0,0,0.06)",
-              borderRadius: 16,
-              padding: "14px",
-              display: "flex", flexDirection: "column", gap: 8,
-              boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
-            }}>
-              <div style={{
-                width: 30, height: 30, borderRadius: 8,
-                background: `${accent}14`,
-                display: "flex", alignItems: "center", justifyContent: "center",
-              }}>
-                <Icon size={15} color={accent} />
+            <div key={id} className="glass-card flex min-w-[160px] flex-col gap-2 rounded-2xl p-3.5 sm:min-w-0">
+              <div
+                className="flex h-8 w-8 items-center justify-center rounded-lg"
+                style={{ background: `${accent}14` }}
+              >
+                <Icon className="h-4 w-4" style={{ color: accent }} />
               </div>
               <div>
-                <p style={{ fontSize: 12, fontWeight: 700, color: "rgba(20,20,35,0.85)", letterSpacing: "-0.01em" }}>{title}</p>
-                <p style={{ fontSize: 10, color: "rgba(40,40,55,0.45)", marginTop: 2, lineHeight: 1.4 }}>{desc}</p>
+                <p className="text-xs sm:text-sm font-bold tracking-tight text-on-surface">{title}</p>
+                <p className="mt-0.5 text-[11px] leading-snug text-on-surface/45">{desc}</p>
               </div>
             </div>
           ))}
@@ -214,48 +161,38 @@ export default function Home() {
 
       {/* ── Grid de servicios ── */}
       {Object.entries(groupedServices).map(([slug, services]) => (
-        <section key={slug} style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(40,40,55,0.40)", letterSpacing: "0.04em", textTransform: "uppercase", padding: "0 2px" }}>
+        <section key={slug} className="flex flex-col gap-2">
+          <span className="px-0.5 text-[11px] font-bold uppercase tracking-[0.04em] text-on-surface/40">
             {categoryLabels[slug] || slug}
           </span>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 8 }}>
+          <div className="grid grid-cols-2 gap-2 xs:grid-cols-3 sm:grid-cols-4 sm:gap-3">
             {services.map((service) => {
               const isLight = service.color?.toLowerCase() === "#ffffff";
-              const bg = isLight ? "rgba(255,255,255,0.88)" : (service.color || "#4343d5");
-              const textColor = isLight ? "rgba(20,20,35,0.85)" : "rgba(255,255,255,0.95)";
-              const subColor = isLight ? "rgba(40,40,55,0.40)" : "rgba(255,255,255,0.55)";
+              const bg = isLight ? undefined : (service.color || "#4343d5");
               return (
-                <Link key={service.id} href={`/explorar/all/${service.id}`} style={{ textDecoration: "none" }}>
-                  <div style={{
-                    background: bg,
-                    borderRadius: 16,
-                    aspectRatio: "1/1",
-                    padding: "10px",
-                    display: "flex", flexDirection: "column", justifyContent: "space-between",
-                    border: isLight ? "1px solid rgba(0,0,0,0.06)" : "none",
-                    boxShadow: isLight
-                      ? "0 1px 4px rgba(0,0,0,0.04)"
-                      : `0 4px 16px ${bg}44`,
-                    position: "relative", overflow: "hidden",
-                  }}>
+                <Link key={service.id} href={`/explorar/all/${service.id}`} className="no-underline">
+                  <div
+                    className={`relative flex aspect-square flex-col justify-between overflow-hidden rounded-2xl p-3 transition-transform active:scale-95 ${
+                      isLight ? "glass-card" : "shadow-lg shadow-black/10"
+                    }`}
+                    style={bg ? { background: bg } : undefined}
+                  >
                     {!isLight && (
-                      <div style={{
-                        position: "absolute", inset: 0,
-                        background: "linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%)",
-                        pointerEvents: "none",
-                      }} />
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/[0.12] to-transparent" />
                     )}
-                    <div style={{ position: "relative", zIndex: 1 }}>
-                      <p style={{ fontSize: 9, fontWeight: 800, color: textColor, letterSpacing: "-0.01em", lineHeight: 1.1 }}>
+                    <div className="relative z-10">
+                      <p className={`text-xs sm:text-sm font-extrabold leading-tight tracking-tight ${isLight ? "text-on-surface" : "text-white/95"}`}>
                         {service.name}
                       </p>
-                      <p style={{ fontSize: 7, fontWeight: 600, color: subColor, textTransform: "uppercase", letterSpacing: "0.03em", marginTop: 1 }}>
+                      <p className={`mt-0.5 text-[9px] font-semibold uppercase tracking-[0.03em] ${isLight ? "text-on-surface/40" : "text-white/55"}`}>
                         {service.planName || "PRO"}
                       </p>
                     </div>
-                    <div style={{ position: "relative", zIndex: 1 }}>
-                      <p style={{ fontSize: 7, fontWeight: 700, color: subColor, textTransform: "uppercase", letterSpacing: "0.03em" }}>DESDE</p>
-                      <p style={{ fontSize: 12, fontWeight: 800, color: textColor, letterSpacing: "-0.02em" }}>
+                    <div className="relative z-10">
+                      <p className={`text-[9px] font-bold uppercase tracking-[0.03em] ${isLight ? "text-on-surface/40" : "text-white/55"}`}>
+                        Desde
+                      </p>
+                      <p className={`text-sm sm:text-base font-extrabold tracking-tight ${isLight ? "text-on-surface" : "text-white/95"}`}>
                         S/{service.pricePerMonth}
                       </p>
                     </div>
@@ -268,26 +205,17 @@ export default function Home() {
       ))}
 
       {/* ── Sugerencias ── */}
-      <section style={{
-        background: "rgba(255,255,255,0.88)",
-        border: "1px solid rgba(0,0,0,0.06)",
-        borderRadius: 20,
-        padding: "18px",
-        textAlign: "center",
-        marginBottom: 8,
-        boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
-      }}>
-        <p style={{ fontSize: 11, fontWeight: 700, color: "rgba(40,40,55,0.35)", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 4 }}>
+      <section className="glass-card mb-2 rounded-3xl p-5 text-center">
+        <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.04em] text-on-surface/35">
           Propón una IA
         </p>
-        <p style={{ fontSize: 12, color: "rgba(40,40,55,0.50)", marginBottom: 12 }}>
+        <p className="mb-3 text-xs sm:text-sm text-on-surface/50">
           ¿No encuentras lo que buscas?
         </p>
-        <div style={{ maxWidth: 180, margin: "0 auto", position: "relative" }}>
-          <Search size={13} color="rgba(40,40,55,0.30)" style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)" }} />
+        <div className="relative mx-auto max-w-[220px]">
+          <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-on-surface/30" />
           <input
-            className="glass-input"
-            style={{ width: "100%", paddingLeft: 32, fontSize: 12, height: 36, textAlign: "left" }}
+            className="glass-input h-9 w-full pl-8 text-left text-xs sm:text-sm"
             placeholder="Ej: Midjourney..."
             value={recommendation}
             onChange={(e) => setRecommendation(e.target.value)}
