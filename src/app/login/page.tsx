@@ -26,12 +26,9 @@ const authErrorMessages: Record<string, string> = {
 };
 
 function mapAuthError(e: unknown): string {
-  if (e instanceof FirebaseError) {
-    if (authErrorMessages[e.code]) return authErrorMessages[e.code];
-    // Temporal: mostrar el código real para diagnóstico
-    return `Error: ${e.code}`;
+  if (e instanceof FirebaseError && authErrorMessages[e.code]) {
+    return authErrorMessages[e.code];
   }
-  if (e instanceof Error) return `Error: ${e.message}`;
   return "Ocurrió un error. Inténtalo de nuevo.";
 }
 
