@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import type { CategorySlug, Service } from "@/lib/types";
 import { useUser } from "@/firebase";
+import { LandingPage } from "@/components/landing-page";
 
 const categoryLabels: Record<string, string> = {
   ia: "IA & Herramientas",
@@ -36,13 +37,16 @@ export default function Home() {
   const [recommendation, setRecommendation] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
-  const { user } = useUser();
+  const { user, loading } = useUser();
 
   const groupedServices = useMemo(() =>
     Object.fromEntries(
       Object.entries(servicesByCategory).filter(([_, s]) => s.length > 0)
     ) as Record<CategorySlug, Service[]>,
   []);
+
+  // Mostrar landing para usuarios no autenticados
+  if (!loading && !user) return <LandingPage />;
 
   const handleRecommend = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && recommendation.trim()) {
