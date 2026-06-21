@@ -21,7 +21,7 @@ export default function MisGruposPage() {
   const { data: groups, loading } = useCollection<GroupDoc>(groupsQuery);
 
   const displayGroups = (groups ?? []).filter((g) =>
-    activeTab === "Active" ? g.status === "Activo" : g.status === "Incompleto"
+    activeTab === "Active" ? g.approval === "approved" : g.approval !== "approved"
   );
 
   return (
@@ -54,7 +54,15 @@ export default function MisGruposPage() {
                   <div className="space-y-0.5">
                     <h3 className="font-bold text-sm text-on-surface tracking-tight">{group.serviceName}</h3>
                     <div className="flex items-center gap-2">
-                      <span className="text-[7px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-md border bg-primary/10 text-primary border-primary/10">Anfitrión</span>
+                      {group.approval === "pending" && (
+                        <span className="text-[7px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-md bg-warning/10 text-warning">En revisión</span>
+                      )}
+                      {group.approval === "rejected" && (
+                        <span className="text-[7px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-md bg-danger/10 text-danger">Rechazado</span>
+                      )}
+                      {group.approval === "approved" && (
+                        <span className="text-[7px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-md bg-primary/10 text-primary">Anfitrión</span>
+                      )}
                       <div className="flex items-center gap-1 text-[8px] font-bold text-on-surface-variant/40 uppercase">
                         <Users className="h-2.5 w-2.5" />
                         {group.slotsFilled}/{group.slotsTotal}
