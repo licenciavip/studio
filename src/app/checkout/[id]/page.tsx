@@ -1,186 +1,171 @@
 "use client";
 
-import { use, useState } from "react";
-import { getSubscriptionById } from "@/lib/data";
-import { notFound, useRouter } from "next/navigation";
-import Image from "next/image";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { use, useMemo, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { CheckCircle, Landmark, Loader2, ArrowLeft, Info, Copy } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useAuth, useFirestore } from "@/firebase";
-import { collection, doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { BCP_ACCOUNT } from "@/lib/constants";
+import { useUser, useFirestore, useDoc } from "@/firebase";
+import { collection, doc, setDoc, serverTimestamp } from "firebase/firestore";
+import {
+  ArrowLeft, Sparkles, Landmark, Copy, Hash, CheckCircle2, Users,
+} from "lucide-react";
+import type { GroupDoc } from "@/lib/types";
+
+type Step = "summary" | "bank" | "operation" | "success";
 
 export default function CheckoutPage({ params: paramsPromise }: { params: Promise<{ id: string }> }) {
-  const router = useRouter();
   const params = use(paramsPromise);
+  const router = useRouter();
   const { toast } = useToast();
-
-  // ✅ FIX: hooks siempre antes de cualquier return condicional
-  const auth = useAuth();
+  const { user } = useUser();
   const firestore = useFirestore();
 
-  const [step, setStep] = useState<"summary" | "instructions">("summary");
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [step, setStep] = useState<Step>("summary");
   const [paymentCode, setPaymentCode] = useState("");
+  const [operationNumber, setOperationNumber] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // ✅ FIX: notFound() después de todos los hooks
-  const subscription = getSubscriptionById(params.id);
-  if (!subscription) notFound();
+  const groupRef = useMemo(
+    () => (firestore ? doc(firestore, "groups", params.id) : null),
+    [firestore, params.id]
+  );
+  const { data: group, loading: groupLoading } = useDoc<GroupDoc>(groupRef);
 
-  const logo = PlaceHolderImages.find((img) => img.id === subscription!.logoId);
+  const copyText = (text: string, label: string) => {
+    navigator.clipboard.writeText(text);
+    toast({ title: "Copiado", description: `${label} copiado.` });
+  };
 
-  const generateOrder = async () => {
-    // ✅ FIX: auth.currentUser (consistente con el resto de la app)
-    if (!auth.currentUser || !firestore) {
-      toast({ title: "Error", description: "Debes iniciar sesión para continuar.", variant: "destructive" });
-      return;
-    }
-    setIsGenerating(true);
-    const code = `PAY-${Math.floor(1000 + Math.random() * 9000)}`;
-    const orderId = doc(collection(firestore, "paymentOrders")).id;
+  const goBank = () => {
+    setPaymentCode(`PAY-${Math.floor(1000 + Math.random() * 9000)}`);
+    setStep("bank");
+  };
+
+  const handleConfirm = async () => {
+    if (!firestore || !user || !group || !operationNumber.trim()) return;
+    setLoading(true);
     try {
+      const orderId = doc(collection(firestore, "paymentOrders")).id;
       await setDoc(doc(firestore, "paymentOrders", orderId), {
         id: orderId,
-        userId: auth.currentUser.uid,
+        userId: user.uid,
         type: "membership_payment",
-        relatedGroupId: subscription!.id,
-        amountExpected: subscription!.price,
-        currency: "USD",
-        paymentCode: code,
+        relatedGroupId: group.id,
+        amountExpected: group.pricePerSlot,
+        amountPaid: group.pricePerSlot,
+        currency: "PEN",
+        paymentCode,
+        operationNumber: operationNumber.trim(),
         bankDestination: BCP_ACCOUNT.bank,
         destinationAccountNumber: BCP_ACCOUNT.number,
-        status: "pending",
-        reviewStatus: "waiting_upload",
-        expiresAt: new Date(Date.now() + 6 * 60 * 60 * 1000).toISOString(),
+        payerName: user.displayName ?? null,
+        status: "uploaded",
+        reviewStatus: "uploaded",
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
         createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
+        updatedAt: serverTimestamp(),
       });
-      setPaymentCode(code);
-      setStep("instructions");
-    } catch (e) {
-      console.error(e);
-      toast({ title: "Error", description: "No se pudo generar la orden de pago.", variant: "destructive" });
+      setStep("success");
+    } catch {
+      toast({ title: "Error", description: "No se pudo registrar el pago.", variant: "destructive" });
     } finally {
-      setIsGenerating(false);
+      setLoading(false);
     }
   };
 
-  const copyToClipboard = (text: string, label: string) => {
-    navigator.clipboard.writeText(text);
-    toast({ title: "Copiado", description: `${label} copiado al portapapeles.` });
-  };
-
-  if (step === "instructions") {
+  if (groupLoading) {
+    return <p className="pt-10 text-center text-[11px] font-bold uppercase tracking-widest text-on-surface/30">Cargando…</p>;
+  }
+  if (!group) {
     return (
-      <div className="pb-24 pt-2">
-        <Card className="rounded-3xl shadow-xl overflow-hidden">
-          <CardHeader className="bg-primary text-white text-center py-8">
-            <div className="mx-auto bg-white/20 rounded-full p-4 w-fit mb-4">
-              <Landmark className="h-10 w-10 text-white" />
-            </div>
-            <CardTitle>Instrucciones de Pago</CardTitle>
-            <CardDescription className="text-white/80">Transferencia {BCP_ACCOUNT.bank}</CardDescription>
-          </CardHeader>
-          <CardContent className="p-8 space-y-6">
-            <div className="bg-primary/5 p-6 rounded-2xl border border-primary/20 space-y-4">
-              <div className="flex justify-between items-center border-b border-primary/10 pb-3">
-                <span className="text-sm text-on-surface-variant">Monto a pagar:</span>
-                <span className="text-2xl font-bold text-primary">${subscription!.price.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between items-center border-b border-primary/10 pb-3">
-                <span className="text-sm text-on-surface-variant">Código de pago:</span>
-                <div className="flex items-center gap-2">
-                  <span className="font-mono font-bold text-primary">{paymentCode}</span>
-                  <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => copyToClipboard(paymentCode, "Código")}>
-                    <Copy className="h-3 w-3" />
-                  </Button>
-                </div>
-              </div>
-              <div className="space-y-1">
-                <span className="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Cuenta {BCP_ACCOUNT.bank}:</span>
-                <div className="flex justify-between items-center bg-white p-3 rounded-xl border">
-                  <span className="font-mono text-sm">{BCP_ACCOUNT.number}</span>
-                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => copyToClipboard(BCP_ACCOUNT.number, "Cuenta")}>
-                    <Copy className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-            <Alert className="bg-amber-50 border-amber-200 rounded-2xl">
-              <Info className="h-4 w-4 text-amber-600" />
-              <AlertDescription className="text-xs text-amber-800">
-                Los pagos se validan de 9:00 AM a 7:00 PM. Si pagas fuera de este horario, se procesará al día siguiente.
-              </AlertDescription>
-            </Alert>
-          </CardContent>
-          <CardFooter className="p-8 pt-0">
-            <Button className="w-full rounded-2xl py-6 font-bold shadow-lg" onClick={() => router.push("/billetera")}>
-              <CheckCircle className="mr-2 h-5 w-5" /> Ya realicé el pago
-            </Button>
-          </CardFooter>
-        </Card>
+      <div className="pt-10 text-center space-y-3">
+        <p className="text-sm text-on-surface/40">Grupo no encontrado</p>
+        <Button asChild variant="link"><Link href="/explorar">Volver a explorar</Link></Button>
       </div>
     );
   }
 
   return (
-    <div className="pb-24 pt-2">
-      <div className="relative text-center mb-10">
-        <Button onClick={() => router.back()} variant="outline" className="absolute left-0 top-1/2 -translate-y-1/2 rounded-full h-12 w-12 p-0">
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
-        <h1 className="text-3xl font-bold text-on-surface">Confirmar Suscripción</h1>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-        <Card className="rounded-3xl border-outline-variant/30 shadow-sm overflow-hidden">
-          <CardHeader className="flex-row items-center gap-4 bg-surface-container/50">
-            {logo && (
-              <Image src={logo.imageUrl} alt={logo.description} width={50} height={50} className="rounded-xl border border-outline-variant/30" />
-            )}
-            <div>
-              <CardTitle className="text-xl text-on-surface">{subscription!.service}</CardTitle>
-              <CardDescription>Anfitrión: {subscription!.host}</CardDescription>
-            </div>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <div className="flex justify-between items-baseline border-t border-outline-variant/20 pt-4">
-              <p className="text-on-surface-variant">Precio por cupo:</p>
-              <p className="font-bold text-3xl text-primary">{subscription!.currency}{subscription!.price.toFixed(2)}</p>
-            </div>
-          </CardContent>
-        </Card>
+    <div className="pb-24 pt-2 space-y-5">
+      {step !== "success" && (
+        <button
+          onClick={() => (step === "summary" ? router.push("/explorar") : setStep(step === "bank" ? "summary" : "bank"))}
+          className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-widest text-on-surface/40"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" /> Volver
+        </button>
+      )}
 
-        <Card className="rounded-3xl border-outline-variant/30 shadow-sm">
-          <CardHeader>
-            <CardTitle>Método de Pago</CardTitle>
-            <CardDescription>Depósito o Transferencia {BCP_ACCOUNT.bank}</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="p-4 bg-surface rounded-xl border border-outline-variant/30 flex items-center gap-3">
-              <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                <Landmark className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <p className="text-sm font-bold">Transferencia {BCP_ACCOUNT.bank}</p>
-                <p className="text-xs text-on-surface-variant">Manual (aprobación en 2h-12h)</p>
-              </div>
+      {/* Resumen */}
+      {step === "summary" && (
+        <div className="space-y-4">
+          <div className="relative overflow-hidden rounded-[2rem] p-6 text-white shadow-lg" style={{ background: group.serviceColor || "#4343d5" }}>
+            <div className="absolute -right-6 -top-6 opacity-10"><Sparkles className="h-28 w-28" /></div>
+            <div className="relative z-10">
+              <p className="text-[10px] font-bold uppercase tracking-widest opacity-70">Unirme a</p>
+              <h1 className="text-2xl font-extrabold tracking-tight">{group.serviceName}</h1>
+              <p className="mt-1 flex items-center gap-1 text-[11px] opacity-80"><Users className="h-3 w-3" /> Anfitrión: {group.hostName}</p>
             </div>
-          </CardContent>
-          <CardFooter>
-            <Button className="w-full rounded-xl py-6 text-lg font-bold shadow-lg" onClick={generateOrder} disabled={isGenerating}>
-              {isGenerating ? (
-                <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Generando...</>
-              ) : (
-                "Obtener Datos de Pago"
-              )}
-            </Button>
-          </CardFooter>
-        </Card>
-      </div>
+          </div>
+          <div className="glass-card rounded-2xl p-4 space-y-2">
+            <div className="flex justify-between"><span className="text-[11px] font-bold text-on-surface/50">Precio por cupo</span><span className="text-lg font-extrabold text-primary">S/{group.pricePerSlot.toFixed(2)}<span className="text-[10px] font-medium text-on-surface/40">/mes</span></span></div>
+            <p className="text-[10px] text-on-surface/35">Tras validar tu pago, te agregaremos al grupo y verás las credenciales en "Mis grupos".</p>
+          </div>
+          <Button className="w-full h-11 rounded-2xl font-bold" onClick={goBank}>Continuar al pago</Button>
+        </div>
+      )}
+
+      {/* Datos bancarios */}
+      {step === "bank" && (
+        <div className="space-y-4">
+          <div className="text-center space-y-1">
+            <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10"><Landmark className="h-5 w-5 text-primary" /></div>
+            <h2 className="text-sm font-bold">Realiza la transferencia</h2>
+            <p className="text-[10px] text-on-surface/30">Transfiere el monto exacto a esta cuenta</p>
+          </div>
+          <div className="glass-card rounded-2xl p-3 space-y-2">
+            <div className="flex justify-between items-center"><span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Banco</span><span className="text-[11px] font-bold">{BCP_ACCOUNT.bank}</span></div>
+            <div className="flex justify-between items-center"><span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Titular</span><span className="text-[11px] font-bold">{BCP_ACCOUNT.holder}</span></div>
+            <div className="flex justify-between items-center border-t border-white/10 pt-2">
+              <span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Cuenta</span>
+              <div className="flex items-center gap-1.5"><span className="text-[10px] font-mono font-bold">{BCP_ACCOUNT.number}</span><button onClick={() => copyText(BCP_ACCOUNT.number, "Cuenta")} className="flex h-5 w-5 items-center justify-center rounded-md bg-primary/10"><Copy className="h-2.5 w-2.5 text-primary" /></button></div>
+            </div>
+          </div>
+          <div className="glass-card rounded-2xl p-3 space-y-2">
+            <div className="flex justify-between items-center"><span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Monto exacto</span><div className="flex items-center gap-1.5"><span className="text-[13px] font-black text-primary">S/{group.pricePerSlot.toFixed(2)}</span><button onClick={() => copyText(group.pricePerSlot.toFixed(2), "Monto")} className="flex h-5 w-5 items-center justify-center rounded-md bg-primary/10"><Copy className="h-2.5 w-2.5 text-primary" /></button></div></div>
+            <div className="flex justify-between items-center border-t border-white/10 pt-2"><span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Código</span><div className="flex items-center gap-1.5"><span className="text-[11px] font-mono font-bold text-primary">{paymentCode}</span><button onClick={() => copyText(paymentCode, "Código")} className="flex h-5 w-5 items-center justify-center rounded-md bg-primary/10"><Copy className="h-2.5 w-2.5 text-primary" /></button></div></div>
+          </div>
+          <Button className="w-full h-11 rounded-2xl font-bold" onClick={() => setStep("operation")}>Ya realicé la transferencia →</Button>
+        </div>
+      )}
+
+      {/* Número de operación */}
+      {step === "operation" && (
+        <div className="space-y-4">
+          <div className="text-center space-y-1">
+            <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10"><Hash className="h-5 w-5 text-primary" /></div>
+            <h2 className="text-sm font-bold">Número de operación</h2>
+            <p className="text-[10px] text-on-surface/30">Ingresa el número de tu comprobante</p>
+          </div>
+          <input type="text" placeholder="Ej: 00123456789" value={operationNumber} onChange={(e) => setOperationNumber(e.target.value)} className="glass-input h-11 w-full text-center text-sm font-bold tracking-widest" />
+          <Button className="w-full h-11 rounded-2xl font-bold" onClick={handleConfirm} disabled={loading || !operationNumber.trim()}>{loading ? "Enviando…" : "Confirmar pago"}</Button>
+        </div>
+      )}
+
+      {/* Éxito */}
+      {step === "success" && (
+        <div className="flex flex-col items-center pt-8 text-center space-y-4">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-success/10"><CheckCircle2 className="h-8 w-8 text-success" /></div>
+          <h2 className="text-xl font-extrabold tracking-tight">¡Pago enviado!</h2>
+          <p className="max-w-xs text-sm leading-relaxed text-on-surface/55">Validaremos tu pago y te agregaremos al grupo de {group.serviceName}. Lo verás en "Mis grupos".</p>
+          <div className="flex w-full max-w-xs gap-3">
+            <Button asChild variant="outline" className="h-11 flex-1 rounded-2xl font-bold"><Link href="/mis-ordenes">Mis órdenes</Link></Button>
+            <Button asChild className="h-11 flex-1 rounded-2xl font-bold"><Link href="/mis-grupos">Mis grupos</Link></Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useFirestore, useCollection, useUser } from "@/firebase";
-import { collection, query, orderBy, doc, updateDoc, getDoc, setDoc, serverTimestamp, increment } from "firebase/firestore";
+import { collection, query, orderBy, doc, updateDoc, getDoc, setDoc, serverTimestamp, increment, arrayUnion } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -60,6 +60,13 @@ export default function AdminPaymentsPage() {
         } else {
           await setDoc(walletRef, { userId: order.userId, balance: amount, currency: order.currency, updatedAt: serverTimestamp() });
         }
+      } else if (order.type === "membership_payment" && order.relatedGroupId) {
+        // Agregar al usuario como miembro del grupo y ocupar un cupo.
+        await updateDoc(doc(firestore, "groups", order.relatedGroupId), {
+          memberIds: arrayUnion(order.userId),
+          slotsFilled: increment(1),
+          updatedAt: serverTimestamp(),
+        });
       }
       await logAdminAction(firestore, user, order.type === "wallet_recharge" ? "recharge_approved" : "payment_approved", {
         targetUserId: order.userId,

@@ -1,78 +1,76 @@
-
 "use client";
 
-import { BrainCircuit, ArrowLeft, ChevronRight } from "lucide-react";
+import { useMemo } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import type { CategorySlug } from "@/lib/types";
-import { cn } from "@/lib/utils";
-
-type Category = {
-  title: string;
-  slug: CategorySlug;
-  icon: React.ReactNode;
-};
-
-const categories: Category[] = [
-  { title: "Inteligencia Artificial", slug: "ia", icon: <BrainCircuit className="h-5 w-5" /> },
-];
+import { Sparkles, Users, ChevronRight } from "lucide-react";
+import { useUser, useFirestore, useCollection } from "@/firebase";
+import { collection, query, where } from "firebase/firestore";
+import type { GroupDoc } from "@/lib/types";
 
 export default function ExplorarPage() {
+  const { user } = useUser();
+  const firestore = useFirestore();
+
+  const groupsQuery = useMemo(
+    () => (firestore ? query(collection(firestore, "groups"), where("approval", "==", "approved")) : null),
+    [firestore]
+  );
+  const { data: groups, loading } = useCollection<GroupDoc>(groupsQuery);
+
+  // Grupos con cupos libres, que no sean míos ni a los que ya pertenezco.
+  const available = useMemo(() => {
+    return (groups ?? []).filter(
+      (g) =>
+        g.slotsFilled < g.slotsTotal &&
+        g.hostId !== user?.uid &&
+        !(g.memberIds ?? []).includes(user?.uid ?? "")
+    );
+  }, [groups, user]);
+
   return (
-    <div className="pb-24 pt-2 space-y-6">
-      {/* Mini Header estilo iOS */}
-      <div className="flex items-center gap-3 px-1">
-        <Button asChild variant="ghost" size="icon" className="h-8 w-8 rounded-full bg-white/40 hover:bg-white/60 active:scale-95 transition-all">
-          <Link href="/inicio">
-            <ArrowLeft className="h-4 w-4 text-primary" />
-          </Link>
-        </Button>
-        <div className="space-y-0">
-          <h1 className="text-lg font-extrabold tracking-tight text-on-surface">Explorar</h1>
-          <p className="text-[10px] font-bold text-on-surface-variant/40 uppercase tracking-widest">Elige una categoría</p>
-        </div>
+    <div className="pb-24 pt-2 space-y-5">
+      <div className="px-1">
+        <h1 className="text-xl font-extrabold tracking-tight text-on-surface">Explorar cupos</h1>
+        <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/40">Únete a un grupo y paga solo tu parte</p>
       </div>
 
-      {/* Grid de Categorías Compacto */}
-      <div className="grid grid-cols-1 gap-2">
-        {categories.map((category) => (
-          <Link href={`/explorar/${category.slug}`} key={category.title} className="group">
-            <div className="glass-card flex items-center justify-between p-4 rounded-[1.8rem] hover:bg-white/50 transition-all active:scale-[0.98]">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-300 shadow-sm border border-primary/5">
-                  {category.icon}
+      {loading && <p className="py-10 text-center text-[10px] font-black uppercase tracking-widest text-on-surface/30">Cargando…</p>}
+
+      {!loading && available.length === 0 && (
+        <div className="glass-card rounded-[2rem] py-16 text-center border-dashed">
+          <p className="text-[11px] font-bold text-on-surface/40">No hay cupos disponibles ahora</p>
+          <p className="mt-1 text-[10px] text-on-surface/30">Vuelve pronto o publica el tuyo</p>
+        </div>
+      )}
+
+      <div className="space-y-2">
+        {available.map((g) => {
+          const free = g.slotsTotal - g.slotsFilled;
+          return (
+            <Link key={g.id} href={`/checkout/${g.id}`} className="no-underline">
+              <div className="glass-card flex items-center justify-between rounded-2xl p-4 transition-all hover:bg-white/50 active:scale-[0.98]">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl text-white shrink-0" style={{ background: g.serviceColor || "#4343d5" }}>
+                    <Sparkles className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold tracking-tight text-on-surface">{g.serviceName}</p>
+                    <div className="mt-0.5 flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-on-surface-variant/40">
+                      <Users className="h-3 w-3" /> {free} {free === 1 ? "cupo libre" : "cupos libres"} · {g.hostName}
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-[13px] font-bold text-on-surface tracking-tight">
-                    {category.title}
-                  </h3>
-                  <p className="text-[9px] text-on-surface-variant/40 font-medium uppercase tracking-tighter">
-                    Descubre servicios premium
-                  </p>
+                <div className="flex items-center gap-2">
+                  <div className="text-right">
+                    <p className="text-[8px] font-black uppercase tracking-widest text-on-surface/30">Desde</p>
+                    <p className="text-sm font-extrabold tracking-tight text-primary">S/{g.pricePerSlot.toFixed(2)}</p>
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-on-surface/25" />
                 </div>
               </div>
-              <ChevronRight className="h-4 w-4 text-on-surface-variant/20 group-hover:text-primary transition-colors" />
-            </div>
-          </Link>
-        ))}
-
-        {/* Placeholder para futuras categorías - Densidad visual */}
-        {[1, 2].map((i) => (
-          <div key={i} className="glass-card opacity-20 p-4 rounded-[1.8rem] border-dashed flex items-center gap-4">
-             <div className="w-10 h-10 rounded-2xl bg-on-surface/5" />
-             <div className="space-y-1">
-                <div className="w-24 h-2 bg-on-surface/10 rounded-full" />
-                <div className="w-16 h-1.5 bg-on-surface/5 rounded-full" />
-             </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Tip Minimalista */}
-      <div className="text-center pt-4">
-        <p className="text-[9px] font-black text-on-surface-variant/20 uppercase tracking-[0.3em]">
-          Nuevas categorías pronto
-        </p>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
