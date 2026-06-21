@@ -95,7 +95,7 @@ export default function MisGruposPage() {
           <div className="text-center py-16 glass-card rounded-[2.5rem] border-dashed border-primary/10">
             <p className="text-on-surface-variant/40 text-[10px] font-black uppercase tracking-widest">Sin grupos {activeTab === 'Active' ? 'activos' : 'pendientes'}</p>
             <Button asChild variant="link" className="mt-2 text-primary text-[11px] font-bold uppercase tracking-tight">
-              <Link href="/">Explorar servicios</Link>
+              <Link href="/explorar">Explorar servicios</Link>
             </Button>
           </div>
         )}

@@ -6,13 +6,13 @@ import { usePathname } from "next/navigation";
 import { Home, Grid2x2, Wallet, User } from "lucide-react";
 
 const navItems = [
-  { href: "/",           label: "Inicio",  Icon: Home      },
+  { href: "/inicio",     label: "Inicio",  Icon: Home      },
   { href: "/mis-grupos", label: "Grupos",  Icon: Grid2x2   },
   { href: "/billetera",  label: "Wallet",  Icon: Wallet    },
   { href: "/perfil",     label: "Perfil",  Icon: User      },
 ];
 
-const HIDDEN_PATHS = ["/login", "/registro"];
+const HIDDEN_PATHS = ["/", "/login", "/registro"];
 
 export function BottomNav() {
   const pathname = usePathname();
@@ -26,7 +26,7 @@ export function BottomNav() {
     <nav className="lg-tab-bar">
       {navItems.map(({ href, label, Icon }) => {
         const isActive =
-          pathname === href || (href !== "/" && pathname.startsWith(href));
+          pathname === href || pathname.startsWith(href + "/");
 
         return (
           <Link

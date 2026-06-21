@@ -13,7 +13,7 @@ export default function Header() {
     <header className="lg-header">
       <div className="lg-header-inner">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 no-underline">
+        <Link href="/inicio" className="flex items-center gap-2 no-underline">
           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-[#5E5CE6] to-primary shadow-[0_2px_8px_rgba(10,132,255,0.35),inset_0_1px_0_rgba(255,255,255,0.30)]">
             <Layers className="h-3.5 w-3.5 text-white" strokeWidth={2} />
           </div>

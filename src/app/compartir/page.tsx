@@ -22,7 +22,7 @@ export default function CompartirPage() {
       {/* Header Compacto Apple Style */}
       <div className="flex items-center gap-3 px-1">
         <Button asChild variant="ghost" size="icon" className="h-8 w-8 rounded-full bg-white/40 hover:bg-white/60 active:scale-95 transition-all">
-          <Link href="/">
+          <Link href="/inicio">
             <ArrowLeft className="h-4 w-4 text-primary" />
           </Link>
         </Button>

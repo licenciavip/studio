@@ -72,7 +72,7 @@ function PublicarForm() {
         </div>
         <div className="flex gap-3 w-full max-w-xs">
           <Button asChild variant="outline" className="flex-1 rounded-2xl h-10 text-[11px] font-bold"><Link href="/mis-grupos">Mis grupos</Link></Button>
-          <Button asChild className="flex-1 rounded-2xl h-10 text-[11px] font-bold"><Link href="/">Inicio</Link></Button>
+          <Button asChild className="flex-1 rounded-2xl h-10 text-[11px] font-bold"><Link href="/inicio">Inicio</Link></Button>
         </div>
       </div>
     );

@@ -3,12 +3,10 @@ import type { Metadata, Viewport } from "next";
 import { Sora } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import Header from "@/components/layout/header";
-import { BottomNav } from "@/components/layout/bottom-nav";
 import { Toaster } from "@/components/ui/toaster";
 import { FirebaseClientProvider } from "@/firebase";
 import { FirebaseErrorListener } from "@/components/FirebaseErrorListener";
-import { AuthGuard } from "@/components/auth-guard";
+import { AppShell } from "@/components/layout/app-shell";
 
 const sora = Sora({
   subsets: ["latin"],
@@ -45,14 +43,7 @@ export default function RootLayout({
       <body className={cn("min-h-screen bg-background text-foreground font-sans antialiased", sora.variable)} suppressHydrationWarning>
         <FirebaseClientProvider>
           <FirebaseErrorListener />
-          <div className="relative flex flex-col min-h-screen">
-            <div className="lg-scroll-edge" aria-hidden />
-            <Header />
-            <main className="flex-1 w-full mx-auto max-w-[var(--content-max-width)] px-4 sm:px-6 pb-28 pt-[calc(5rem+env(safe-area-inset-top))]">
-              <AuthGuard>{children}</AuthGuard>
-            </main>
-            <BottomNav />
-          </div>
+          <AppShell>{children}</AppShell>
           <Toaster />
         </FirebaseClientProvider>
       </body>
