@@ -6,6 +6,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { getServiceById } from "@/lib/data";
+import { useUser, useFirestore } from "@/firebase";
+import { collection, doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { cn } from "@/lib/utils";
 import {
   ArrowLeft, CheckCircle2, Users, DollarSign,
@@ -18,6 +20,8 @@ function PublicarForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { toast } = useToast();
+  const { user } = useUser();
+  const firestore = useFirestore();
 
   const serviceId = searchParams.get("service") || "";
   const category = searchParams.get("category") || "ia";
@@ -48,9 +52,37 @@ function PublicarForm() {
   const earnings = (priceNum * slots * 0.85).toFixed(2);
   const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
 
-  const handlePublish = () => {
+  const handlePublish = async () => {
+    if (!firestore || !user) {
+      toast({ title: "Error", description: "Debes iniciar sesión.", variant: "destructive" });
+      return;
+    }
     setIsLoading(true);
-    setTimeout(() => { setIsLoading(false); setStep("success"); }, 1200);
+    try {
+      const id = doc(collection(firestore, "groups")).id;
+      await setDoc(doc(firestore, "groups", id), {
+        id,
+        hostId: user.uid,
+        hostName: user.displayName ?? "Anfitrión",
+        serviceId: service.id,
+        serviceName: service.name,
+        serviceColor: service.color ?? null,
+        slotsTotal: slots,
+        slotsFilled: 0,
+        pricePerSlot: priceNum,
+        hostEarning: parseFloat(earnings),
+        status: "Activo",
+        credentials: { email: email.trim(), pass: password },
+        nextBill: "—",
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      });
+      setStep("success");
+    } catch {
+      toast({ title: "Error", description: "No se pudo publicar el grupo.", variant: "destructive" });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (step === "success") {
@@ -62,7 +94,7 @@ function PublicarForm() {
         <div className="space-y-2">
           <h2 className="text-xl font-extrabold tracking-tight">¡Grupo publicado!</h2>
           <p className="text-[11px] text-on-surface/40 leading-relaxed max-w-xs mx-auto">
-            Tu grupo de <span className="font-bold text-on-surface/60">{service.name}</span> ya está visible. Te notificaremos cuando alguien se una.
+            Tu grupo de <span className="font-bold text-on-surface/60">{service.name}</span> ya está creado. Lo verás en "Mis grupos".
           </p>
         </div>
         <div className="glass-card p-4 rounded-[2rem] w-full max-w-xs space-y-3">
@@ -205,7 +237,7 @@ function PublicarForm() {
             </div>
             <div className="flex items-center gap-2 p-3 bg-amber-500/5 rounded-xl border border-amber-500/10">
               <Key className="h-4 w-4 text-amber-500 shrink-0" />
-              <p className="text-[9px] font-medium text-amber-600/70">Credenciales encriptadas. Solo miembros activos pueden verlas.</p>
+              <p className="text-[9px] font-medium text-amber-600/70">Credenciales protegidas. Solo miembros activos pueden verlas.</p>
             </div>
           </div>
           <div className="flex gap-3">
