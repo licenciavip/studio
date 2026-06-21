@@ -31,6 +31,17 @@ export default function AdminPaymentsPage() {
 
   const { data: payments, loading } = useCollection<PaymentOrder>(paymentsQuery);
 
+  // Antifraude: números de operación que aparecen en más de un pago.
+  const dupOps = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const p of payments ?? []) {
+      if (p.operationNumber) counts.set(p.operationNumber, (counts.get(p.operationNumber) ?? 0) + 1);
+    }
+    const set = new Set<string>();
+    counts.forEach((n, op) => { if (n > 1) set.add(op); });
+    return set;
+  }, [payments]);
+
   // Re-verificación de autorización antes de cualquier operación sensible.
   const ensureAdmin = (): boolean => {
     if (!firestore || !user || !isAdmin) {
@@ -131,6 +142,9 @@ export default function AdminPaymentsPage() {
                 <div>
                   <p className="text-sm font-bold text-white">{payment.paymentCode}</p>
                   <p className="text-[11px] uppercase tracking-wide text-white/40">{payment.type}</p>
+                  {payment.operationNumber && dupOps.has(payment.operationNumber) && (
+                    <p className="mt-0.5 text-[9px] font-black uppercase tracking-widest text-danger">⚠ N° operación duplicado</p>
+                  )}
                 </div>
                 <div className="text-right">
                   <p className="text-sm font-bold text-white">S/{payment.amountExpected.toFixed(2)}</p>
@@ -160,9 +174,12 @@ export default function AdminPaymentsPage() {
               </div>
             </div>
             {selectedOrder?.operationNumber && (
-              <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+              <div className={cn("rounded-xl border bg-white/[0.03] p-4", selectedOrder.operationNumber && dupOps.has(selectedOrder.operationNumber) ? "border-danger/40" : "border-white/10")}>
                 <p className="text-[9px] font-black uppercase text-white/40">N° de operación</p>
                 <p className="font-mono text-sm font-bold">{selectedOrder.operationNumber}</p>
+                {selectedOrder.operationNumber && dupOps.has(selectedOrder.operationNumber) && (
+                  <p className="mt-1 text-[10px] font-black uppercase tracking-widest text-danger">⚠ Este número ya se usó en otro pago</p>
+                )}
               </div>
             )}
           </div>
