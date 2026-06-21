@@ -2,14 +2,15 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import { servicesByCategory, groups } from "@/lib/data";
+import { servicesByCategory } from "@/lib/data";
 import { useToast } from "@/hooks/use-toast";
 import {
   ChevronRight, Plus, Sparkles, Zap,
   TrendingDown, TrendingUp, Search
 } from "lucide-react";
-import type { CategorySlug, Service } from "@/lib/types";
-import { useUser } from "@/firebase";
+import type { CategorySlug, Service, GroupDoc } from "@/lib/types";
+import { useUser, useFirestore, useCollection } from "@/firebase";
+import { collection, query, where } from "firebase/firestore";
 
 const categoryLabels: Record<string, string> = {
   ia: "IA & Herramientas",
@@ -37,6 +38,13 @@ export default function InicioPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const { user } = useUser();
+  const firestore = useFirestore();
+
+  const groupsQuery = useMemo(
+    () => (firestore && user ? query(collection(firestore, "groups"), where("hostId", "==", user.uid)) : null),
+    [firestore, user]
+  );
+  const { data: groups } = useCollection<GroupDoc>(groupsQuery);
 
   const groupedServices = useMemo(() =>
     Object.fromEntries(
@@ -113,7 +121,12 @@ export default function InicioPage() {
           </Link>
         </div>
 
-        {groups.slice(0, 1).map((group) => (
+        {(groups ?? []).length === 0 && (
+          <div className="glass-card rounded-2xl px-3.5 py-5 text-center">
+            <p className="text-[11px] font-medium text-on-surface/40">Aún no tienes grupos</p>
+          </div>
+        )}
+        {(groups ?? []).slice(0, 1).map((group) => (
           <Link key={group.id} href={`/mis-grupos/${group.id}`} className="no-underline">
             <div className="glass-card flex items-center justify-between rounded-2xl px-3.5 py-3 transition-transform active:scale-[0.98]">
               <div className="flex items-center gap-2.5">
@@ -122,10 +135,10 @@ export default function InicioPage() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold tracking-tight text-on-surface">
-                    {group.service}
+                    {group.serviceName}
                   </p>
                   <p className="mt-0.5 text-[11px] font-medium text-on-surface/40">
-                    {group.slots.filled}/{group.slots.total} cupos
+                    {group.slotsFilled}/{group.slotsTotal} cupos
                   </p>
                 </div>
               </div>
