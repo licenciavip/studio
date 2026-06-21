@@ -1,82 +1,108 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { BCP_ACCOUNT } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { paymentStatusConfig } from "@/lib/status";
+import { useUser, useFirestore, useDoc, useCollection } from "@/firebase";
+import {
+  collection, query, where, doc, setDoc, serverTimestamp,
+} from "firebase/firestore";
 import {
   History, Plus, ArrowUpRight, TrendingUp, Copy,
-  ArrowLeft, CheckCircle2, Clock, Landmark, Hash
+  ArrowLeft, CheckCircle2, Clock, Landmark, Hash,
 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import type { PaymentOrderStatus } from "@/lib/types";
+import type { PaymentOrder, Wallet } from "@/lib/types";
 
 type RechargeStep = "amount" | "bank-details" | "operation-number" | "success";
 
 const QUICK_AMOUNTS = [10, 20, 50, 100];
 
-type MockOrder = {
-  id: string;
-  type: "wallet_recharge" | "membership_payment";
-  paymentCode: string;
-  amountExpected: number;
-  status: PaymentOrderStatus;
-};
-
-const MOCK_ORDERS: MockOrder[] = [
-  { id: "1", type: "wallet_recharge", paymentCode: "REC-4821", amountExpected: 50, status: "approved" },
-  { id: "2", type: "membership_payment", paymentCode: "PAY-3302", amountExpected: 26.90, status: "approved" },
-  { id: "3", type: "wallet_recharge", paymentCode: "REC-9174", amountExpected: 20, status: "uploaded" },
-];
-
 export default function BilleteraPage() {
   const { toast } = useToast();
-  const [mockBalance] = useState(43.10);
+  const { user } = useUser();
+  const firestore = useFirestore();
+
   const [showDialog, setShowDialog] = useState(false);
   const [step, setStep] = useState<RechargeStep>("amount");
   const [rechargeAmount, setRechargeAmount] = useState("");
   const [paymentCode, setPaymentCode] = useState("");
   const [operationNumber, setOperationNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [orders, setOrders] = useState<MockOrder[]>(MOCK_ORDERS);
+
+  // Saldo real de Firestore (colección wallets/{uid}).
+  const walletRef = useMemo(
+    () => (firestore && user ? doc(firestore, "wallets", user.uid) : null),
+    [firestore, user]
+  );
+  const { data: wallet } = useDoc<Wallet>(walletRef);
+  const balance = wallet?.balance ?? 0;
+
+  // Actividad real: pagos del usuario (sin orderBy para no exigir índice compuesto).
+  const ordersQuery = useMemo(
+    () => (firestore && user ? query(collection(firestore, "paymentOrders"), where("userId", "==", user.uid)) : null),
+    [firestore, user]
+  );
+  const { data: ordersRaw, loading: ordersLoading } = useCollection<PaymentOrder>(ordersQuery);
+
+  const orders = useMemo(() => {
+    const toMs = (v: unknown): number => {
+      if (v && typeof v === "object" && "seconds" in v) return (v as { seconds: number }).seconds * 1000;
+      return 0;
+    };
+    return [...(ordersRaw ?? [])].sort((a, b) => toMs(b.updatedAt) - toMs(a.updatedAt));
+  }, [ordersRaw]);
 
   const openDialog = () => {
     setStep("amount");
     setRechargeAmount("");
     setOperationNumber("");
+    setPaymentCode("");
     setShowDialog(true);
   };
 
-  // Paso 1 → 2: generar código y mostrar datos bancarios (mock, sin Firebase)
+  // Paso 1 → 2: generar código de pago.
   const handleConfirmAmount = () => {
     if (!rechargeAmount || parseFloat(rechargeAmount) <= 0) return;
-    setIsLoading(true);
-    setTimeout(() => {
-      const code = `REC-${Math.floor(1000 + Math.random() * 9000)}`;
-      setPaymentCode(code);
-      setIsLoading(false);
-      setStep("bank-details");
-    }, 600);
+    setPaymentCode(`REC-${Math.floor(1000 + Math.random() * 9000)}`);
+    setStep("bank-details");
   };
 
-  // Paso 3 → 4: registrar número de operación (mock)
-  const handleSubmitOperation = () => {
-    if (!operationNumber.trim()) return;
+  // Paso 3 → 4: crear la orden de recarga REAL en Firestore (estado "uploaded"
+  // para que el admin la vea y pueda validarla).
+  const handleSubmitOperation = async () => {
+    if (!operationNumber.trim() || !firestore || !user) return;
     setIsLoading(true);
-    setTimeout(() => {
-      const newOrder: MockOrder = {
-        id: Date.now().toString(),
+    try {
+      const orderId = doc(collection(firestore, "paymentOrders")).id;
+      const amount = parseFloat(rechargeAmount);
+      await setDoc(doc(firestore, "paymentOrders", orderId), {
+        id: orderId,
+        userId: user.uid,
         type: "wallet_recharge",
+        amountExpected: amount,
+        amountPaid: amount,
+        currency: "PEN",
         paymentCode,
-        amountExpected: parseFloat(rechargeAmount),
+        operationNumber: operationNumber.trim(),
+        bankDestination: BCP_ACCOUNT.bank,
+        destinationAccountNumber: BCP_ACCOUNT.number,
+        payerName: user.displayName ?? null,
         status: "uploaded",
-      };
-      setOrders(prev => [newOrder, ...prev]);
-      setIsLoading(false);
+        reviewStatus: "uploaded",
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      });
       setStep("success");
-    }, 800);
+    } catch {
+      toast({ title: "Error", description: "No se pudo registrar la recarga.", variant: "destructive" });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const copyText = (text: string, label: string) => {
@@ -84,7 +110,7 @@ export default function BilleteraPage() {
     toast({ title: "Copiado", description: `${label} copiado.` });
   };
 
-  const getStatusBadge = (status: PaymentOrderStatus) => {
+  const getStatusBadge = (status: PaymentOrder["status"]) => {
     const s = paymentStatusConfig[status];
     return s ? <span className={`text-[9px] font-black uppercase tracking-widest ${s.text}`}>{s.label}</span> : null;
   };
@@ -99,13 +125,16 @@ export default function BilleteraPage() {
         <div className="relative z-10 space-y-4">
           <div>
             <p className="text-[9px] font-bold opacity-40 uppercase tracking-[0.25em]">Saldo disponible</p>
-            <h1 className="text-3xl font-extrabold tracking-tighter">${mockBalance.toFixed(2)}</h1>
+            <h1 className="text-3xl font-extrabold tracking-tighter">S/{balance.toFixed(2)}</h1>
           </div>
           <div className="flex gap-2">
             <button onClick={openDialog} className="flex-1 bg-white text-black rounded-xl h-9 text-[11px] font-bold flex items-center justify-center gap-2 active:scale-95 transition-all">
               <Plus className="h-3 w-3" /> Recargar
             </button>
-            <button className="flex-1 bg-white/10 text-white rounded-xl h-9 text-[11px] font-bold flex items-center justify-center gap-2 backdrop-blur-md border border-white/10 active:scale-95 transition-all">
+            <button
+              onClick={() => toast({ title: "Próximamente", description: "Los retiros estarán disponibles pronto." })}
+              className="flex-1 bg-white/10 text-white rounded-xl h-9 text-[11px] font-bold flex items-center justify-center gap-2 backdrop-blur-md border border-white/10 active:scale-95 transition-all"
+            >
               <ArrowUpRight className="h-3 w-3" /> Retirar
             </button>
           </div>
@@ -118,6 +147,17 @@ export default function BilleteraPage() {
           <History className="h-3 w-3 text-on-surface/30" />
           <h2 className="text-[10px] font-bold text-on-surface/30 tracking-tight uppercase">Actividad</h2>
         </div>
+
+        {ordersLoading && (
+          <p className="py-8 text-center text-[10px] font-black uppercase tracking-widest text-on-surface/30">Cargando…</p>
+        )}
+        {!ordersLoading && orders.length === 0 && (
+          <div className="glass-card rounded-[1.5rem] py-10 text-center">
+            <p className="text-[11px] font-bold text-on-surface/40">Aún no tienes movimientos</p>
+            <p className="mt-1 text-[10px] text-on-surface/30">Recarga tu saldo para empezar</p>
+          </div>
+        )}
+
         <div className="space-y-1.5">
           {orders.map((order) => (
             <div key={order.id} className="glass-card p-3 rounded-[1.5rem] flex items-center justify-between">
@@ -134,7 +174,7 @@ export default function BilleteraPage() {
               </div>
               <div className="text-right">
                 <p className={cn("text-[11px] font-bold tracking-tight", order.status === "approved" ? "text-success" : "text-on-surface")}>
-                  {order.type === "wallet_recharge" ? "+" : "-"}${order.amountExpected.toFixed(2)}
+                  {order.type === "wallet_recharge" ? "+" : "-"}S/{order.amountExpected.toFixed(2)}
                 </p>
                 {getStatusBadge(order.status)}
               </div>
@@ -144,7 +184,7 @@ export default function BilleteraPage() {
       </div>
 
       {/* Dialog recarga - 4 pasos estilo PAGO46 */}
-      <Dialog open={showDialog} onOpenChange={(open) => { if (!open && step !== "success") setShowDialog(false); if (!open && step === "success") setShowDialog(false); }}>
+      <Dialog open={showDialog} onOpenChange={() => setShowDialog(false)}>
         <DialogContent className="glass-card rounded-[2.5rem] max-w-[320px] p-0 border-white/20 overflow-hidden">
 
           {/* PASO 1: Monto */}
@@ -156,7 +196,7 @@ export default function BilleteraPage() {
               </DialogHeader>
               <div className="text-center">
                 <div className="flex items-center justify-center gap-1">
-                  <span className="text-2xl font-black text-on-surface/30">$</span>
+                  <span className="text-2xl font-black text-on-surface/30">S/</span>
                   <input
                     type="number"
                     placeholder="0.00"
@@ -178,16 +218,16 @@ export default function BilleteraPage() {
                         : "bg-white/20 text-on-surface/50 border-white/30 hover:bg-white/40"
                     )}
                   >
-                    ${amount}
+                    S/{amount}
                   </button>
                 ))}
               </div>
               <Button
                 className="w-full h-10 rounded-2xl text-[11px] font-bold"
                 onClick={handleConfirmAmount}
-                disabled={isLoading || !rechargeAmount || parseFloat(rechargeAmount) <= 0}
+                disabled={!rechargeAmount || parseFloat(rechargeAmount) <= 0}
               >
-                {isLoading ? "Generando..." : "Continuar →"}
+                Continuar →
               </Button>
             </div>
           )}
@@ -229,7 +269,7 @@ export default function BilleteraPage() {
                   <div className="flex justify-between items-center">
                     <span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Monto exacto</span>
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[13px] font-black text-primary">${parseFloat(rechargeAmount).toFixed(2)}</span>
+                      <span className="text-[13px] font-black text-primary">S/{parseFloat(rechargeAmount).toFixed(2)}</span>
                       <button onClick={() => copyText(parseFloat(rechargeAmount).toFixed(2), "Monto")} className="w-5 h-5 rounded-md bg-primary/10 flex items-center justify-center">
                         <Copy className="h-2.5 w-2.5 text-primary" />
                       </button>
