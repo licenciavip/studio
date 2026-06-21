@@ -13,10 +13,10 @@ import { initializeApp, applicationDefault } from "firebase-admin/app";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
 
 const SERVICES = [
-  { id: "chatgpt",    name: "ChatGPT",    planName: "ChatGPT Plus",   color: "#10a37f", category: "ia", pricePerMonth: 26.90, hostEarnings: 75.52, maxSlots: 5 },
-  { id: "claude",     name: "Claude Pro", planName: "Claude Pro",     color: "#d97757", category: "ia", pricePerMonth: 47.90, hostEarnings: 82.30, maxSlots: 5 },
-  { id: "gemini",     name: "Gemini AI",  planName: "Gemini AI",      color: "#4285f4", category: "ia", pricePerMonth: 16.90, hostEarnings: 61.65, maxSlots: 6 },
-  { id: "perplexity", name: "Perplexity", planName: "Perplexity Pro", color: "#0b1416", category: "ia", pricePerMonth: 47.90, hostEarnings: 78.40, maxSlots: 5 },
+  { id: "chatgpt",    name: "ChatGPT",    planName: "ChatGPT Plus",   color: "#10a37f", category: "ia", pricePerMonth: 26.90, platformFee: 4.00, maxSlots: 5 },
+  { id: "claude",     name: "Claude Pro", planName: "Claude Pro",     color: "#d97757", category: "ia", pricePerMonth: 47.90, platformFee: 7.00, maxSlots: 5 },
+  { id: "gemini",     name: "Gemini AI",  planName: "Gemini AI",      color: "#4285f4", category: "ia", pricePerMonth: 16.90, platformFee: 2.50, maxSlots: 6 },
+  { id: "perplexity", name: "Perplexity", planName: "Perplexity Pro", color: "#0b1416", category: "ia", pricePerMonth: 47.90, platformFee: 7.00, maxSlots: 5 },
 ];
 
 async function main() {
