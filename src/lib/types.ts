@@ -63,22 +63,40 @@ export interface Wallet {
   updatedAt: any;
 }
 
+/** Entidad financiera destino del retiro. */
+export type WithdrawalEntity = 'yape' | 'bcp' | 'plin';
+
+/** Cuenta de retiro registrada por el usuario. */
+export interface WithdrawalAccount {
+  id: string;
+  userId: string;
+  /** Nombre personalizado de la cuenta (opcional). */
+  accountName?: string;
+  holderName: string;
+  docType: string; // 'DNI'
+  docNumber: string;
+  entity: WithdrawalEntity;
+  /** N° de celular (Yape/Plin) o N° de cuenta (BCP). */
+  destination: string;
+  isPrimary: boolean;
+  status: 'pending' | 'approved' | 'rejected';
+  createdAt: any;
+  updatedAt: any;
+}
+
 /** Estado de una solicitud de retiro. */
 export type WithdrawalStatus = 'pending' | 'paid' | 'rejected';
-
-/** Método de pago del retiro. */
-export type WithdrawalMethod = 'yape' | 'transfer';
 
 export interface Withdrawal {
   id: string;
   userId: string;
   amount: number;
   currency: string;
-  method: WithdrawalMethod;
-  /** Número de Yape o número de cuenta destino. */
-  destination: string;
-  /** Nombre del titular de la cuenta/Yape. */
+  accountId: string;
+  entity: WithdrawalEntity;
   holderName: string;
+  destination: string;
+  docNumber?: string;
   status: WithdrawalStatus;
   rejectedReason?: string;
   reviewedBy?: string;
