@@ -32,7 +32,7 @@ export default function AdminResumenPage() {
         <StatCard label="Pagos por revisar" value={loading ? "…" : String(pendientes.length)} hint="Requieren tu validación" />
         <StatCard label="Recargas pendientes" value={loading ? "…" : String(recargasPend.length)} />
         <StatCard label="Pagos aprobados" value={loading ? "…" : String(aprobados.length)} />
-        <StatCard label="Total acreditado" value={loading ? "…" : `$${totalAprobado.toFixed(2)}`} />
+        <StatCard label="Total acreditado" value={loading ? "…" : `S/${totalAprobado.toFixed(2)}`} />
       </div>
 
       <div className="mt-6">
@@ -58,7 +58,7 @@ export default function AdminResumenPage() {
                     <p className="text-[11px] uppercase tracking-wide text-white/40">{p.type}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-bold text-white">${p.amountExpected.toFixed(2)}</p>
+                    <p className="text-sm font-bold text-white">S/{p.amountExpected.toFixed(2)}</p>
                     <span className="text-[10px] font-black uppercase tracking-widest text-warning">{cfg?.label}</span>
                   </div>
                 </AdminCard>
