@@ -70,6 +70,15 @@ service cloud.firestore {
       allow update, delete: if isAdmin();
     }
 
+    // Grupos (publicaciones de suscripción). Por ahora solo el anfitrión y el
+    // admin pueden leerlos (contienen credenciales). El navegar grupos de otros
+    // usuarios se habilitará con un modelo de miembros que separe las credenciales.
+    match /groups/{id} {
+      allow read: if isSignedIn() && (isOwner(resource.data.hostId) || isAdmin());
+      allow create: if isSignedIn() && isOwner(request.resource.data.hostId);
+      allow update, delete: if isOwner(resource.data.hostId) || isAdmin();
+    }
+
     match /serviceRecommendations/{id} {
       allow create: if isSignedIn();
       allow read: if isAdmin();
