@@ -88,10 +88,15 @@ function PublicarForm() {
         hostEarning: parseFloat(earnings),
         status: "Activo",
         approval: "pending",
-        credentials: { email: email.trim(), pass: password },
+        memberIds: [],
         nextBill: "—",
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
+      });
+      // Credenciales en subcolección privada (no se exponen al explorar).
+      await setDoc(doc(firestore, "groups", id, "private", "credentials"), {
+        email: email.trim(),
+        pass: password,
       });
       setStep("success");
     } catch {
