@@ -12,10 +12,18 @@ const CHROMELESS_PATHS = ["/", "/login"];
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
+  // El entorno administrativo tiene su propio layout (sidebar) y su propio
+  // guard. AppShell no le aplica nada del marco de usuario.
+  if (pathname === "/admin" || pathname.startsWith("/admin/")) {
+    return <>{children}</>;
+  }
+
+  // Landing y login: pantalla completa, sin chrome de usuario.
   if (CHROMELESS_PATHS.includes(pathname)) {
     return <>{children}</>;
   }
 
+  // Resto: entorno de usuario normal (protegido por AuthGuard).
   return (
     <div className="relative flex flex-col min-h-screen">
       <div className="lg-scroll-edge" aria-hidden />

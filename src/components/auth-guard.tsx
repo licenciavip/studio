@@ -7,8 +7,16 @@ import { useUser } from "@/firebase";
 // Rutas accesibles sin iniciar sesión
 const PUBLIC_PATHS = ["/", "/login"];
 
+/**
+ * Protege el entorno de usuario normal.
+ *
+ * - Sin sesión en ruta privada → /login
+ * - Administrador en ruta de usuario → /admin (no debe usar la app de usuario)
+ *
+ * Nota: el entorno /admin no pasa por aquí; tiene su propio AdminGuard.
+ */
 export function AuthGuard({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useUser();
+  const { user, loading, isAdmin } = useUser();
   const pathname = usePathname();
   const router = useRouter();
 
@@ -16,17 +24,16 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (loading) return;
-    // Sin sesión y en ruta privada → al login
     if (!user && !isPublic) {
       router.replace("/login");
+      return;
     }
-    // Con sesión en la pantalla de login → al inicio de la app
-    if (user && pathname === "/login") {
-      router.replace("/inicio");
+    // El administrador no debe entrar al entorno de usuario.
+    if (user && isAdmin) {
+      router.replace("/admin");
     }
-  }, [user, loading, isPublic, pathname, router]);
+  }, [user, loading, isAdmin, isPublic, router]);
 
-  // Mientras carga el estado de auth, o mientras se va a redirigir, no mostramos nada
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -35,6 +42,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     );
   }
   if (!user && !isPublic) return null;
+  if (user && isAdmin) return null;
 
   return <>{children}</>;
 }
