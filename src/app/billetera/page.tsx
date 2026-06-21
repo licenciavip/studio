@@ -15,7 +15,7 @@ import {
   ArrowLeft, CheckCircle2, Clock, Landmark, Hash,
 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import type { PaymentOrder, Wallet } from "@/lib/types";
+import type { PaymentOrder, Wallet, Withdrawal, WithdrawalMethod } from "@/lib/types";
 
 type RechargeStep = "amount" | "bank-details" | "operation-number" | "success";
 
@@ -32,6 +32,15 @@ export default function BilleteraPage() {
   const [paymentCode, setPaymentCode] = useState("");
   const [operationNumber, setOperationNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  // Retiro
+  const [showWithdraw, setShowWithdraw] = useState(false);
+  const [wAmount, setWAmount] = useState("");
+  const [wMethod, setWMethod] = useState<WithdrawalMethod>("yape");
+  const [wDestination, setWDestination] = useState("");
+  const [wHolder, setWHolder] = useState("");
+  const [wLoading, setWLoading] = useState(false);
+  const [wDone, setWDone] = useState(false);
 
   // Saldo real de Firestore (colección wallets/{uid}).
   const walletRef = useMemo(
@@ -55,6 +64,62 @@ export default function BilleteraPage() {
     };
     return [...(ordersRaw ?? [])].sort((a, b) => toMs(b.updatedAt) - toMs(a.updatedAt));
   }, [ordersRaw]);
+
+  // Retiros del usuario (para calcular el saldo realmente disponible).
+  const withdrawalsQuery = useMemo(
+    () => (firestore && user ? query(collection(firestore, "withdrawals"), where("userId", "==", user.uid)) : null),
+    [firestore, user]
+  );
+  const { data: withdrawals } = useCollection<Withdrawal>(withdrawalsQuery);
+
+  // El saldo disponible descuenta los retiros pendientes (aún no pagados),
+  // para que el usuario no pueda solicitar más de lo que tiene.
+  const pendingWithdrawTotal = useMemo(
+    () => (withdrawals ?? []).filter((w) => w.status === "pending").reduce((acc, w) => acc + w.amount, 0),
+    [withdrawals]
+  );
+  const available = Math.max(0, balance - pendingWithdrawTotal);
+
+  const openWithdraw = () => {
+    setWAmount("");
+    setWDestination("");
+    setWHolder(user?.displayName ?? "");
+    setWMethod("yape");
+    setWDone(false);
+    setShowWithdraw(true);
+  };
+
+  const handleWithdraw = async () => {
+    const amount = parseFloat(wAmount);
+    if (!firestore || !user) return;
+    if (!amount || amount <= 0) return;
+    if (amount > available) {
+      toast({ title: "Saldo insuficiente", description: `Disponible: S/${available.toFixed(2)}`, variant: "destructive" });
+      return;
+    }
+    if (!wDestination.trim() || !wHolder.trim()) return;
+    setWLoading(true);
+    try {
+      const id = doc(collection(firestore, "withdrawals")).id;
+      await setDoc(doc(firestore, "withdrawals", id), {
+        id,
+        userId: user.uid,
+        amount,
+        currency: "PEN",
+        method: wMethod,
+        destination: wDestination.trim(),
+        holderName: wHolder.trim(),
+        status: "pending",
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      });
+      setWDone(true);
+    } catch {
+      toast({ title: "Error", description: "No se pudo registrar el retiro.", variant: "destructive" });
+    } finally {
+      setWLoading(false);
+    }
+  };
 
   const openDialog = () => {
     setStep("amount");
@@ -132,7 +197,7 @@ export default function BilleteraPage() {
               <Plus className="h-3 w-3" /> Recargar
             </button>
             <button
-              onClick={() => toast({ title: "Próximamente", description: "Los retiros estarán disponibles pronto." })}
+              onClick={openWithdraw}
               className="flex-1 bg-white/10 text-white rounded-xl h-9 text-[11px] font-bold flex items-center justify-center gap-2 backdrop-blur-md border border-white/10 active:scale-95 transition-all"
             >
               <ArrowUpRight className="h-3 w-3" /> Retirar
@@ -341,6 +406,89 @@ export default function BilleteraPage() {
                 <p className="text-[10px] text-on-surface/50 text-left">Tiempo de validación: <span className="font-bold text-on-surface">2 a 12 horas hábiles</span></p>
               </div>
               <Button className="w-full h-10 rounded-2xl text-[11px] font-bold" onClick={() => setShowDialog(false)}>
+                Entendido
+              </Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog retiro */}
+      <Dialog open={showWithdraw} onOpenChange={() => setShowWithdraw(false)}>
+        <DialogContent className="glass-card rounded-[2.5rem] max-w-[320px] p-6 border-white/20">
+          {!wDone ? (
+            <div className="space-y-4">
+              <DialogHeader className="space-y-1">
+                <DialogTitle className="text-sm font-bold text-center">Retirar saldo</DialogTitle>
+                <DialogDescription className="text-center text-[10px] opacity-40">
+                  Disponible: S/{available.toFixed(2)}
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="text-center">
+                <div className="flex items-center justify-center gap-1">
+                  <span className="text-2xl font-black text-on-surface/30">S/</span>
+                  <input
+                    type="number"
+                    placeholder="0.00"
+                    value={wAmount}
+                    onChange={(e) => setWAmount(e.target.value)}
+                    className="glass-input w-28 h-12 text-2xl font-black text-primary text-center tracking-tighter border-none bg-transparent outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Método */}
+              <div className="grid grid-cols-2 gap-2">
+                {(["yape", "transfer"] as WithdrawalMethod[]).map((m) => (
+                  <button
+                    key={m}
+                    onClick={() => setWMethod(m)}
+                    className={cn(
+                      "py-2 rounded-xl text-[11px] font-black uppercase tracking-widest border transition-all",
+                      wMethod === m ? "bg-primary text-white border-primary" : "bg-white/20 text-on-surface/50 border-white/30"
+                    )}
+                  >
+                    {m === "yape" ? "Yape" : "Transferencia"}
+                  </button>
+                ))}
+              </div>
+
+              <input
+                type="text"
+                placeholder={wMethod === "yape" ? "Número de Yape" : "N° de cuenta o CCI"}
+                value={wDestination}
+                onChange={(e) => setWDestination(e.target.value)}
+                className="glass-input w-full h-11 text-sm font-bold px-4"
+              />
+              <input
+                type="text"
+                placeholder="Nombre del titular"
+                value={wHolder}
+                onChange={(e) => setWHolder(e.target.value)}
+                className="glass-input w-full h-11 text-sm font-bold px-4"
+              />
+
+              <Button
+                className="w-full h-10 rounded-2xl text-[11px] font-bold"
+                onClick={handleWithdraw}
+                disabled={wLoading || !wAmount || parseFloat(wAmount) <= 0 || !wDestination.trim() || !wHolder.trim()}
+              >
+                {wLoading ? "Enviando..." : "Solicitar retiro"}
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-4 text-center">
+              <div className="w-14 h-14 bg-success/10 rounded-full flex items-center justify-center mx-auto">
+                <CheckCircle2 className="h-7 w-7 text-success" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-sm font-bold">¡Solicitud enviada!</h3>
+                <p className="text-[10px] text-on-surface/40 leading-relaxed">
+                  Procesaremos tu retiro y te pagaremos a la brevedad. El monto queda reservado de tu saldo disponible.
+                </p>
+              </div>
+              <Button className="w-full h-10 rounded-2xl text-[11px] font-bold" onClick={() => setShowWithdraw(false)}>
                 Entendido
               </Button>
             </div>

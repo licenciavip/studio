@@ -1,13 +1,13 @@
-export type CategorySlug = 
-  | 'streaming' 
-  | 'musica' 
-  | 'ia' 
-  | 'gaming' 
-  | 'educacion' 
-  | 'diseno' 
-  | 'seguridad' 
-  | 'deportes' 
-  | 'bienestar' 
+export type CategorySlug =
+  | 'streaming'
+  | 'musica'
+  | 'ia'
+  | 'gaming'
+  | 'educacion'
+  | 'diseno'
+  | 'seguridad'
+  | 'deportes'
+  | 'bienestar'
   | 'software';
 
 export type Subscription = {
@@ -60,6 +60,30 @@ export interface Wallet {
   userId: string;
   balance: number;
   currency: string;
+  updatedAt: any;
+}
+
+/** Estado de una solicitud de retiro. */
+export type WithdrawalStatus = 'pending' | 'paid' | 'rejected';
+
+/** Método de pago del retiro. */
+export type WithdrawalMethod = 'yape' | 'transfer';
+
+export interface Withdrawal {
+  id: string;
+  userId: string;
+  amount: number;
+  currency: string;
+  method: WithdrawalMethod;
+  /** Número de Yape o número de cuenta destino. */
+  destination: string;
+  /** Nombre del titular de la cuenta/Yape. */
+  holderName: string;
+  status: WithdrawalStatus;
+  rejectedReason?: string;
+  reviewedBy?: string;
+  reviewedAt?: any;
+  createdAt: any;
   updatedAt: any;
 }
 

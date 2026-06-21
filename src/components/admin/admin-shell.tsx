@@ -8,7 +8,7 @@ import { signOut } from "firebase/auth";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard, Users, Wallet, BadgeCheck, Layers,
-  Boxes, BarChart3, ScrollText, Settings, LogOut, Menu, X, ShieldCheck
+  Boxes, BarChart3, ScrollText, Settings, LogOut, Menu, X, ShieldCheck, Send
 } from "lucide-react";
 
 interface NavItem {
@@ -21,6 +21,7 @@ const NAV: NavItem[] = [
   { href: "/admin", label: "Resumen", Icon: LayoutDashboard },
   { href: "/admin/usuarios", label: "Usuarios", Icon: Users },
   { href: "/admin/recargas", label: "Recargas pendientes", Icon: Wallet },
+  { href: "/admin/retiros", label: "Retiros", Icon: Send },
   { href: "/admin/pagos", label: "Pagos", Icon: BadgeCheck },
   { href: "/admin/suscripciones", label: "Suscripciones", Icon: Layers },
   { href: "/admin/servicios", label: "Servicios", Icon: Boxes },

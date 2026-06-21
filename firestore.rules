@@ -44,6 +44,16 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // Solicitudes de retiro: el usuario crea las suyas; el admin las gestiona.
+    // El usuario no puede cambiar el estado ni el monto una vez creada.
+    match /withdrawals/{id} {
+      allow read: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
+      allow create: if isSignedIn()
+        && isOwner(request.resource.data.userId)
+        && request.resource.data.status == 'pending';
+      allow update, delete: if isAdmin();
+    }
+
     match /serviceRecommendations/{id} {
       allow create: if isSignedIn();
       allow read: if isAdmin();
