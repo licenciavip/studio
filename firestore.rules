@@ -1,40 +1,60 @@
-
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Helper functions
-    function isAuthenticated() {
+
+    function isSignedIn() {
       return request.auth != null;
     }
+
     function isOwner(userId) {
-      return request.auth.uid == userId;
-    }
-    function isAdmin() {
-      return isAuthenticated() && exists(/databases/$(database)/documents/users/$(request.auth.uid)) && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      return isSignedIn() && request.auth.uid == userId;
     }
 
+    // Autorización REAL de admin: custom claim del token de Firebase Auth.
+    // NO depende de ningún campo editable de Firestore.
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.admin == true;
+    }
+
+    // El usuario gestiona su propio documento, pero NO puede tocar campos
+    // sensibles como `role` para auto-promoverse (la autorización real es la
+    // custom claim, pero igual blindamos el documento).
     match /users/{userId} {
-      allow read: if isAuthenticated();
-      allow write: if isOwner(userId);
+      allow read: if isSignedIn();
+      allow create: if isOwner(userId)
+        && (!('role' in request.resource.data) || request.resource.data.role == 'user');
+      allow update: if (isOwner(userId)
+                        && request.resource.data.role == resource.data.role)
+                    || isAdmin();
+      allow delete: if isAdmin();
     }
 
     match /paymentOrders/{orderId} {
-      allow read: if isAuthenticated() && (isOwner(resource.data.userId) || isAdmin());
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated() && (
-        (isOwner(resource.data.userId) && resource.data.status in ['pending', 'uploaded']) || 
-        isAdmin()
-      );
+      allow read: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
+      allow create: if isSignedIn();
+      allow update: if (isOwner(resource.data.userId)
+                        && resource.data.status in ['pending', 'uploaded'])
+                    || isAdmin();
+      allow delete: if isAdmin();
     }
 
     match /wallets/{userId} {
-      allow read: if isAuthenticated() && (isOwner(userId) || isAdmin());
+      allow read: if isOwner(userId) || isAdmin();
+      // Solo el backend admin ajusta saldos.
       allow write: if isAdmin();
     }
 
     match /serviceRecommendations/{id} {
-      allow create: if isAuthenticated();
+      allow create: if isSignedIn();
       allow read: if isAdmin();
+    }
+
+    // Registro de acciones administrativas: inmutable desde el cliente.
+    // Solo un admin puede crear; nadie puede actualizar ni borrar.
+    match /adminLogs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isAdmin();
+      allow update, delete: if false;
     }
   }
 }
