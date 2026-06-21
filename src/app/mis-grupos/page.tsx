@@ -14,21 +14,39 @@ export default function MisGruposPage() {
   const firestore = useFirestore();
   const [activeTab, setActiveTab] = useState<"Active" | "Pending">("Active");
 
-  const groupsQuery = useMemo(
+  const hostedQuery = useMemo(
     () => (firestore && user ? query(collection(firestore, "groups"), where("hostId", "==", user.uid)) : null),
     [firestore, user]
   );
-  const { data: groups, loading } = useCollection<GroupDoc>(groupsQuery);
+  const { data: hosted, loading: l1 } = useCollection<GroupDoc>(hostedQuery);
 
-  const displayGroups = (groups ?? []).filter((g) =>
-    activeTab === "Active" ? g.approval === "approved" : g.approval !== "approved"
+  const memberQuery = useMemo(
+    () => (firestore && user ? query(collection(firestore, "groups"), where("memberIds", "array-contains", user.uid)) : null),
+    [firestore, user]
+  );
+  const { data: member, loading: l2 } = useCollection<GroupDoc>(memberQuery);
+
+  const loading = l1 || l2;
+
+  // Combina hosted + member, marcando el rol. (No se solapan: no te unes a tu propio grupo.)
+  const all = useMemo(() => {
+    const list: Array<GroupDoc & { role: "Anfitrión" | "Miembro" }> = [];
+    for (const g of hosted ?? []) list.push({ ...g, role: "Anfitrión" });
+    for (const g of member ?? []) list.push({ ...g, role: "Miembro" });
+    return list;
+  }, [hosted, member]);
+
+  const displayGroups = all.filter((g) =>
+    activeTab === "Active"
+      ? g.role === "Miembro" || g.approval === "approved"
+      : g.role === "Anfitrión" && g.approval !== "approved"
   );
 
   return (
     <div className="pb-32 pt-2 space-y-6">
       <div className="px-1 space-y-0.5">
         <h2 className="text-xl font-extrabold text-on-surface tracking-tight">Mis Grupos</h2>
-        <p className="text-[10px] font-bold text-on-surface-variant/40 uppercase tracking-widest">Suscripciones que publicaste</p>
+        <p className="text-[10px] font-bold text-on-surface-variant/40 uppercase tracking-widest">Suscripciones que publicaste o a las que te uniste</p>
       </div>
 
       <div className="p-1 bg-white/30 backdrop-blur-3xl border border-white/40 rounded-2xl flex shadow-sm">
@@ -54,13 +72,13 @@ export default function MisGruposPage() {
                   <div className="space-y-0.5">
                     <h3 className="font-bold text-sm text-on-surface tracking-tight">{group.serviceName}</h3>
                     <div className="flex items-center gap-2">
-                      {group.approval === "pending" && (
+                      {group.role === "Miembro" ? (
+                        <span className="text-[7px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-md bg-secondary/10 text-secondary">Miembro</span>
+                      ) : group.approval === "pending" ? (
                         <span className="text-[7px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-md bg-warning/10 text-warning">En revisión</span>
-                      )}
-                      {group.approval === "rejected" && (
+                      ) : group.approval === "rejected" ? (
                         <span className="text-[7px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-md bg-danger/10 text-danger">Rechazado</span>
-                      )}
-                      {group.approval === "approved" && (
+                      ) : (
                         <span className="text-[7px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-md bg-primary/10 text-primary">Anfitrión</span>
                       )}
                       <div className="flex items-center gap-1 text-[8px] font-bold text-on-surface-variant/40 uppercase">
@@ -70,13 +88,7 @@ export default function MisGruposPage() {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="text-right">
-                    <p className="text-[8px] font-black text-on-surface-variant/30 uppercase tracking-widest">Ganancia</p>
-                    <p className="text-[11px] font-bold text-on-surface">S/{group.hostEarning.toFixed(2)}</p>
-                  </div>
-                  <ChevronRight className="h-4 w-4 text-on-surface-variant/20 group-hover:text-primary transition-colors" />
-                </div>
+                <ChevronRight className="h-4 w-4 text-on-surface-variant/20 group-hover:text-primary transition-colors" />
               </Link>
             ))}
           </div>
@@ -84,7 +96,7 @@ export default function MisGruposPage() {
           <div className="text-center py-16 glass-card rounded-[2.5rem] border-dashed border-primary/10">
             <p className="text-on-surface-variant/40 text-[10px] font-black uppercase tracking-widest">Sin grupos {activeTab === "Active" ? "activos" : "pendientes"}</p>
             <Button asChild variant="link" className="mt-2 text-primary text-[11px] font-bold uppercase tracking-tight">
-              <Link href="/compartir">Publicar suscripción</Link>
+              <Link href="/explorar">Explorar cupos</Link>
             </Button>
           </div>
         ) : null}
