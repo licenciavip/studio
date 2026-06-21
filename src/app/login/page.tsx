@@ -1,19 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useAuth, useFirestore } from "@/firebase";
+import { useAuth, useFirestore, useUser } from "@/firebase";
 import {
+  User,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
+
+/**
+ * Decide el destino tras autenticarse leyendo la custom claim `admin` del token.
+ * Se fuerza el refresco del token para tomar claims recién asignadas.
+ */
+async function resolveDestination(user: User): Promise<"/admin" | "/inicio"> {
+  try {
+    const tokenResult = await user.getIdTokenResult(true);
+    return tokenResult.claims.admin === true ? "/admin" : "/inicio";
+  } catch {
+    return "/inicio";
+  }
+}
 
 const authErrorMessages: Record<string, string> = {
   "auth/invalid-email": "El correo no es válido.",
@@ -37,6 +51,7 @@ export default function LoginPage() {
   const { toast } = useToast();
   const auth = useAuth();
   const firestore = useFirestore();
+  const { user, loading, isAdmin } = useUser();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -48,13 +63,20 @@ export default function LoginPage() {
   const [nombre, setNombre] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
 
+  // Si ya hay sesión activa al abrir /login, redirige según el rol.
+  useEffect(() => {
+    if (loading || !user) return;
+    router.replace(isAdmin ? "/admin" : "/inicio");
+  }, [loading, user, isAdmin, router]);
+
   const handleLogin = async () => {
     if (!email || !password) return;
     setIsLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, email.trim(), password);
+      const cred = await signInWithEmailAndPassword(auth, email.trim(), password);
+      const dest = await resolveDestination(cred.user);
       toast({ title: "¡Bienvenido!", description: "Sesión iniciada correctamente." });
-      router.push("/inicio");
+      router.replace(dest);
     } catch (e) {
       toast({ title: "Error", description: mapAuthError(e), variant: "destructive" });
     } finally {
@@ -81,7 +103,8 @@ export default function LoginPage() {
         createdAt: serverTimestamp(),
       });
       toast({ title: "¡Cuenta creada!", description: "Bienvenido a Poolera." });
-      router.push("/inicio");
+      // Una cuenta recién creada nunca es admin → entorno de usuario.
+      router.replace("/inicio");
     } catch (e) {
       toast({ title: "Error", description: mapAuthError(e), variant: "destructive" });
     } finally {
