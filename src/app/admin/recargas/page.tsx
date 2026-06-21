@@ -41,7 +41,7 @@ export default function AdminRecargasPage() {
                 <p className="text-[11px] text-white/40">N° op: {r.operationNumber || "—"}</p>
               </div>
               <div className="flex items-center gap-3">
-                <p className="text-sm font-bold text-white">${r.amountExpected.toFixed(2)}</p>
+                <p className="text-sm font-bold text-white">S/{r.amountExpected.toFixed(2)}</p>
                 <ArrowRight className="h-4 w-4 text-white/30" />
               </div>
             </AdminCard>
