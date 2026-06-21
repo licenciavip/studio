@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useUser } from "@/firebase";
 
 // Rutas accesibles sin iniciar sesión
-const PUBLIC_PATHS = ["/login"];
+const PUBLIC_PATHS = ["/", "/login"];
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const { user, loading } = useUser();
@@ -20,11 +20,11 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     if (!user && !isPublic) {
       router.replace("/login");
     }
-    // Con sesión y en login → al inicio
-    if (user && isPublic) {
-      router.replace("/");
+    // Con sesión en la pantalla de login → al inicio de la app
+    if (user && pathname === "/login") {
+      router.replace("/inicio");
     }
-  }, [user, loading, isPublic, router]);
+  }, [user, loading, isPublic, pathname, router]);
 
   // Mientras carga el estado de auth, o mientras se va a redirigir, no mostramos nada
   if (loading) {
@@ -35,7 +35,6 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     );
   }
   if (!user && !isPublic) return null;
-  if (user && isPublic) return null;
 
   return <>{children}</>;
 }
