@@ -182,7 +182,7 @@ export default function InicioPage() {
               const isLight = service.color?.toLowerCase() === "#ffffff";
               const bg = isLight ? undefined : (service.color || "#4343d5");
               return (
-                <Link key={service.id} href={`/explorar/all/${service.id}`} className="no-underline">
+                <Link key={service.id} href="/explorar" className="no-underline">
                   <div
                     className={`relative flex aspect-square flex-col justify-between overflow-hidden rounded-2xl p-3 transition-transform active:scale-95 ${
                       isLight ? "glass-card" : "shadow-lg shadow-black/10"
