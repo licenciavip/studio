@@ -54,6 +54,13 @@ service cloud.firestore {
       allow update, delete: if isAdmin();
     }
 
+    // Cuentas de retiro registradas por el usuario.
+    match /withdrawalAccounts/{id} {
+      allow read: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
+      allow create: if isSignedIn() && isOwner(request.resource.data.userId);
+      allow update, delete: if isOwner(resource.data.userId) || isAdmin();
+    }
+
     match /serviceRecommendations/{id} {
       allow create: if isSignedIn();
       allow read: if isAdmin();
