@@ -133,7 +133,7 @@ export default function AdminPaymentsPage() {
                   <p className="text-[11px] uppercase tracking-wide text-white/40">{payment.type}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-bold text-white">${payment.amountExpected.toFixed(2)}</p>
+                  <p className="text-sm font-bold text-white">S/{payment.amountExpected.toFixed(2)}</p>
                   <span className={cn("inline-block rounded-full px-2 py-0.5 text-[9px] font-black uppercase tracking-widest", cfg?.badge)}>
                     {cfg?.label || payment.status}
                   </span>
@@ -152,11 +152,11 @@ export default function AdminPaymentsPage() {
             <div className="grid grid-cols-2 gap-3">
               <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
                 <p className="text-[9px] font-black uppercase text-white/40">Esperado</p>
-                <p className="text-lg font-bold">${selectedOrder?.amountExpected.toFixed(2)}</p>
+                <p className="text-lg font-bold">S/{selectedOrder?.amountExpected.toFixed(2)}</p>
               </div>
               <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
                 <p className="text-[9px] font-black uppercase text-white/40">Pagado</p>
-                <p className="text-lg font-bold text-success">${selectedOrder?.amountPaid?.toFixed(2) || "0.00"}</p>
+                <p className="text-lg font-bold text-success">S/{selectedOrder?.amountPaid?.toFixed(2) || "0.00"}</p>
               </div>
             </div>
             {selectedOrder?.operationNumber && (
