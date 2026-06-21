@@ -54,7 +54,7 @@ export default function LoginPage() {
     try {
       await signInWithEmailAndPassword(auth, email.trim(), password);
       toast({ title: "¡Bienvenido!", description: "Sesión iniciada correctamente." });
-      router.push("/");
+      router.push("/inicio");
     } catch (e) {
       toast({ title: "Error", description: mapAuthError(e), variant: "destructive" });
     } finally {
@@ -81,7 +81,7 @@ export default function LoginPage() {
         createdAt: serverTimestamp(),
       });
       toast({ title: "¡Cuenta creada!", description: "Bienvenido a Poolera." });
-      router.push("/");
+      router.push("/inicio");
     } catch (e) {
       toast({ title: "Error", description: mapAuthError(e), variant: "destructive" });
     } finally {
