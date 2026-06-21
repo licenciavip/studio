@@ -1,228 +1,202 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import { servicesByCategory, groups } from "@/lib/data";
-import { useToast } from "@/hooks/use-toast";
+import { servicesByCategory } from "@/lib/data";
 import {
-  ChevronRight, Plus, Sparkles, Zap,
-  TrendingDown, TrendingUp, Search
+  Layers, Sparkles, ShieldCheck, Wallet, Users,
+  ArrowRight, Check, TrendingDown
 } from "lucide-react";
-import type { CategorySlug, Service } from "@/lib/types";
-import { useUser } from "@/firebase";
 
-const categoryLabels: Record<string, string> = {
-  ia: "IA & Herramientas",
-};
-
-const NOVEDADES = [
+const PASOS = [
   {
-    id: 1,
-    title: "IA Pro Ilimitada",
-    desc: "Claude 3.5 Sonnet disponible",
-    icon: Sparkles,
-    accent: "#5E5CE6",
+    icon: Users,
+    title: "Únete a un grupo",
+    desc: "Elige el servicio de IA que quieres y entra a un cupo disponible.",
   },
   {
-    id: 2,
-    title: "Pagos Rápidos",
-    desc: "Validación BCP < 30 min",
-    icon: Zap,
-    accent: "#FF9F0A",
+    icon: Wallet,
+    title: "Paga solo tu parte",
+    desc: "Transferencia simple por Yape o banco. Validamos tu pago rápido.",
+  },
+  {
+    icon: Sparkles,
+    title: "Disfruta premium",
+    desc: "Accede a ChatGPT, Claude o Gemini Pro a una fracción del precio.",
   },
 ];
 
-export default function Home() {
-  const [recommendation, setRecommendation] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
-  const { user } = useUser();
-
-  const groupedServices = useMemo(() =>
-    Object.fromEntries(
-      Object.entries(servicesByCategory).filter(([_, s]) => s.length > 0)
-    ) as Record<CategorySlug, Service[]>,
-  []);
-
-  const handleRecommend = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && recommendation.trim()) {
-      setIsSubmitting(true);
-      setTimeout(() => {
-        toast({ title: "¡Gracias!", description: "Sugerencia recibida." });
-        setRecommendation("");
-        setIsSubmitting(false);
-      }, 600);
-    }
-  };
+export default function LandingPage() {
+  const servicios = servicesByCategory.ia ?? [];
 
   return (
-    <div className="space-y-5 sm:space-y-6">
+    <div className="mx-auto w-full max-w-[var(--content-max-width)] px-4 sm:px-6 pb-16">
 
-      {/* ── Hero card — propuesta de valor ── */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#5E5CE6] to-primary p-5 sm:p-6 shadow-[0_8px_32px_rgba(10,132,255,0.28),inset_0_1px_0_rgba(255,255,255,0.20)]">
-        {/* Glare */}
-        <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.14)_0%,transparent_70%)]" />
-
-        <p className="mb-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.08em] text-white/55">
-          Poolera Digital
-        </p>
-        <h1 className="mb-1.5 text-xl sm:text-2xl font-extrabold leading-tight tracking-tighter text-white">
-          Accede a IA premium<br />pagando solo tu parte
-        </h1>
-        <p className="mb-4 text-xs sm:text-sm font-medium leading-relaxed text-white/70">
-          Comparte o compra cupos de ChatGPT, Claude, Gemini y más. Hasta <strong className="text-white">70% más barato</strong>.
-        </p>
-
-        <div className="flex gap-2">
-          <Link href="/explorar" className="flex-1 no-underline">
-            <div className="flex h-10 items-center justify-center gap-1.5 rounded-full bg-white/95 text-xs sm:text-sm font-bold text-primary shadow-md transition-transform active:scale-95">
-              <TrendingDown className="h-3.5 w-3.5" /> Explorar cupos
-            </div>
-          </Link>
-          <Link href="/login" className="flex-1 no-underline">
-            <div className="flex h-10 items-center justify-center gap-1.5 rounded-full border border-white/35 bg-white/[0.18] text-xs sm:text-sm font-bold text-white/90 transition-transform active:scale-95">
-              <TrendingUp className="h-3.5 w-3.5" /> Compartir
-            </div>
-          </Link>
-        </div>
-      </section>
-
-      {/* ── Saludo + acción principal ── */}
-      <section className="flex flex-col gap-3">
-        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tighter text-on-surface">
-          Hola{user?.displayName ? `, ${user.displayName.split(" ")[0]}` : ""} 👋
-        </h2>
-        <Link href="/compartir" className="no-underline">
-          <div className="flex h-12 items-center justify-center gap-2 rounded-2xl bg-primary shadow-[0_4px_18px_rgba(10,132,255,0.35),inset_0_1px_0_rgba(255,255,255,0.20)] transition-transform active:scale-[0.98]">
-            <Plus className="h-4 w-4 text-white" strokeWidth={2.5} />
-            <span className="text-sm font-bold tracking-tight text-white">
-              Compartir suscripción
-            </span>
+      {/* ── Top bar ── */}
+      <header className="flex items-center justify-between pt-[calc(1rem+env(safe-area-inset-top))] pb-4">
+        <div className="flex items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[#5E5CE6] to-primary shadow-[0_2px_8px_rgba(10,132,255,0.35),inset_0_1px_0_rgba(255,255,255,0.30)]">
+            <Layers className="h-4 w-4 text-white" strokeWidth={2} />
           </div>
-        </Link>
-      </section>
-
-      {/* ── Grupos activos ── */}
-      <section className="flex flex-col gap-2">
-        <div className="flex items-center justify-between px-0.5">
-          <span className="text-[11px] font-bold uppercase tracking-[0.04em] text-on-surface/40">
-            Activos
-          </span>
-          <Link href="/mis-grupos" className="text-[11px] font-bold text-primary no-underline">
-            Ver todo
-          </Link>
+          <span className="text-base font-extrabold tracking-tighter text-on-surface">Poolera</span>
         </div>
+        <Link
+          href="/login"
+          className="flex h-9 items-center rounded-full px-4 text-xs font-bold text-primary no-underline transition-colors hover:bg-primary/10"
+        >
+          Iniciar sesión
+        </Link>
+      </header>
 
-        {groups.slice(0, 1).map((group) => (
-          <Link key={group.id} href={`/mis-grupos/${group.id}`} className="no-underline">
-            <div className="glass-card flex items-center justify-between rounded-2xl px-3.5 py-3 transition-transform active:scale-[0.98]">
-              <div className="flex items-center gap-2.5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10">
-                  <Sparkles className="h-4 w-4 text-primary" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold tracking-tight text-on-surface">
-                    {group.service}
-                  </p>
-                  <p className="mt-0.5 text-[11px] font-medium text-on-surface/40">
-                    {group.slots.filled}/{group.slots.total} cupos
-                  </p>
-                </div>
+      {/* ── Hero ── */}
+      <section className="relative mt-2 overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#5E5CE6] to-primary p-7 sm:p-9 shadow-[0_12px_40px_rgba(10,132,255,0.30),inset_0_1px_0_rgba(255,255,255,0.20)]">
+        <div className="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.16)_0%,transparent_70%)]" />
+        <div className="relative z-10">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.06em] text-white/90 backdrop-blur">
+            <TrendingDown className="h-3 w-3" /> Hasta 70% más barato
+          </span>
+          <h1 className="mt-4 text-[28px] sm:text-4xl font-extrabold leading-[1.1] tracking-tighter text-white">
+            Accede a IA premium pagando solo tu parte
+          </h1>
+          <p className="mt-3 text-sm sm:text-base font-medium leading-relaxed text-white/75">
+            Comparte cupos de ChatGPT, Claude, Gemini y más con otras personas. De forma simple, segura y al mejor precio.
+          </p>
+
+          <div className="mt-6 flex flex-col gap-2.5 sm:flex-row">
+            <Link href="/login" className="flex-1 no-underline">
+              <div className="flex h-12 items-center justify-center gap-2 rounded-full bg-white text-sm font-bold text-primary shadow-lg transition-transform active:scale-95">
+                Crear cuenta gratis <ArrowRight className="h-4 w-4" />
               </div>
-              <ChevronRight className="h-3.5 w-3.5 text-on-surface/25" />
-            </div>
-          </Link>
-        ))}
+            </Link>
+            <Link href="/login" className="flex-1 no-underline">
+              <div className="flex h-12 items-center justify-center rounded-full border border-white/35 bg-white/[0.12] text-sm font-bold text-white transition-transform active:scale-95">
+                Ya tengo cuenta
+              </div>
+            </Link>
+          </div>
+        </div>
       </section>
 
-      {/* ── Novedades ── */}
-      <section className="flex flex-col gap-2">
-        <span className="px-0.5 text-[11px] font-bold uppercase tracking-[0.04em] text-on-surface/40">
-          Novedades
-        </span>
-        <div className="no-scrollbar flex gap-2 overflow-x-auto pb-0.5 sm:grid sm:grid-cols-2 sm:overflow-visible">
-          {NOVEDADES.map(({ id, title, desc, icon: Icon, accent }) => (
-            <div key={id} className="glass-card flex min-w-[160px] flex-col gap-2 rounded-2xl p-3.5 sm:min-w-0">
-              <div
-                className="flex h-8 w-8 items-center justify-center rounded-lg"
-                style={{ background: `${accent}14` }}
-              >
-                <Icon className="h-4 w-4" style={{ color: accent }} />
+      {/* ── Servicios disponibles con precio ── */}
+      <section className="mt-10">
+        <h2 className="text-xl sm:text-2xl font-extrabold tracking-tighter text-on-surface">
+          Únete desde S/16.90 al mes
+        </h2>
+        <p className="mt-1 text-sm text-on-surface/50">
+          Estos son algunos de los servicios que puedes compartir hoy.
+        </p>
+
+        <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-2">
+          {servicios.map((service) => {
+            const bg = service.color || "#4343d5";
+            return (
+              <Link key={service.id} href="/login" className="no-underline">
+                <div
+                  className="relative flex flex-col justify-between overflow-hidden rounded-2xl p-4 transition-transform active:scale-95 shadow-lg shadow-black/10"
+                  style={{ background: bg, minHeight: 130 }}
+                >
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/[0.14] to-transparent" />
+                  <div className="relative z-10">
+                    <p className="text-sm font-extrabold leading-tight tracking-tight text-white">
+                      {service.name}
+                    </p>
+                    <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-[0.03em] text-white/60">
+                      {service.planName || "PRO"}
+                    </p>
+                  </div>
+                  <div className="relative z-10">
+                    {service.discount && (
+                      <span className="inline-block rounded-md bg-white/20 px-1.5 py-0.5 text-[9px] font-black text-white">
+                        {service.discount}
+                      </span>
+                    )}
+                    <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.03em] text-white/60">Únete desde</p>
+                    <p className="text-lg font-extrabold tracking-tighter text-white">
+                      S/{service.pricePerMonth}
+                      <span className="text-[10px] font-semibold text-white/60"> /mes</span>
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* ── Cómo funciona ── */}
+      <section className="mt-12">
+        <h2 className="text-xl sm:text-2xl font-extrabold tracking-tighter text-on-surface">
+          ¿Cómo funciona?
+        </h2>
+        <div className="mt-5 flex flex-col gap-3">
+          {PASOS.map(({ icon: Icon, title, desc }, i) => (
+            <div key={i} className="glass-card flex items-start gap-4 rounded-2xl p-4">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <Icon className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-xs sm:text-sm font-bold tracking-tight text-on-surface">{title}</p>
-                <p className="mt-0.5 text-[11px] leading-snug text-on-surface/45">{desc}</p>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-black text-primary/50">0{i + 1}</span>
+                  <p className="text-sm font-bold tracking-tight text-on-surface">{title}</p>
+                </div>
+                <p className="mt-0.5 text-[13px] leading-snug text-on-surface/55">{desc}</p>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ── Grid de servicios ── */}
-      {Object.entries(groupedServices).map(([slug, services]) => (
-        <section key={slug} className="flex flex-col gap-2">
-          <span className="px-0.5 text-[11px] font-bold uppercase tracking-[0.04em] text-on-surface/40">
-            {categoryLabels[slug] || slug}
-          </span>
-          <div className="grid grid-cols-2 gap-2 xs:grid-cols-3 sm:grid-cols-4 sm:gap-3">
-            {services.map((service) => {
-              const isLight = service.color?.toLowerCase() === "#ffffff";
-              const bg = isLight ? undefined : (service.color || "#4343d5");
-              return (
-                <Link key={service.id} href={`/explorar/all/${service.id}`} className="no-underline">
-                  <div
-                    className={`relative flex aspect-square flex-col justify-between overflow-hidden rounded-2xl p-3 transition-transform active:scale-95 ${
-                      isLight ? "glass-card" : "shadow-lg shadow-black/10"
-                    }`}
-                    style={bg ? { background: bg } : undefined}
-                  >
-                    {!isLight && (
-                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/[0.12] to-transparent" />
-                    )}
-                    <div className="relative z-10">
-                      <p className={`text-xs sm:text-sm font-extrabold leading-tight tracking-tight ${isLight ? "text-on-surface" : "text-white/95"}`}>
-                        {service.name}
-                      </p>
-                      <p className={`mt-0.5 text-[9px] font-semibold uppercase tracking-[0.03em] ${isLight ? "text-on-surface/40" : "text-white/55"}`}>
-                        {service.planName || "PRO"}
-                      </p>
-                    </div>
-                    <div className="relative z-10">
-                      <p className={`text-[9px] font-bold uppercase tracking-[0.03em] ${isLight ? "text-on-surface/40" : "text-white/55"}`}>
-                        Desde
-                      </p>
-                      <p className={`text-sm sm:text-base font-extrabold tracking-tight ${isLight ? "text-on-surface" : "text-white/95"}`}>
-                        S/{service.pricePerMonth}
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
+      {/* ── Confianza ── */}
+      <section className="mt-12">
+        <div className="glass-card rounded-[1.8rem] p-6">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-success/10 text-success">
+            <ShieldCheck className="h-6 w-6" />
           </div>
-        </section>
-      ))}
-
-      {/* ── Sugerencias ── */}
-      <section className="glass-card mb-2 rounded-3xl p-5 text-center">
-        <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.04em] text-on-surface/35">
-          Propón una IA
-        </p>
-        <p className="mb-3 text-xs sm:text-sm text-on-surface/50">
-          ¿No encuentras lo que buscas?
-        </p>
-        <div className="relative mx-auto max-w-[220px]">
-          <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-on-surface/30" />
-          <input
-            className="glass-input h-9 w-full pl-8 text-left text-xs sm:text-sm"
-            placeholder="Ej: Midjourney..."
-            value={recommendation}
-            onChange={(e) => setRecommendation(e.target.value)}
-            onKeyDown={handleRecommend}
-            disabled={isSubmitting}
-          />
+          <h3 className="mt-4 text-lg font-extrabold tracking-tight text-on-surface">
+            Pagos protegidos
+          </h3>
+          <p className="mt-1 text-sm leading-relaxed text-on-surface/55">
+            Tu dinero queda retenido hasta confirmar que el servicio funciona. Si algo falla, abres una disputa y te devolvemos tu parte.
+          </p>
+          <ul className="mt-4 flex flex-col gap-2">
+            {["Validación de pagos rápida", "Saldo en billetera propia", "Soporte y disputas"].map((t) => (
+              <li key={t} className="flex items-center gap-2 text-[13px] font-medium text-on-surface/70">
+                <Check className="h-4 w-4 text-success" /> {t}
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
+
+      {/* ── CTA final ── */}
+      <section className="mt-12">
+        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#5E5CE6] to-primary p-8 text-center shadow-[0_12px_40px_rgba(10,132,255,0.30)]">
+          <div className="pointer-events-none absolute -left-10 -bottom-10 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.14)_0%,transparent_70%)]" />
+          <div className="relative z-10">
+            <h2 className="text-2xl font-extrabold tracking-tighter text-white">
+              Empieza a ahorrar hoy
+            </h2>
+            <p className="mt-2 text-sm text-white/75">
+              Crea tu cuenta gratis y únete a tu primer grupo en minutos.
+            </p>
+            <Link href="/login" className="mt-5 inline-block no-underline">
+              <div className="flex h-12 items-center justify-center gap-2 rounded-full bg-white px-8 text-sm font-bold text-primary shadow-lg transition-transform active:scale-95">
+                Crear cuenta gratis <ArrowRight className="h-4 w-4" />
+              </div>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Footer ── */}
+      <footer className="mt-12 flex flex-col items-center gap-2 text-center">
+        <div className="flex items-center gap-1.5 opacity-50">
+          <Layers className="h-3.5 w-3.5 text-on-surface" />
+          <span className="text-xs font-bold tracking-tight text-on-surface">Poolera</span>
+        </div>
+        <p className="text-[11px] text-on-surface/40">
+          Suscripciones compartidas · Hecho en Perú 🇵🇪
+        </p>
+      </footer>
     </div>
   );
 }
