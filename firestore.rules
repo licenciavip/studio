@@ -61,6 +61,15 @@ service cloud.firestore {
       allow update, delete: if isOwner(resource.data.userId) || isAdmin();
     }
 
+    // Disputas: el usuario abre las suyas; solo el admin las resuelve.
+    match /disputes/{id} {
+      allow read: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
+      allow create: if isSignedIn()
+        && isOwner(request.resource.data.userId)
+        && request.resource.data.status == 'open';
+      allow update, delete: if isAdmin();
+    }
+
     match /serviceRecommendations/{id} {
       allow create: if isSignedIn();
       allow read: if isAdmin();
