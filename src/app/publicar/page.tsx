@@ -64,7 +64,9 @@ function PublicarForm() {
   }
 
   const priceNum = parseFloat(customPrice || "0");
-  const earnings = (priceNum * slots * 0.85).toFixed(2);
+  const platformFee = serviceDoc?.platformFee ?? 0;
+  const earningPerSlot = Math.max(0, priceNum - platformFee);
+  const earnings = (earningPerSlot * slots).toFixed(2);
   const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
 
   const handlePublish = async () => {
@@ -170,8 +172,8 @@ function PublicarForm() {
           <p className={cn("text-[9px] font-bold opacity-60 uppercase tracking-widest", isWhiteBg ? "text-on-surface" : "text-white")}>{service.planName}</p>
         </div>
         <div className="ml-auto text-right">
-          <p className={cn("text-[8px] font-black uppercase opacity-40", isWhiteBg ? "text-on-surface" : "text-white")}>RECIBES</p>
-          <p className={cn("text-base font-extrabold", isWhiteBg ? "text-primary" : "text-white")}>S/ {service.hostEarnings}</p>
+          <p className={cn("text-[8px] font-black uppercase opacity-40", isWhiteBg ? "text-on-surface" : "text-white")}>RECIBES/CUPO</p>
+          <p className={cn("text-base font-extrabold", isWhiteBg ? "text-primary" : "text-white")}>S/ {earningPerSlot.toFixed(2)}</p>
         </div>
       </div>
 
@@ -253,7 +255,7 @@ function PublicarForm() {
                 </div>
               ))}
               <div className="flex justify-between items-center border-t border-white/10 pt-3">
-                <span className="text-[10px] font-bold text-on-surface/50">Ganancias (85%)</span>
+                <span className="text-[10px] font-bold text-on-surface/50">Ganancia neta (menos comisión S/{platformFee.toFixed(2)}/cupo)</span>
                 <span className="text-sm font-extrabold text-green-500">S/ {earnings}/mes</span>
               </div>
             </div>
