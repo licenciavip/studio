@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { logAdminAction } from "@/lib/admin-log";
 import { PageHeader, AdminCard, EmptyState } from "@/components/admin/admin-ui";
+import { ENTITIES } from "@/lib/withdrawal";
 import type { Withdrawal } from "@/lib/types";
 
 const statusBadge: Record<Withdrawal["status"], { label: string; cls: string }> = {
@@ -69,7 +70,7 @@ export default function AdminRetirosPage() {
       await logAdminAction(firestore, user, "withdrawal_paid", {
         targetUserId: w.userId,
         resourceId: w.id,
-        details: { amount: w.amount, method: w.method, destination: w.destination },
+        details: { amount: w.amount, entity: w.entity, destination: w.destination },
       });
       toast({ title: "Retiro pagado" });
       setSelected(null);
@@ -125,7 +126,7 @@ export default function AdminRetirosPage() {
                 <div>
                   <p className="text-sm font-bold text-white">{w.holderName}</p>
                   <p className="text-[11px] text-white/40">
-                    {w.method === "yape" ? "Yape" : "Transferencia"} · {w.destination}
+                    {ENTITIES[w.entity]?.label} · {w.destination}
                   </p>
                 </div>
                 <div className="text-right">
@@ -150,12 +151,13 @@ export default function AdminRetirosPage() {
               <p className="text-2xl font-bold">S/{selected?.amount.toFixed(2)}</p>
             </div>
             <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 space-y-1">
-              <p className="text-sm"><span className="text-white/40">Método:</span> {selected?.method === "yape" ? "Yape" : "Transferencia"}</p>
+              <p className="text-sm"><span className="text-white/40">Entidad:</span> {selected ? ENTITIES[selected.entity]?.label : ""}</p>
               <p className="text-sm"><span className="text-white/40">Destino:</span> <span className="font-mono">{selected?.destination}</span></p>
               <p className="text-sm"><span className="text-white/40">Titular:</span> {selected?.holderName}</p>
+              {selected?.docNumber && <p className="text-sm"><span className="text-white/40">DNI:</span> {selected.docNumber}</p>}
             </div>
             <p className="text-[11px] text-white/40">
-              Paga manualmente por {selected?.method === "yape" ? "Yape" : "transferencia"} al destino indicado y luego marca como pagado. Eso descontará el saldo del usuario.
+              Paga manualmente a la cuenta indicada y luego marca como pagado. Eso descontará el saldo del usuario.
             </p>
           </div>
           <DialogFooter className="flex-col gap-2">
