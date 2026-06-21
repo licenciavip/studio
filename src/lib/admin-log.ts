@@ -15,6 +15,8 @@ export type AdminActionType =
   | "recharge_rejected"
   | "payment_approved"
   | "payment_rejected"
+  | "withdrawal_paid"
+  | "withdrawal_rejected"
   | "subscription_status_changed"
   | "user_blocked"
   | "user_unblocked"
