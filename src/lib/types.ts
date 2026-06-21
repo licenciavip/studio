@@ -192,8 +192,11 @@ export interface ServiceDoc {
   planName?: string;
   color?: string;
   category: string;
+  /** Precio que paga el miembro por cupo/mes. */
   pricePerMonth: number;
-  hostEarnings: number;
+  hostEarnings?: number;
+  /** Ganancia de Poolera por cupo/mes (comisión). Anfitrión recibe = pricePerMonth - platformFee. */
+  platformFee: number;
   /** Máximo de asientos por cuenta (incluye al dueño). Compartibles = maxSlots - 1. */
   maxSlots: number;
   active: boolean;
