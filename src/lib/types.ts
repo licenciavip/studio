@@ -158,6 +158,17 @@ export interface Order {
   expires: string;
 }
 
+/** Documento de usuario en Firestore. */
+export interface UserDoc {
+  id: string;
+  uid?: string;
+  displayName?: string;
+  email?: string;
+  role?: string;
+  blocked?: boolean;
+  createdAt?: any;
+}
+
 /** Estado de revisión de un grupo publicado. */
 export type GroupApproval = 'pending' | 'approved' | 'rejected';
 
