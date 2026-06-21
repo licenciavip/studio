@@ -1,98 +1,98 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
-import { useEffect, useRef } from 'react';
-import { createDispute } from './actions';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Bot, Loader2 } from 'lucide-react';
-
-const initialState: {
-  message: string;
-  recommendation?: string | null;
-  error?: string | null;
-} = {
-  message: '',
-  recommendation: null,
-  error: null,
-};
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <Button type="submit" disabled={pending} className="w-full sm:w-auto">
-      {pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-      {pending ? 'Enviando...' : 'Abrir Disputa'}
-    </Button>
-  );
-}
+import { useUser, useFirestore } from '@/firebase';
+import { collection, doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { ShieldAlert, CheckCircle2 } from 'lucide-react';
 
 export function DisputeForm({ orderId }: { orderId: string }) {
-  const [state, formAction] = useFormState(createDispute, initialState);
+  const router = useRouter();
   const { toast } = useToast();
-  const formRef = useRef<HTMLFormElement>(null);
+  const { user } = useUser();
+  const firestore = useFirestore();
 
-  useEffect(() => {
-    if (state.message === 'OK' && state.recommendation) {
-        toast({
-            title: "Disputa recibida",
-            description: "Hemos recibido tu disputa y la IA ha generado una recomendación.",
-        });
-        formRef.current?.reset();
-    } else if (state.message === 'Error de servidor' && state.error) {
-      toast({
-        variant: 'destructive',
-        title: 'Error del Servidor',
-        description: state.error,
-      });
+  const [evidence, setEvidence] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [done, setDone] = useState(false);
+
+  const handleSubmit = async () => {
+    if (evidence.trim().length < 10) {
+      toast({ title: 'Evidencia muy corta', description: 'Describe tu caso con al menos 10 caracteres.', variant: 'destructive' });
+      return;
     }
-  }, [state, toast]);
+    if (!firestore || !user) return;
+    setLoading(true);
+    try {
+      const id = doc(collection(firestore, 'disputes')).id;
+      await setDoc(doc(firestore, 'disputes', id), {
+        id,
+        userId: user.uid,
+        orderId,
+        evidence: evidence.trim(),
+        status: 'open',
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      });
+      setDone(true);
+    } catch {
+      toast({ title: 'Error', description: 'No se pudo abrir la disputa.', variant: 'destructive' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (done) {
+    return (
+      <div className="mx-auto flex max-w-md flex-col items-center gap-4 pt-6 text-center">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-success/10">
+          <CheckCircle2 className="h-8 w-8 text-success" />
+        </div>
+        <h1 className="text-xl font-extrabold tracking-tight text-on-surface">Disputa enviada</h1>
+        <p className="max-w-xs text-sm leading-relaxed text-on-surface/55">
+          Recibimos tu caso. Nuestro equipo lo revisará y te daremos una respuesta pronto.
+        </p>
+        <Button className="h-11 w-full max-w-xs rounded-2xl font-bold" onClick={() => router.push('/mis-ordenes')}>
+          Volver a mis órdenes
+        </Button>
+      </div>
+    );
+  }
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
-      <CardHeader>
-        <CardTitle className="font-headline text-3xl">Abrir Disputa</CardTitle>
-        <CardDescription>
-          Describe tu problema y proporciona evidencia. Nuestro sistema de IA analizará el caso y
-          propondrá un reembolso proporcional si corresponde.
-        </CardDescription>
-      </CardHeader>
-      <form ref={formRef} action={formAction}>
-        <CardContent className="space-y-4">
-          <input type="hidden" name="orderId" value={orderId} />
-          <div className="space-y-2">
-            <Label htmlFor="evidence">Evidencia</Label>
-            <Textarea
-              id="evidence"
-              name="evidence"
-              placeholder="Ej: El anfitrión me eliminó del grupo de Netflix el día 15 del mes. Adjunto como prueba la captura de pantalla del correo de notificación..."
-              rows={6}
-              required
-            />
-            {state.message === 'Error de validación' && state.error && (
-                 <p className="text-sm font-medium text-destructive">{state.error}</p>
-            )}
-          </div>
-        </CardContent>
-        <CardFooter className="flex justify-end">
-          <SubmitButton />
-        </CardFooter>
-      </form>
-      {state.recommendation && state.message === 'OK' && (
-        <div className="p-6 pt-0">
-          <Alert className="bg-primary/10 border-primary/50">
-            <Bot className="h-4 w-4 !text-primary" />
-            <AlertTitle className="text-primary font-semibold">Recomendación de la IA</AlertTitle>
-            <AlertDescription className="text-primary/90">
-              {state.recommendation}
-            </AlertDescription>
-          </Alert>
+    <div className="mx-auto max-w-md space-y-4">
+      <div className="flex items-center gap-3">
+        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-danger/10 text-danger">
+          <ShieldAlert className="h-5 w-5" />
         </div>
-      )}
-    </Card>
+        <div>
+          <h1 className="text-lg font-extrabold tracking-tight text-on-surface">Abrir disputa</h1>
+          <p className="text-[11px] text-on-surface/40">Orden {orderId}</p>
+        </div>
+      </div>
+
+      <div className="glass-card space-y-3 rounded-2xl p-4">
+        <div className="space-y-1.5">
+          <Label className="text-[10px] font-black uppercase tracking-widest text-on-surface/40">Describe tu problema</Label>
+          <Textarea
+            value={evidence}
+            onChange={(e) => setEvidence(e.target.value)}
+            rows={6}
+            placeholder="Ej: El anfitrión me eliminó del grupo el día 15. Adjunto la captura del correo de notificación…"
+            className="glass-input rounded-2xl text-sm"
+          />
+          <p className="text-[10px] text-on-surface/35">
+            Incluye fechas y detalles. Si corresponde, recibirás un reembolso proporcional.
+          </p>
+        </div>
+        <Button className="h-11 w-full rounded-2xl font-bold" onClick={handleSubmit} disabled={loading || evidence.trim().length < 10}>
+          {loading ? 'Enviando…' : 'Abrir disputa'}
+        </Button>
+      </div>
+    </div>
   );
 }

@@ -105,6 +105,26 @@ export interface Withdrawal {
   updatedAt: any;
 }
 
+export type DisputeStatus = 'open' | 'resolved' | 'rejected';
+
+export interface Dispute {
+  id: string;
+  userId: string;
+  orderId: string;
+  evidence: string;
+  status: DisputeStatus;
+  /** Nota de resolución del admin. */
+  resolution?: string;
+  /** Reembolso proporcional acreditado al usuario, si aplica. */
+  refundAmount?: number;
+  /** Recomendación opcional de la IA. */
+  aiRecommendation?: string;
+  reviewedBy?: string;
+  reviewedAt?: any;
+  createdAt: any;
+  updatedAt: any;
+}
+
 export type Service = {
   id: string;
   name: string;
