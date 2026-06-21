@@ -73,10 +73,23 @@ service cloud.firestore {
     // Grupos (publicaciones de suscripción). Por ahora solo el anfitrión y el
     // admin pueden leerlos (contienen credenciales). El navegar grupos de otros
     // usuarios se habilitará con un modelo de miembros que separe las credenciales.
+    // Al crear, el grupo entra en revisión (approval == 'pending'). El dueño NO
+    // puede cambiar el estado de aprobación; solo el admin.
     match /groups/{id} {
       allow read: if isSignedIn() && (isOwner(resource.data.hostId) || isAdmin());
-      allow create: if isSignedIn() && isOwner(request.resource.data.hostId);
-      allow update, delete: if isOwner(resource.data.hostId) || isAdmin();
+      allow create: if isSignedIn()
+        && isOwner(request.resource.data.hostId)
+        && request.resource.data.approval == 'pending';
+      allow update: if isAdmin()
+        || (isOwner(resource.data.hostId)
+            && request.resource.data.approval == resource.data.approval);
+      allow delete: if isOwner(resource.data.hostId) || isAdmin();
+    }
+
+    // Catálogo de servicios: lectura pública, escritura solo admin.
+    match /services/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
     }
 
     match /serviceRecommendations/{id} {

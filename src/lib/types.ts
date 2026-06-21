@@ -158,6 +158,9 @@ export interface Order {
   expires: string;
 }
 
+/** Estado de revisión de un grupo publicado. */
+export type GroupApproval = 'pending' | 'approved' | 'rejected';
+
 /** Grupo (publicación de suscripción compartida) almacenado en Firestore. */
 export interface GroupDoc {
   id: string;
@@ -171,8 +174,29 @@ export interface GroupDoc {
   pricePerSlot: number;
   hostEarning: number;
   status: 'Activo' | 'Incompleto' | 'Finalizado';
+  /** Revisión del admin antes de quedar visible. */
+  approval: GroupApproval;
+  rejectedReason?: string;
+  reviewedBy?: string;
+  reviewedAt?: any;
   credentials: { email: string; pass: string };
   nextBill: string;
   createdAt: any;
   updatedAt: any;
+}
+
+/** Servicio del catálogo, gestionado por el admin en Firestore. */
+export interface ServiceDoc {
+  id: string;
+  name: string;
+  planName?: string;
+  color?: string;
+  category: string;
+  pricePerMonth: number;
+  hostEarnings: number;
+  /** Máximo de asientos por cuenta (incluye al dueño). Compartibles = maxSlots - 1. */
+  maxSlots: number;
+  active: boolean;
+  createdAt?: any;
+  updatedAt?: any;
 }

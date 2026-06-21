@@ -1,13 +1,14 @@
 "use client";
 
-import { Suspense, useState, useEffect } from "react";
+import { Suspense, useState, useEffect, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { getServiceById } from "@/lib/data";
-import { useUser, useFirestore } from "@/firebase";
+import { useUser, useFirestore, useDoc } from "@/firebase";
 import { collection, doc, setDoc, serverTimestamp } from "firebase/firestore";
+import type { ServiceDoc } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import {
   ArrowLeft, CheckCircle2, Users, DollarSign,
@@ -35,9 +36,23 @@ function PublicarForm() {
   const [showPass, setShowPass] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Configuración del servicio en Firestore (cupos máximos por cuenta).
+  const serviceRef = useMemo(
+    () => (firestore && serviceId ? doc(firestore, "services", serviceId) : null),
+    [firestore, serviceId]
+  );
+  const { data: serviceDoc } = useDoc<ServiceDoc>(serviceRef);
+  const maxSlots = serviceDoc?.maxSlots ?? 5;
+  const shareableMax = Math.max(1, maxSlots - 1);
+
   useEffect(() => {
     if (service?.pricePerMonth) setCustomPrice(service.pricePerMonth);
   }, [service]);
+
+  // El dueño ocupa 1 asiento: no se puede ofrecer más de (maxSlots - 1) cupos.
+  useEffect(() => {
+    setSlots((s) => Math.min(s, shareableMax));
+  }, [shareableMax]);
 
   if (!service) {
     return (
@@ -72,6 +87,7 @@ function PublicarForm() {
         pricePerSlot: priceNum,
         hostEarning: parseFloat(earnings),
         status: "Activo",
+        approval: "pending",
         credentials: { email: email.trim(), pass: password },
         nextBill: "—",
         createdAt: serverTimestamp(),
@@ -92,9 +108,9 @@ function PublicarForm() {
           <CheckCircle2 className="h-8 w-8 text-green-500" />
         </div>
         <div className="space-y-2">
-          <h2 className="text-xl font-extrabold tracking-tight">¡Grupo publicado!</h2>
+          <h2 className="text-xl font-extrabold tracking-tight">¡Enviado a revisión!</h2>
           <p className="text-[11px] text-on-surface/40 leading-relaxed max-w-xs mx-auto">
-            Tu grupo de <span className="font-bold text-on-surface/60">{service.name}</span> ya está creado. Lo verás en "Mis grupos".
+            Tu grupo de <span className="font-bold text-on-surface/60">{service.name}</span> fue enviado. Lo revisaremos y, una vez aprobado, quedará visible. Lo verás en "Mis grupos" como "En revisión".
           </p>
         </div>
         <div className="glass-card p-4 rounded-[2rem] w-full max-w-xs space-y-3">
@@ -164,10 +180,11 @@ function PublicarForm() {
                 <h3 className="text-[11px] font-black uppercase tracking-widest text-on-surface/50">Cupos disponibles</h3>
               </div>
               <div className="flex gap-1.5">
-                {[1,2,3,4,5].map(n => (
+                {Array.from({ length: shareableMax }, (_, i) => i + 1).map(n => (
                   <button key={n} onClick={() => setSlots(n)} className={cn("flex-1 h-9 rounded-xl text-[11px] font-black transition-all", slots === n ? "bg-primary text-white" : "bg-white/20 text-on-surface/40 hover:bg-white/40")}>{n}</button>
                 ))}
               </div>
+              <p className="text-[9px] text-on-surface/35">Esta cuenta admite hasta {maxSlots} asientos. Como tú usas 1, puedes compartir máximo {shareableMax}.</p>
             </div>
             <div className="space-y-2">
               <div className="flex items-center gap-2">

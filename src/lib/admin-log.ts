@@ -19,6 +19,8 @@ export type AdminActionType =
   | "withdrawal_rejected"
   | "dispute_resolved"
   | "dispute_rejected"
+  | "group_approved"
+  | "group_rejected"
   | "subscription_status_changed"
   | "user_blocked"
   | "user_unblocked"
