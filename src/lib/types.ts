@@ -157,3 +157,22 @@ export interface Order {
   status: OrderStatus;
   expires: string;
 }
+
+/** Grupo (publicación de suscripción compartida) almacenado en Firestore. */
+export interface GroupDoc {
+  id: string;
+  hostId: string;
+  hostName: string;
+  serviceId: string;
+  serviceName: string;
+  serviceColor?: string | null;
+  slotsTotal: number;
+  slotsFilled: number;
+  pricePerSlot: number;
+  hostEarning: number;
+  status: 'Activo' | 'Incompleto' | 'Finalizado';
+  credentials: { email: string; pass: string };
+  nextBill: string;
+  createdAt: any;
+  updatedAt: any;
+}
