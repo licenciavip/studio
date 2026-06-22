@@ -15,7 +15,7 @@ import {
   CheckCircle2, Clock, Landmark, Hash, CreditCard, ChevronRight, Star,
 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import type { PaymentOrder, Wallet, Withdrawal, WithdrawalAccount } from "@/lib/types";
+import type { PaymentOrder, Wallet, Withdrawal, WithdrawalAccount, PaymentConfig } from "@/lib/types";
 
 type RechargeStep = "amount" | "bank-details" | "operation-number" | "success";
 const QUICK_AMOUNTS = [10, 20, 50, 100];
@@ -65,6 +65,11 @@ export default function BilleteraPage() {
   );
   const { data: wallet } = useDoc<Wallet>(walletRef);
   const balance = wallet?.balance ?? 0;
+
+  // Cuenta de cobro configurable (Firestore) con respaldo a la constante.
+  const bankRef = useMemo(() => (firestore ? doc(firestore, "config", "payment") : null), [firestore]);
+  const { data: bankCfg } = useDoc<PaymentConfig>(bankRef);
+  const bank = bankCfg ?? BCP_ACCOUNT;
 
   const ordersQuery = useMemo(
     () => (firestore && user ? query(collection(firestore, "paymentOrders"), where("userId", "==", user.uid)) : null),
@@ -141,7 +146,7 @@ export default function BilleteraPage() {
         id: orderId, userId: user.uid, type: "wallet_recharge",
         amountExpected: amount, amountPaid: amount, currency: "PEN",
         paymentCode, operationNumber: operationNumber.trim(),
-        bankDestination: BCP_ACCOUNT.bank, destinationAccountNumber: BCP_ACCOUNT.number,
+        bankDestination: bank.bank, destinationAccountNumber: bank.number,
         payerName: user.displayName ?? null, status: "uploaded", reviewStatus: "uploaded",
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
         createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
@@ -325,11 +330,11 @@ export default function BilleteraPage() {
               </div>
               <div className="space-y-2">
                 <div className="glass-card p-3 rounded-2xl space-y-2">
-                  <div className="flex justify-between items-center"><span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Banco</span><span className="text-[11px] font-bold">{BCP_ACCOUNT.bank}</span></div>
-                  <div className="flex justify-between items-center"><span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Titular</span><span className="text-[11px] font-bold">{BCP_ACCOUNT.holder}</span></div>
+                  <div className="flex justify-between items-center"><span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Banco</span><span className="text-[11px] font-bold">{bank.bank}</span></div>
+                  <div className="flex justify-between items-center"><span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Titular</span><span className="text-[11px] font-bold">{bank.holder}</span></div>
                   <div className="flex justify-between items-center border-t border-white/10 pt-2">
                     <span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Cuenta</span>
-                    <div className="flex items-center gap-1.5"><span className="text-[10px] font-bold font-mono">{BCP_ACCOUNT.number}</span><button onClick={() => copyText(BCP_ACCOUNT.number, "Cuenta")} className="w-5 h-5 rounded-md bg-primary/10 flex items-center justify-center"><Copy className="h-2.5 w-2.5 text-primary" /></button></div>
+                    <div className="flex items-center gap-1.5"><span className="text-[10px] font-bold font-mono">{bank.number}</span><button onClick={() => copyText(bank.number, "Cuenta")} className="w-5 h-5 rounded-md bg-primary/10 flex items-center justify-center"><Copy className="h-2.5 w-2.5 text-primary" /></button></div>
                   </div>
                 </div>
                 <div className="glass-card p-3 rounded-2xl space-y-2">
