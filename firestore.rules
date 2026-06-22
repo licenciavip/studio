@@ -111,6 +111,12 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // Configuración del negocio (cuenta bancaria, etc.): lectura pública, escritura admin.
+    match /config/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
     match /serviceRecommendations/{id} {
       allow create: if isSignedIn();
       allow read: if isAdmin();
