@@ -3,69 +3,73 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import { useFirestore, useCollection } from "@/firebase";
-import { collection, query, orderBy } from "firebase/firestore";
-import { PageHeader, StatCard, AdminCard } from "@/components/admin/admin-ui";
-import { paymentStatusConfig } from "@/lib/status";
-import { ArrowRight } from "lucide-react";
-import type { PaymentOrder } from "@/lib/types";
+import { collection, query, where } from "firebase/firestore";
+import { PageHeader, AdminCard } from "@/components/admin/admin-ui";
+import { cn } from "@/lib/utils";
+import { Wallet, Send, BadgeCheck, Gavel, Layers, ArrowRight, CheckCircle2 } from "lucide-react";
+import type { PaymentOrder, Withdrawal, Dispute, GroupDoc } from "@/lib/types";
 
 export default function AdminResumenPage() {
   const firestore = useFirestore();
+  const qy = (name: string, field: string, val: string) =>
+    firestore ? query(collection(firestore, name), where(field, "==", val)) : null;
 
-  const paymentsQuery = useMemo(() => {
-    if (!firestore) return null;
-    return query(collection(firestore, "paymentOrders"), orderBy("updatedAt", "desc"));
-  }, [firestore]);
+  const { data: uploaded, loading } = useCollection<PaymentOrder>(useMemo(() => qy("paymentOrders", "status", "uploaded"), [firestore]));
+  const { data: wPend } = useCollection<Withdrawal>(useMemo(() => qy("withdrawals", "status", "pending"), [firestore]));
+  const { data: dOpen } = useCollection<Dispute>(useMemo(() => qy("disputes", "status", "open"), [firestore]));
+  const { data: gPend } = useCollection<GroupDoc>(useMemo(() => qy("groups", "approval", "pending"), [firestore]));
 
-  const { data: payments, loading } = useCollection<PaymentOrder>(paymentsQuery);
+  const recargas = (uploaded ?? []).filter((p) => p.type === "wallet_recharge").length;
+  const pagos = (uploaded ?? []).filter((p) => p.type === "membership_payment").length;
+  const retiros = (wPend ?? []).length;
+  const disputas = (dOpen ?? []).length;
+  const suscripciones = (gPend ?? []).length;
+  const total = recargas + pagos + retiros + disputas + suscripciones;
 
-  const pendientes = payments?.filter((p) => p.status === "uploaded") ?? [];
-  const aprobados = payments?.filter((p) => p.status === "approved") ?? [];
-  const recargasPend = pendientes.filter((p) => p.type === "wallet_recharge");
-  const totalAprobado = aprobados.reduce((acc, p) => acc + (p.amountPaid || p.amountExpected || 0), 0);
+  const items = [
+    { label: "Recargas pendientes", count: recargas, href: "/admin/recargas", Icon: Wallet },
+    { label: "Pagos de membresía", count: pagos, href: "/admin/pagos", Icon: BadgeCheck },
+    { label: "Retiros por pagar", count: retiros, href: "/admin/retiros", Icon: Send },
+    { label: "Disputas abiertas", count: disputas, href: "/admin/disputas", Icon: Gavel },
+    { label: "Grupos por aprobar", count: suscripciones, href: "/admin/suscripciones", Icon: Layers },
+  ];
 
   return (
     <div>
-      <PageHeader title="Resumen general" description="Vista rápida del estado de la plataforma." />
+      <PageHeader title="Resumen" description="Todo lo que requiere tu atención." />
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <StatCard label="Pagos por revisar" value={loading ? "…" : String(pendientes.length)} hint="Requieren tu validación" />
-        <StatCard label="Recargas pendientes" value={loading ? "…" : String(recargasPend.length)} />
-        <StatCard label="Pagos aprobados" value={loading ? "…" : String(aprobados.length)} />
-        <StatCard label="Total acreditado" value={loading ? "…" : `S/${totalAprobado.toFixed(2)}`} />
-      </div>
+      {/* Total pendiente */}
+      <AdminCard className={cn("mb-4 flex items-center justify-between", total > 0 ? "border-danger/30 bg-danger/5" : "border-success/20 bg-success/5")}>
+        <div>
+          <p className="text-[11px] font-black uppercase tracking-widest text-white/40">Total pendiente</p>
+          <p className={cn("mt-1 text-3xl font-extrabold", total > 0 ? "text-danger" : "text-success")}>{total}</p>
+        </div>
+        {total === 0 ? <CheckCircle2 className="h-10 w-10 text-success" /> : <span className="text-[11px] font-bold text-white/50">acciones por hacer</span>}
+      </AdminCard>
 
-      <div className="mt-6">
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-sm font-bold uppercase tracking-[0.1em] text-white/50">Pagos por revisar</h2>
-          <Link href="/admin/pagos" className="flex items-center gap-1 text-xs font-bold text-primary no-underline">
-            Ver todos <ArrowRight className="h-3 w-3" />
+      {loading && <p className="py-4 text-center text-[13px] text-white/30">Cargando…</p>}
+
+      <div className="space-y-2">
+        {items.map(({ label, count, href, Icon }) => (
+          <Link key={href} href={href} className="no-underline">
+            <AdminCard className={cn("flex items-center justify-between transition-colors hover:bg-white/[0.06]", count > 0 && "border-danger/20")}>
+              <div className="flex items-center gap-3">
+                <div className={cn("flex h-10 w-10 items-center justify-center rounded-xl", count > 0 ? "bg-danger/15 text-danger" : "bg-white/[0.05] text-white/40")}>
+                  <Icon className="h-5 w-5" />
+                </div>
+                <p className="text-sm font-bold text-white">{label}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                {count > 0 ? (
+                  <span className="flex h-6 min-w-[24px] items-center justify-center rounded-full bg-danger px-2 text-[11px] font-black text-white">{count}</span>
+                ) : (
+                  <span className="text-[11px] font-bold text-white/30">0</span>
+                )}
+                <ArrowRight className="h-4 w-4 text-white/25" />
+              </div>
+            </AdminCard>
           </Link>
-        </div>
-
-        {loading && <p className="py-8 text-center text-[13px] text-white/30">Cargando…</p>}
-        {!loading && pendientes.length === 0 && (
-          <AdminCard><p className="text-center text-[13px] text-white/40">No hay pagos pendientes de revisión.</p></AdminCard>
-        )}
-        <div className="space-y-2">
-          {pendientes.slice(0, 5).map((p) => {
-            const cfg = paymentStatusConfig[p.status];
-            return (
-              <Link key={p.id} href="/admin/pagos" className="no-underline">
-                <AdminCard className="flex items-center justify-between transition-colors hover:bg-white/[0.06]">
-                  <div>
-                    <p className="text-sm font-bold text-white">{p.paymentCode}</p>
-                    <p className="text-[11px] uppercase tracking-wide text-white/40">{p.type}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm font-bold text-white">S/{p.amountExpected.toFixed(2)}</p>
-                    <span className="text-[10px] font-black uppercase tracking-widest text-warning">{cfg?.label}</span>
-                  </div>
-                </AdminCard>
-              </Link>
-            );
-          })}
-        </div>
+        ))}
       </div>
     </div>
   );
