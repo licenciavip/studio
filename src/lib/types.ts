@@ -158,6 +158,14 @@ export interface Order {
   expires: string;
 }
 
+/** Configuración de la cuenta de cobro (Firestore: config/payment). */
+export interface PaymentConfig {
+  bank: string;
+  holder: string;
+  number: string;
+  cci?: string;
+}
+
 /** Documento de usuario en Firestore. */
 export interface UserDoc {
   id: string;

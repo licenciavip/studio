@@ -8,12 +8,12 @@ import { useToast } from "@/hooks/use-toast";
 import { getServiceById } from "@/lib/data";
 import { useUser, useFirestore, useDoc } from "@/firebase";
 import { collection, doc, setDoc, serverTimestamp } from "firebase/firestore";
-import type { ServiceDoc } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import {
   ArrowLeft, CheckCircle2, Users, DollarSign,
   Key, Eye, EyeOff, Sparkles, TrendingUp, Info
 } from "lucide-react";
+import type { ServiceDoc } from "@/lib/types";
 
 type PublicarStep = "config" | "credentials" | "preview" | "success";
 
@@ -26,7 +26,7 @@ function PublicarForm() {
 
   const serviceId = searchParams.get("service") || "";
   const category = searchParams.get("category") || "ia";
-  const service = getServiceById(serviceId);
+  const staticService = getServiceById(serviceId);
 
   const [step, setStep] = useState<PublicarStep>("config");
   const [slots, setSlots] = useState(3);
@@ -35,45 +35,37 @@ function PublicarForm() {
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [pricePrefilled, setPricePrefilled] = useState(false);
 
-  // Configuración del servicio en Firestore (cupos máximos por cuenta).
+  // Servicio desde Firestore (fuente de verdad) con respaldo al catálogo estático.
   const serviceRef = useMemo(
     () => (firestore && serviceId ? doc(firestore, "services", serviceId) : null),
     [firestore, serviceId]
   );
-  const { data: serviceDoc } = useDoc<ServiceDoc>(serviceRef);
+  const { data: serviceDoc, loading: svcLoading } = useDoc<ServiceDoc>(serviceRef);
+
+  const svcName = serviceDoc?.name ?? staticService?.name ?? "";
+  const svcColor = serviceDoc?.color ?? staticService?.color ?? "#4343d5";
+  const svcPlan = serviceDoc?.planName ?? staticService?.planName ?? "PRO";
+  const defaultPrice = serviceDoc?.pricePerMonth != null ? String(serviceDoc.pricePerMonth) : (staticService?.pricePerMonth ?? "");
   const maxSlots = serviceDoc?.maxSlots ?? 5;
+  const platformFee = serviceDoc?.platformFee ?? 0;
   const shareableMax = Math.max(1, maxSlots - 1);
+  const found = !!(serviceDoc || staticService);
 
   useEffect(() => {
-    if (service?.pricePerMonth) setCustomPrice(service.pricePerMonth);
-  }, [service]);
+    if (!pricePrefilled && defaultPrice) { setCustomPrice(defaultPrice); setPricePrefilled(true); }
+  }, [defaultPrice, pricePrefilled]);
 
-  // El dueño ocupa 1 asiento: no se puede ofrecer más de (maxSlots - 1) cupos.
-  useEffect(() => {
-    setSlots((s) => Math.min(s, shareableMax));
-  }, [shareableMax]);
-
-  if (!service) {
-    return (
-      <div className="pt-10 pb-32 text-center space-y-4">
-        <p className="text-on-surface/40 text-sm">Servicio no encontrado</p>
-        <Button asChild variant="link"><Link href="/compartir">Volver</Link></Button>
-      </div>
-    );
-  }
+  useEffect(() => { setSlots((s) => Math.min(s, shareableMax)); }, [shareableMax]);
 
   const priceNum = parseFloat(customPrice || "0");
-  const platformFee = serviceDoc?.platformFee ?? 0;
   const earningPerSlot = Math.max(0, priceNum - platformFee);
   const earnings = (earningPerSlot * slots).toFixed(2);
-  const isWhiteBg = service.color?.toLowerCase() === "#ffffff";
+  const isWhiteBg = svcColor.toLowerCase() === "#ffffff";
 
   const handlePublish = async () => {
-    if (!firestore || !user) {
-      toast({ title: "Error", description: "Debes iniciar sesión.", variant: "destructive" });
-      return;
-    }
+    if (!firestore || !user) { toast({ title: "Error", description: "Debes iniciar sesión.", variant: "destructive" }); return; }
     setIsLoading(true);
     try {
       const id = doc(collection(firestore, "groups")).id;
@@ -81,9 +73,9 @@ function PublicarForm() {
         id,
         hostId: user.uid,
         hostName: user.displayName ?? "Anfitrión",
-        serviceId: service.id,
-        serviceName: service.name,
-        serviceColor: service.color ?? null,
+        serviceId,
+        serviceName: svcName,
+        serviceColor: svcColor,
         slotsTotal: slots,
         slotsFilled: 0,
         pricePerSlot: priceNum,
@@ -95,11 +87,7 @@ function PublicarForm() {
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       });
-      // Credenciales en subcolección privada (no se exponen al explorar).
-      await setDoc(doc(firestore, "groups", id, "private", "credentials"), {
-        email: email.trim(),
-        pass: password,
-      });
+      await setDoc(doc(firestore, "groups", id, "private", "credentials"), { email: email.trim(), pass: password });
       setStep("success");
     } catch {
       toast({ title: "Error", description: "No se pudo publicar el grupo.", variant: "destructive" });
@@ -107,6 +95,18 @@ function PublicarForm() {
       setIsLoading(false);
     }
   };
+
+  if (svcLoading && !staticService) {
+    return <p className="pt-10 text-center text-[10px] font-black uppercase tracking-widest text-on-surface/30">Cargando…</p>;
+  }
+  if (!found) {
+    return (
+      <div className="pt-10 pb-32 text-center space-y-4">
+        <p className="text-on-surface/40 text-sm">Servicio no encontrado</p>
+        <Button asChild variant="link"><Link href="/compartir">Volver</Link></Button>
+      </div>
+    );
+  }
 
   if (step === "success") {
     return (
@@ -117,7 +117,7 @@ function PublicarForm() {
         <div className="space-y-2">
           <h2 className="text-xl font-extrabold tracking-tight">¡Enviado a revisión!</h2>
           <p className="text-[11px] text-on-surface/40 leading-relaxed max-w-xs mx-auto">
-            Tu grupo de <span className="font-bold text-on-surface/60">{service.name}</span> fue enviado. Lo revisaremos y, una vez aprobado, quedará visible. Lo verás en "Mis grupos" como "En revisión".
+            Tu grupo de <span className="font-bold text-on-surface/60">{svcName}</span> fue enviado. Una vez aprobado quedará visible. Lo verás en "Mis grupos" como "En revisión".
           </p>
         </div>
         <div className="glass-card p-4 rounded-[2rem] w-full max-w-xs space-y-3">
@@ -141,11 +141,10 @@ function PublicarForm() {
         </Button>
         <div>
           <h1 className="text-base font-extrabold tracking-tight text-on-surface">Publicar cupo</h1>
-          <p className="text-[9px] font-bold text-on-surface-variant/40 uppercase tracking-widest">Compartir {service.name}</p>
+          <p className="text-[9px] font-bold text-on-surface-variant/40 uppercase tracking-widest">Compartir {svcName}</p>
         </div>
       </div>
 
-      {/* Stepper */}
       <div className="flex items-center gap-2 px-1">
         {(["config", "credentials", "preview"] as PublicarStep[]).map((s, i) => {
           const steps = ["config", "credentials", "preview", "success"];
@@ -162,14 +161,13 @@ function PublicarForm() {
         })}
       </div>
 
-      {/* Service card */}
-      <div className={cn("p-4 rounded-[1.8rem] flex items-center gap-4", isWhiteBg ? "glass-card" : "shadow-lg")} style={{ backgroundColor: !isWhiteBg ? (service.color || "#4343d5") : undefined }}>
+      <div className={cn("p-4 rounded-[1.8rem] flex items-center gap-4", isWhiteBg ? "glass-card" : "shadow-lg")} style={{ backgroundColor: !isWhiteBg ? svcColor : undefined }}>
         <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
           <Sparkles className={cn("h-6 w-6", isWhiteBg ? "text-primary" : "text-white")} />
         </div>
         <div>
-          <h3 className={cn("text-sm font-extrabold", isWhiteBg ? "text-on-surface" : "text-white")}>{service.name}</h3>
-          <p className={cn("text-[9px] font-bold opacity-60 uppercase tracking-widest", isWhiteBg ? "text-on-surface" : "text-white")}>{service.planName}</p>
+          <h3 className={cn("text-sm font-extrabold", isWhiteBg ? "text-on-surface" : "text-white")}>{svcName}</h3>
+          <p className={cn("text-[9px] font-bold opacity-60 uppercase tracking-widest", isWhiteBg ? "text-on-surface" : "text-white")}>{svcPlan}</p>
         </div>
         <div className="ml-auto text-right">
           <p className={cn("text-[8px] font-black uppercase opacity-40", isWhiteBg ? "text-on-surface" : "text-white")}>RECIBES/CUPO</p>
@@ -177,7 +175,6 @@ function PublicarForm() {
         </div>
       </div>
 
-      {/* PASO 1: Config */}
       {step === "config" && (
         <div className="space-y-4">
           <div className="glass-card p-5 rounded-[2rem] space-y-5">
@@ -200,7 +197,7 @@ function PublicarForm() {
               </div>
               <div className="flex items-center gap-2 glass-card p-3 rounded-xl">
                 <span className="text-sm font-black text-on-surface/30">S/</span>
-                <input type="number" value={customPrice} onChange={(e) => setCustomPrice(e.target.value)} className="flex-1 bg-transparent text-base font-extrabold text-primary outline-none" placeholder={service.pricePerMonth} />
+                <input type="number" value={customPrice} onChange={(e) => setCustomPrice(e.target.value)} className="flex-1 bg-transparent text-base font-extrabold text-primary outline-none" placeholder={defaultPrice} />
                 <span className="text-[9px] font-black text-on-surface/20 uppercase">/mes</span>
               </div>
             </div>
@@ -213,7 +210,6 @@ function PublicarForm() {
         </div>
       )}
 
-      {/* PASO 2: Credenciales */}
       {step === "credentials" && (
         <div className="space-y-4">
           <div className="glass-card p-5 rounded-[2rem] space-y-4">
@@ -242,13 +238,12 @@ function PublicarForm() {
         </div>
       )}
 
-      {/* PASO 3: Preview */}
       {step === "preview" && (
         <div className="space-y-4">
           <div className="glass-card p-5 rounded-[2rem] space-y-4">
             <h3 className="text-[10px] font-black uppercase tracking-widest text-on-surface/30">Resumen del grupo</h3>
             <div className="space-y-3">
-              {[["Servicio", service.name], ["Cupos", `${slots} cupos`], ["Precio/cupo", `S/ ${customPrice}/mes`]].map(([label, value]) => (
+              {[["Servicio", svcName], ["Cupos", `${slots} cupos`], ["Precio/cupo", `S/ ${customPrice}/mes`]].map(([label, value]) => (
                 <div key={label} className="flex justify-between items-center">
                   <span className="text-[10px] font-bold text-on-surface/50">{label}</span>
                   <span className="text-sm font-bold">{value}</span>

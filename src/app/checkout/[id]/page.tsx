@@ -11,7 +11,7 @@ import { collection, doc, setDoc, serverTimestamp } from "firebase/firestore";
 import {
   ArrowLeft, Sparkles, Landmark, Copy, Hash, CheckCircle2, Users,
 } from "lucide-react";
-import type { GroupDoc } from "@/lib/types";
+import type { GroupDoc, PaymentConfig } from "@/lib/types";
 
 type Step = "summary" | "bank" | "operation" | "success";
 
@@ -32,6 +32,10 @@ export default function CheckoutPage({ params: paramsPromise }: { params: Promis
     [firestore, params.id]
   );
   const { data: group, loading: groupLoading } = useDoc<GroupDoc>(groupRef);
+
+  const bankRef = useMemo(() => (firestore ? doc(firestore, "config", "payment") : null), [firestore]);
+  const { data: bankCfg } = useDoc<PaymentConfig>(bankRef);
+  const bank = bankCfg ?? BCP_ACCOUNT;
 
   const copyText = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
@@ -58,8 +62,8 @@ export default function CheckoutPage({ params: paramsPromise }: { params: Promis
         currency: "PEN",
         paymentCode,
         operationNumber: operationNumber.trim(),
-        bankDestination: BCP_ACCOUNT.bank,
-        destinationAccountNumber: BCP_ACCOUNT.number,
+        bankDestination: bank.bank,
+        destinationAccountNumber: bank.number,
         payerName: user.displayName ?? null,
         status: "uploaded",
         reviewStatus: "uploaded",
@@ -126,11 +130,11 @@ export default function CheckoutPage({ params: paramsPromise }: { params: Promis
             <p className="text-[10px] text-on-surface/30">Transfiere el monto exacto a esta cuenta</p>
           </div>
           <div className="glass-card rounded-2xl p-3 space-y-2">
-            <div className="flex justify-between items-center"><span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Banco</span><span className="text-[11px] font-bold">{BCP_ACCOUNT.bank}</span></div>
-            <div className="flex justify-between items-center"><span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Titular</span><span className="text-[11px] font-bold">{BCP_ACCOUNT.holder}</span></div>
+            <div className="flex justify-between items-center"><span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Banco</span><span className="text-[11px] font-bold">{bank.bank}</span></div>
+            <div className="flex justify-between items-center"><span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Titular</span><span className="text-[11px] font-bold">{bank.holder}</span></div>
             <div className="flex justify-between items-center border-t border-white/10 pt-2">
               <span className="text-[9px] font-black uppercase tracking-widest text-on-surface/30">Cuenta</span>
-              <div className="flex items-center gap-1.5"><span className="text-[10px] font-mono font-bold">{BCP_ACCOUNT.number}</span><button onClick={() => copyText(BCP_ACCOUNT.number, "Cuenta")} className="flex h-5 w-5 items-center justify-center rounded-md bg-primary/10"><Copy className="h-2.5 w-2.5 text-primary" /></button></div>
+              <div className="flex items-center gap-1.5"><span className="text-[10px] font-mono font-bold">{bank.number}</span><button onClick={() => copyText(bank.number, "Cuenta")} className="flex h-5 w-5 items-center justify-center rounded-md bg-primary/10"><Copy className="h-2.5 w-2.5 text-primary" /></button></div>
             </div>
           </div>
           <div className="glass-card rounded-2xl p-3 space-y-2">
