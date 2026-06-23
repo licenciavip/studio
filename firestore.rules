@@ -11,57 +11,59 @@ service cloud.firestore {
     }
 
     // Autorización REAL de admin: custom claim del token de Firebase Auth.
-    // NO depende de ningún campo editable de Firestore.
     function isAdmin() {
       return isSignedIn() && request.auth.token.admin == true;
     }
 
-    // El usuario gestiona su propio documento, pero NO puede tocar campos
-    // sensibles como `role` para auto-promoverse (la autorización real es la
-    // custom claim, pero igual blindamos el documento).
+    // FIX #1: cada quien lee SOLO su propio documento (el admin, todos).
+    // Antes cualquier logueado leía el email de todos.
+    // El usuario no puede cambiar `role` ni `blocked` (eso es solo del admin).
     match /users/{userId} {
-      allow read: if isSignedIn();
+      allow read: if isOwner(userId) || isAdmin();
       allow create: if isOwner(userId)
-        && (!('role' in request.resource.data) || request.resource.data.role == 'user');
-      allow update: if (isOwner(userId)
-                        && request.resource.data.role == resource.data.role)
-                    || isAdmin();
+        && (!('role' in request.resource.data) || request.resource.data.role == 'user')
+        && (!('blocked' in request.resource.data) || request.resource.data.blocked == false);
+      allow update: if isAdmin()
+        || (isOwner(userId)
+            && request.resource.data.role == resource.data.role
+            && request.resource.data.get('blocked', false) == resource.data.get('blocked', false));
       allow delete: if isAdmin();
     }
 
+    // FIX #2 y #3: crear solo órdenes propias, con estado inicial válido; el
+    // usuario YA NO puede modificarlas (los flujos crean la orden completa de
+    // una vez). Solo el admin las actualiza.
     match /paymentOrders/{orderId} {
       allow read: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
-      allow create: if isSignedIn();
-      allow update: if (isOwner(resource.data.userId)
-                        && resource.data.status in ['pending', 'uploaded'])
-                    || isAdmin();
-      allow delete: if isAdmin();
+      allow create: if isSignedIn()
+        && isOwner(request.resource.data.userId)
+        && request.resource.data.status in ['pending', 'uploaded']
+        && request.resource.data.type in ['wallet_recharge', 'membership_payment'];
+      allow update, delete: if isAdmin();
     }
 
     match /wallets/{userId} {
       allow read: if isOwner(userId) || isAdmin();
-      // Solo el backend admin ajusta saldos.
       allow write: if isAdmin();
     }
 
-    // Solicitudes de retiro: el usuario crea las suyas; el admin las gestiona.
-    // El usuario no puede cambiar el estado ni el monto una vez creada.
+    // Retiros: el usuario crea los suyos con monto positivo; el admin los gestiona.
     match /withdrawals/{id} {
       allow read: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
       allow create: if isSignedIn()
         && isOwner(request.resource.data.userId)
-        && request.resource.data.status == 'pending';
+        && request.resource.data.status == 'pending'
+        && request.resource.data.amount is number
+        && request.resource.data.amount > 0;
       allow update, delete: if isAdmin();
     }
 
-    // Cuentas de retiro registradas por el usuario.
     match /withdrawalAccounts/{id} {
       allow read: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
       allow create: if isSignedIn() && isOwner(request.resource.data.userId);
       allow update, delete: if isOwner(resource.data.userId) || isAdmin();
     }
 
-    // Disputas: el usuario abre las suyas; solo el admin las resuelve.
     match /disputes/{id} {
       allow read: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
       allow create: if isSignedIn()
@@ -70,28 +72,19 @@ service cloud.firestore {
       allow update, delete: if isAdmin();
     }
 
-    // Grupos (publicaciones de suscripción). Por ahora solo el anfitrión y el
-    // admin pueden leerlos (contienen credenciales). El navegar grupos de otros
-    // usuarios se habilitará con un modelo de miembros que separe las credenciales.
-    // Al crear, el grupo entra en revisión (approval == 'pending'). El dueño NO
-    // puede cambiar el estado de aprobación; solo el admin.
-    // El documento del grupo es el LISTADO (sin credenciales): cualquier usuario
-    // autenticado puede leerlo para explorar. Las credenciales viven en la
-    // subcolección privada de abajo.
+    // Grupos: listado legible por usuarios autenticados (para explorar).
+    // Crear en revisión; actualizar solo el admin (aprobar, sumar miembros);
+    // borrar el dueño o el admin. Las credenciales van en subcolección privada.
     match /groups/{id} {
       allow read: if isSignedIn();
       allow create: if isSignedIn()
         && isOwner(request.resource.data.hostId)
-        && request.resource.data.approval == 'pending';
-      // El dueño puede editar sin tocar aprobación ni miembros; el admin todo
-      // (aprobar, agregar miembros al validar el pago).
-      allow update: if isAdmin()
-        || (isOwner(resource.data.hostId)
-            && request.resource.data.approval == resource.data.approval
-            && request.resource.data.memberIds == resource.data.memberIds);
+        && request.resource.data.approval == 'pending'
+        && request.resource.data.slotsFilled == 0
+        && request.resource.data.memberIds.size() == 0;
+      allow update: if isAdmin();
       allow delete: if isOwner(resource.data.hostId) || isAdmin();
 
-      // Credenciales: solo el dueño, los miembros del grupo y el admin.
       match /private/{doc} {
         allow read: if isSignedIn() && (
           get(/databases/$(database)/documents/groups/$(id)).data.hostId == request.auth.uid
@@ -105,13 +98,11 @@ service cloud.firestore {
       }
     }
 
-    // Catálogo de servicios: lectura pública, escritura solo admin.
+    // Catálogo de servicios y configuración: lectura pública, escritura admin.
     match /services/{id} {
       allow read: if true;
       allow write: if isAdmin();
     }
-
-    // Configuración del negocio (cuenta bancaria, etc.): lectura pública, escritura admin.
     match /config/{id} {
       allow read: if true;
       allow write: if isAdmin();
@@ -123,7 +114,6 @@ service cloud.firestore {
     }
 
     // Registro de acciones administrativas: inmutable desde el cliente.
-    // Solo un admin puede crear; nadie puede actualizar ni borrar.
     match /adminLogs/{logId} {
       allow read: if isAdmin();
       allow create: if isAdmin();
