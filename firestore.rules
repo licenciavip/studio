@@ -15,6 +15,14 @@ service cloud.firestore {
       return isSignedIn() && request.auth.token.admin == true;
     }
 
+    // FIX #6: un usuario bloqueado no puede escribir nada (ni pegándole a
+    // Firestore directo). Lee su propio doc para ver la marca `blocked`.
+    function notBlocked() {
+      return isSignedIn()
+        && !(exists(/databases/$(database)/documents/users/$(request.auth.uid))
+             && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('blocked', false) == true);
+    }
+
     // FIX #1: cada quien lee SOLO su propio documento (el admin, todos).
     // Antes cualquier logueado leía el email de todos.
     // El usuario no puede cambiar `role` ni `blocked` (eso es solo del admin).
@@ -24,7 +32,7 @@ service cloud.firestore {
         && (!('role' in request.resource.data) || request.resource.data.role == 'user')
         && (!('blocked' in request.resource.data) || request.resource.data.blocked == false);
       allow update: if isAdmin()
-        || (isOwner(userId)
+        || (isOwner(userId) && notBlocked()
             && request.resource.data.role == resource.data.role
             && request.resource.data.get('blocked', false) == resource.data.get('blocked', false));
       allow delete: if isAdmin();
@@ -35,7 +43,7 @@ service cloud.firestore {
     // una vez). Solo el admin las actualiza.
     match /paymentOrders/{orderId} {
       allow read: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
-      allow create: if isSignedIn()
+      allow create: if isSignedIn() && notBlocked()
         && isOwner(request.resource.data.userId)
         && request.resource.data.status in ['pending', 'uploaded']
         && request.resource.data.type in ['wallet_recharge', 'membership_payment'];
@@ -50,7 +58,7 @@ service cloud.firestore {
     // Retiros: el usuario crea los suyos con monto positivo; el admin los gestiona.
     match /withdrawals/{id} {
       allow read: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
-      allow create: if isSignedIn()
+      allow create: if isSignedIn() && notBlocked()
         && isOwner(request.resource.data.userId)
         && request.resource.data.status == 'pending'
         && request.resource.data.amount is number
@@ -60,13 +68,13 @@ service cloud.firestore {
 
     match /withdrawalAccounts/{id} {
       allow read: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
-      allow create: if isSignedIn() && isOwner(request.resource.data.userId);
-      allow update, delete: if isOwner(resource.data.userId) || isAdmin();
+      allow create: if isSignedIn() && notBlocked() && isOwner(request.resource.data.userId);
+      allow update, delete: if (isOwner(resource.data.userId) && notBlocked()) || isAdmin();
     }
 
     match /disputes/{id} {
       allow read: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
-      allow create: if isSignedIn()
+      allow create: if isSignedIn() && notBlocked()
         && isOwner(request.resource.data.userId)
         && request.resource.data.status == 'open';
       allow update, delete: if isAdmin();
@@ -77,7 +85,7 @@ service cloud.firestore {
     // borrar el dueño o el admin. Las credenciales van en subcolección privada.
     match /groups/{id} {
       allow read: if isSignedIn();
-      allow create: if isSignedIn()
+      allow create: if isSignedIn() && notBlocked()
         && isOwner(request.resource.data.hostId)
         && request.resource.data.approval == 'pending'
         && request.resource.data.slotsFilled == 0
@@ -92,7 +100,7 @@ service cloud.firestore {
           || isAdmin()
         );
         allow write: if isSignedIn() && (
-          get(/databases/$(database)/documents/groups/$(id)).data.hostId == request.auth.uid
+          (get(/databases/$(database)/documents/groups/$(id)).data.hostId == request.auth.uid && notBlocked())
           || isAdmin()
         );
       }
@@ -109,7 +117,7 @@ service cloud.firestore {
     }
 
     match /serviceRecommendations/{id} {
-      allow create: if isSignedIn();
+      allow create: if isSignedIn() && notBlocked();
       allow read: if isAdmin();
     }
 
