@@ -18,13 +18,19 @@ export default function PublicProfilePage({ params: paramsPromise }: { params: P
   const { id } = use(paramsPromise);
   const firestore = useFirestore();
 
-  const profileRef = useMemo(() => (firestore ? doc(firestore, "publicProfiles", id) : null), [firestore, id]);
-  const { data: profile, loading } = useDoc<PublicProfile>(profileRef);
+  // El parámetro puede ser un slug (nombre-apellido) o un uid. Resolvemos el slug.
+  const unameRef = useMemo(() => (firestore ? doc(firestore, "usernames", id) : null), [firestore, id]);
+  const { data: uname, loading: unameLoading } = useDoc<{ uid: string }>(unameRef);
+  const uid = uname?.uid ?? id;
 
-  const groupsRef = useMemo(() => (firestore ? query(collection(firestore, "groups"), where("hostId", "==", id)) : null), [firestore, id]);
+  const profileRef = useMemo(() => (firestore ? doc(firestore, "publicProfiles", uid) : null), [firestore, uid]);
+  const { data: profile, loading: profileLoading } = useDoc<PublicProfile>(profileRef);
+  const loading = unameLoading || profileLoading;
+
+  const groupsRef = useMemo(() => (firestore ? query(collection(firestore, "groups"), where("hostId", "==", uid)) : null), [firestore, uid]);
   const { data: groups } = useCollection<GroupDoc>(groupsRef);
 
-  const reviewsRef = useMemo(() => (firestore ? query(collection(firestore, "reviews"), where("hostId", "==", id)) : null), [firestore, id]);
+  const reviewsRef = useMemo(() => (firestore ? query(collection(firestore, "reviews"), where("hostId", "==", uid)) : null), [firestore, uid]);
   const { data: reviews } = useCollection<Review>(reviewsRef);
 
   const { toast } = useToast();
