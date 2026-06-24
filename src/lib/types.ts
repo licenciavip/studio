@@ -166,6 +166,31 @@ export interface PaymentConfig {
   cci?: string;
 }
 
+/** Perfil público de un usuario (Firestore: publicProfiles/{uid}). Solo datos seguros. */
+export interface PublicProfile {
+  uid: string;
+  displayName: string;
+  /** Semilla del avatar prediseñado, o vacío para usar iniciales. */
+  avatarSeed?: string;
+  bio?: string;
+  createdAt?: any;
+  /** Agregados de reputación (se llenan en la Parte B). */
+  ratingSum?: number;
+  ratingCount?: number;
+}
+
+/** Reseña de un miembro a un anfitrión (Firestore: reviews/{hostId}__{raterId}). */
+export interface Review {
+  id: string;
+  hostId: string;
+  raterId: string;
+  raterName: string;
+  groupId: string;
+  stars: number;
+  comment?: string;
+  createdAt?: any;
+}
+
 /** Documento de usuario en Firestore. */
 export interface UserDoc {
   id: string;
