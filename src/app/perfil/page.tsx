@@ -186,7 +186,7 @@ export default function PerfilPage() {
       {/* Ver perfil público */}
       {user && (
         <Link href={`/u/${user.uid}`} className="no-underline">
-          <div className="glass-card flex items-center justify-between rounded-2xl px-4 py-3 transition-all active:scale-[0.98]">
+          <div className="glass-card flex items-center justify-between rounded-[1.8rem] px-5 py-4 transition-all active:scale-[0.98]">
             <div className="flex items-center gap-2.5">
               <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10"><ExternalLink className="h-3.5 w-3.5 text-primary" /></div>
               <span className="text-[12px] font-bold tracking-tight text-on-surface">Ver mi perfil público</span>
@@ -199,7 +199,7 @@ export default function PerfilPage() {
       {/* Settings */}
       <div className="space-y-1">
         <h2 className="text-[9px] font-black text-on-surface-variant/20 uppercase tracking-[0.25em] px-3">Cuenta</h2>
-        <div className="glass-card rounded-[2rem] overflow-hidden divide-y divide-white/10">
+        <div className="glass-card rounded-[1.8rem] overflow-hidden divide-y divide-white/10">
           <SettingRow icon={Lock} label="Contraseña" href="/perfil/password" />
           <SettingRow icon={Bell} label="Notificaciones" href="/perfil/notificaciones" />
           <SettingRow icon={CreditCard} label="Métodos de pago" href="/perfil/pagos" />
