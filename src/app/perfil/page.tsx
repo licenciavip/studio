@@ -185,7 +185,7 @@ export default function PerfilPage() {
 
       {/* Ver perfil público */}
       {user && (
-        <Link href={`/u/${user.uid}`} className="no-underline">
+        <Link href={`/u/${user.uid}`} className="block no-underline">
           <div className="glass-card flex items-center justify-between rounded-[1.8rem] px-5 py-4 transition-all active:scale-[0.98]">
             <div className="flex items-center gap-2.5">
               <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10"><ExternalLink className="h-3.5 w-3.5 text-primary" /></div>
