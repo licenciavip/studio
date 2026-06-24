@@ -110,7 +110,7 @@ export default function CheckoutPage({ params: paramsPromise }: { params: Promis
             <div className="relative z-10">
               <p className="text-[10px] font-bold uppercase tracking-widest opacity-70">Unirme a</p>
               <h1 className="text-2xl font-extrabold tracking-tight">{group.serviceName}</h1>
-              <p className="mt-1 flex items-center gap-1 text-[11px] opacity-80"><Users className="h-3 w-3" /> Anfitrión: {group.hostName}</p>
+              <Link href={`/u/${group.hostId}`} className="mt-1 inline-flex items-center gap-1 text-[11px] underline-offset-2 opacity-80 hover:underline"><Users className="h-3 w-3" /> Anfitrión: {group.hostName} · ver perfil</Link>
             </div>
           </div>
           <div className="glass-card rounded-2xl p-4 space-y-2">
