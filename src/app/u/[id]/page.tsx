@@ -7,7 +7,8 @@ import { ArrowLeft, Star, Layers, ShieldCheck } from "lucide-react";
 import { useFirestore, useDoc, useCollection } from "@/firebase";
 import { doc, collection, query, where } from "firebase/firestore";
 import { UserAvatar } from "@/components/user-avatar";
-import type { PublicProfile, GroupDoc } from "@/lib/types";
+import { cn } from "@/lib/utils";
+import type { PublicProfile, GroupDoc, Review } from "@/lib/types";
 
 export default function PublicProfilePage({ params: paramsPromise }: { params: Promise<{ id: string }> }) {
   const { id } = use(paramsPromise);
@@ -18,6 +19,9 @@ export default function PublicProfilePage({ params: paramsPromise }: { params: P
 
   const groupsRef = useMemo(() => (firestore ? query(collection(firestore, "groups"), where("hostId", "==", id)) : null), [firestore, id]);
   const { data: groups } = useCollection<GroupDoc>(groupsRef);
+
+  const reviewsRef = useMemo(() => (firestore ? query(collection(firestore, "reviews"), where("hostId", "==", id)) : null), [firestore, id]);
+  const { data: reviews } = useCollection<Review>(reviewsRef);
 
   const activeGroups = (groups ?? []).filter((g) => g.approval === "approved");
   const ratingCount = profile?.ratingCount ?? 0;
@@ -79,7 +83,26 @@ export default function PublicProfilePage({ params: paramsPromise }: { params: P
         </div>
       </div>
 
-      <p className="px-2 text-center text-[10px] text-on-surface/30">Las reseñas de los miembros aparecerán aquí.</p>
+      {/* Reseñas */}
+      <section className="space-y-2">
+        <h2 className="px-1 text-[11px] font-black uppercase tracking-widest text-on-surface/40">Reseñas</h2>
+        {(reviews ?? []).length === 0 && (
+          <p className="px-2 text-[11px] text-on-surface/30">Aún no hay reseñas.</p>
+        )}
+        {(reviews ?? []).map((r) => (
+          <div key={r.id} className="glass-card rounded-2xl p-4">
+            <div className="flex items-center justify-between">
+              <p className="text-[12px] font-bold text-on-surface">{r.raterName || "Miembro"}</p>
+              <div className="flex gap-0.5">
+                {[1, 2, 3, 4, 5].map((n) => (
+                  <Star key={n} className={cn("h-3.5 w-3.5", n <= r.stars ? "fill-warning text-warning" : "text-on-surface/15")} />
+                ))}
+              </div>
+            </div>
+            {r.comment && <p className="mt-1 text-[12px] leading-snug text-on-surface/60">{r.comment}</p>}
+          </div>
+        ))}
+      </section>
     </div>
   );
 }

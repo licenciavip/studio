@@ -1,14 +1,16 @@
 "use client";
 
-import { use, useMemo, useState } from "react";
+import { use, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Mail, Key, Copy, Eye, EyeOff, AlertCircle, Info, Users, Sparkles, Lock } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { ArrowLeft, Mail, Key, Copy, Eye, EyeOff, AlertCircle, Info, Users, Sparkles, Lock, Star } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useUser, useFirestore, useDoc } from "@/firebase";
-import { doc } from "firebase/firestore";
-import type { GroupDoc } from "@/lib/types";
+import { doc, getDoc, setDoc, updateDoc, increment, serverTimestamp } from "firebase/firestore";
+import { cn } from "@/lib/utils";
+import type { GroupDoc, Review } from "@/lib/types";
 
 interface Credentials { email: string; pass: string }
 
@@ -24,6 +26,46 @@ export default function GroupDetailPage({ params: paramsPromise }: { params: Pro
 
   const credRef = useMemo(() => (firestore ? doc(firestore, "groups", params.id, "private", "credentials") : null), [firestore, params.id]);
   const { data: creds } = useDoc<Credentials>(credRef);
+
+  // Reseña del miembro al anfitrión
+  const reviewRef = useMemo(
+    () => (firestore && group && user ? doc(firestore, "reviews", `${group.hostId}__${user.uid}`) : null),
+    [firestore, group, user]
+  );
+  const { data: existingReview } = useDoc<Review>(reviewRef);
+  const [stars, setStars] = useState(0);
+  const [comment, setComment] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (existingReview) { setStars(existingReview.stars); setComment(existingReview.comment ?? ""); }
+  }, [existingReview]);
+
+  const submitReview = async () => {
+    if (!firestore || !user || !group || stars < 1) return;
+    setSubmitting(true);
+    try {
+      const rid = `${group.hostId}__${user.uid}`;
+      const ref = doc(firestore, "reviews", rid);
+      const snap = await getDoc(ref);
+      const old = snap.exists() ? ((snap.data().stars as number) ?? 0) : 0;
+      await setDoc(ref, {
+        id: rid, hostId: group.hostId, raterId: user.uid, raterName: user.displayName ?? "Miembro",
+        groupId: group.id, stars, comment: comment.trim(), createdAt: serverTimestamp(),
+      }, { merge: true });
+      const profileRef = doc(firestore, "publicProfiles", group.hostId);
+      if (snap.exists()) {
+        await updateDoc(profileRef, { ratingSum: increment(stars - old), updatedAt: serverTimestamp() });
+      } else {
+        await updateDoc(profileRef, { ratingSum: increment(stars), ratingCount: increment(1), updatedAt: serverTimestamp() });
+      }
+      toast({ title: "¡Gracias por tu reseña!" });
+    } catch {
+      toast({ title: "Error", description: "No se pudo guardar la reseña.", variant: "destructive" });
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const handleCopy = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
@@ -132,6 +174,33 @@ export default function GroupDetailPage({ params: paramsPromise }: { params: Pro
           </div>
         )}
       </section>
+
+      {/* Calificar al anfitrión (solo miembros) */}
+      {isMember && !isHost && (
+        <section className="space-y-3">
+          <h3 className="flex items-center gap-2 text-sm font-extrabold text-on-surface">
+            <Star className="h-4 w-4 text-warning" /> Califica a tu anfitrión
+          </h3>
+          <div className="glass-card rounded-[1.8rem] p-5 space-y-3">
+            <div className="flex items-center justify-center gap-2">
+              {[1, 2, 3, 4, 5].map((n) => (
+                <button key={n} onClick={() => setStars(n)} className="active:scale-90 transition-transform">
+                  <Star className={cn("h-8 w-8", n <= stars ? "fill-warning text-warning" : "text-on-surface/20")} />
+                </button>
+              ))}
+            </div>
+            <Textarea
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              placeholder="Cuenta cómo fue tu experiencia (opcional)…"
+              className="glass-input rounded-2xl text-sm"
+            />
+            <Button className="h-11 w-full rounded-2xl font-bold" onClick={submitReview} disabled={submitting || stars < 1}>
+              {submitting ? "Enviando…" : existingReview ? "Actualizar reseña" : "Enviar reseña"}
+            </Button>
+          </div>
+        </section>
+      )}
     </div>
   );
 }
