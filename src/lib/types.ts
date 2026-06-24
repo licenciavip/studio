@@ -173,8 +173,14 @@ export interface PublicProfile {
   /** Semilla del avatar prediseñado, o vacío para usar iniciales. */
   avatarSeed?: string;
   bio?: string;
+  /** Contacto */
+  phone?: string;
+  whatsapp?: string;
+  /** Verificaciones (sin SMS por ahora; el tel. real queda para Blaze). */
+  verifiedEmail?: boolean;
+  verifiedProfile?: boolean;
   createdAt?: any;
-  /** Agregados de reputación (se llenan en la Parte B). */
+  /** Agregados de reputación. */
   ratingSum?: number;
   ratingCount?: number;
 }
