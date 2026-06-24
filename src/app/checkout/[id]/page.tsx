@@ -11,6 +11,7 @@ import { collection, doc, setDoc, serverTimestamp } from "firebase/firestore";
 import {
   ArrowLeft, Sparkles, Landmark, Copy, Hash, CheckCircle2, Users, Star,
 } from "lucide-react";
+import { LevelBadge } from "@/components/level-badge";
 import type { GroupDoc, PaymentConfig, PublicProfile } from "@/lib/types";
 
 type Step = "summary" | "bank" | "operation" | "success";
@@ -114,7 +115,10 @@ export default function CheckoutPage({ params: paramsPromise }: { params: Promis
             <div className="absolute -right-6 -top-6 opacity-10"><Sparkles className="h-28 w-28" /></div>
             <div className="relative z-10">
               <p className="text-[10px] font-bold uppercase tracking-widest opacity-70">Unirme a</p>
-              <h1 className="text-2xl font-extrabold tracking-tight">{group.serviceName}</h1>
+              <div className="flex items-center gap-2">
+                <h1 className="text-2xl font-extrabold tracking-tight">{group.serviceName}</h1>
+                {hostProfile?.tierKey && <LevelBadge tierKey={hostProfile.tierKey} size="xs" />}
+              </div>
               <div className="mt-1 flex items-center gap-2">
                 <Link href={`/u/${group.hostId}`} className="inline-flex items-center gap-1 text-[11px] underline-offset-2 opacity-80 hover:underline"><Users className="h-3 w-3" /> {group.hostName} · ver perfil</Link>
                 {hostRatingCount > 0 && (
