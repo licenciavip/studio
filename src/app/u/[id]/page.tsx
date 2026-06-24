@@ -3,10 +3,12 @@
 import { use, useMemo } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Star, Layers, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Star, Layers, ShieldCheck, Crown, BadgeCheck, Share2, MessageCircle } from "lucide-react";
 import { useFirestore, useDoc, useCollection } from "@/firebase";
 import { doc, collection, query, where } from "firebase/firestore";
+import { useToast } from "@/hooks/use-toast";
 import { UserAvatar } from "@/components/user-avatar";
+import { computeScore, levelFor } from "@/lib/levels";
 import { cn } from "@/lib/utils";
 import type { PublicProfile, GroupDoc, Review } from "@/lib/types";
 
@@ -23,9 +25,28 @@ export default function PublicProfilePage({ params: paramsPromise }: { params: P
   const reviewsRef = useMemo(() => (firestore ? query(collection(firestore, "reviews"), where("hostId", "==", id)) : null), [firestore, id]);
   const { data: reviews } = useCollection<Review>(reviewsRef);
 
+  const { toast } = useToast();
   const activeGroups = (groups ?? []).filter((g) => g.approval === "approved");
   const ratingCount = profile?.ratingCount ?? 0;
   const ratingAvg = ratingCount > 0 ? (profile?.ratingSum ?? 0) / ratingCount : 0;
+
+  const createdAtMs = profile?.createdAt && typeof profile.createdAt === "object" && "seconds" in profile.createdAt
+    ? (profile.createdAt as { seconds: number }).seconds * 1000 : undefined;
+  const lvl = levelFor(computeScore({
+    createdAtMs,
+    groupsActive: activeGroups.length,
+    membersServed: activeGroups.reduce((a, g) => a + g.slotsFilled, 0),
+    ratingSum: profile?.ratingSum ?? 0,
+  }));
+  const verified = !!profile?.verifiedEmail && !!profile?.verifiedProfile;
+
+  const share = async () => {
+    const url = typeof window !== "undefined" ? window.location.href : "";
+    try {
+      if (navigator.share) await navigator.share({ title: profile?.displayName, url });
+      else { await navigator.clipboard.writeText(url); toast({ title: "Enlace copiado" }); }
+    } catch { /* cancelado */ }
+  };
 
   const since = useMemo(() => {
     const ts = profile?.createdAt;
@@ -58,7 +79,14 @@ export default function PublicProfilePage({ params: paramsPromise }: { params: P
         <div className="mx-auto w-fit">
           <UserAvatar name={profile.displayName} seed={profile.avatarSeed} size={80} className="border border-white/30 shadow-lg" />
         </div>
-        <h1 className="mt-3 text-xl font-extrabold tracking-tight text-on-surface">{profile.displayName}</h1>
+        <div className="mt-3 flex items-center justify-center gap-1.5">
+          <h1 className="text-xl font-extrabold tracking-tight text-on-surface">{profile.displayName}</h1>
+          {verified && <BadgeCheck className="h-5 w-5 text-success" />}
+        </div>
+        <div className="mt-1 flex items-center justify-center gap-1.5">
+          <Crown className="h-3.5 w-3.5" style={{ color: lvl.current.color }} />
+          <span className="text-[11px] font-bold" style={{ color: lvl.current.color }}>Corona de {lvl.current.label}</span>
+        </div>
         {since && <p className="mt-0.5 text-[11px] font-bold uppercase tracking-widest text-on-surface/40">Anfitrión desde {since}</p>}
 
         {/* Reputación */}
@@ -81,6 +109,16 @@ export default function PublicProfilePage({ params: paramsPromise }: { params: P
           <p className="mt-1 text-2xl font-extrabold text-on-surface">{activeGroups.reduce((a, g) => a + g.slotsFilled, 0)}</p>
           <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface/40">Miembros atendidos</p>
         </div>
+      </div>
+
+      {/* Contacto + compartir */}
+      <div className="flex gap-2">
+        {profile.whatsapp && (
+          <a href={`https://wa.me/${profile.whatsapp.replace(/[^0-9]/g, "")}`} target="_blank" rel="noopener" className="no-underline flex-1">
+            <Button className="h-11 w-full rounded-2xl bg-success font-bold text-white hover:bg-success/90"><MessageCircle className="mr-1.5 h-4 w-4" /> WhatsApp</Button>
+          </a>
+        )}
+        <Button variant="outline" className="h-11 flex-1 rounded-2xl font-bold" onClick={share}><Share2 className="mr-1.5 h-4 w-4" /> Compartir</Button>
       </div>
 
       {/* Reseñas */}
