@@ -183,6 +183,9 @@ export interface PublicProfile {
   /** Agregados de reputación. */
   ratingSum?: number;
   ratingCount?: number;
+  /** Nivel cacheado (para mostrar el badge sin recalcular en cada vista). */
+  score?: number;
+  tierKey?: string;
 }
 
 /** Reseña de un miembro a un anfitrión (Firestore: reviews/{hostId}__{raterId}). */
