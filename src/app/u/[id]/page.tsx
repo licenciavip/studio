@@ -85,7 +85,7 @@ export default function PublicProfilePage({ params: paramsPromise }: { params: P
         </div>
         <div className="mt-1 flex items-center justify-center gap-1.5">
           <Crown className="h-3.5 w-3.5" style={{ color: lvl.current.color }} />
-          <span className="text-[11px] font-bold" style={{ color: lvl.current.color }}>Corona de {lvl.current.label}</span>
+          <span className="text-[11px] font-bold" style={{ color: lvl.current.color }}>Nivel {lvl.current.label}</span>
         </div>
         {since && <p className="mt-0.5 text-[11px] font-bold uppercase tracking-widest text-on-surface/40">Anfitrión desde {since}</p>}
 
