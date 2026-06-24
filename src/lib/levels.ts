@@ -31,6 +31,23 @@ export function computeScore(i: LevelInput): number {
   return Math.round(months * 5 + i.groupsActive * 20 + i.membersServed * 3 + i.ratingSum * 2);
 }
 
+/** Reglas de puntos, para mostrar en "¿Cómo funciona?". */
+export const POINT_RULES = [
+  { label: "Por cada mes activo en Poolera", points: "+5" },
+  { label: "Por cada grupo activo que tienes", points: "+20" },
+  { label: "Por cada miembro que se une a tus grupos", points: "+3" },
+  { label: "Por cada estrella recibida en reseñas", points: "+2" },
+];
+
+export function tierByKey(key?: string) {
+  return TIERS.find((t) => t.key === key) ?? null;
+}
+
+/** Índice del tier (0 = más básico). Premium = índice >= 4. */
+export function tierIndex(key: string) {
+  return TIERS.findIndex((t) => t.key === key);
+}
+
 export function levelFor(score: number) {
   let currentIdx = 0;
   for (let k = 0; k < TIERS.length; k++) {

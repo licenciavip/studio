@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { UserAvatar } from "@/components/user-avatar";
+import { HowLevelsButton } from "@/components/how-levels";
 import { AVATAR_SEEDS, avatarUrl } from "@/lib/avatars";
 import { TIERS, computeScore, levelFor } from "@/lib/levels";
 import {
@@ -58,15 +59,18 @@ export default function PerfilPage() {
   const profileComplete = !!profile?.avatarSeed && phoneSet;
   const verifiedCount = (emailVerified ? 1 : 0) + (phoneSet ? 1 : 0) + (profileComplete ? 1 : 0);
 
-  // Espejar verificaciones al perfil público (para el badge).
+  // Espejar verificaciones y nivel al perfil público (para mostrar el badge en
+  // explorar, checkout y el perfil público sin recalcular).
   useEffect(() => {
     if (!firestore || !user || !profile) return;
-    const wantEmail = emailVerified;
-    const wantProfile = profileComplete;
-    if (profile.verifiedEmail !== wantEmail || profile.verifiedProfile !== wantProfile) {
-      updateDoc(doc(firestore, "publicProfiles", user.uid), { verifiedEmail: wantEmail, verifiedProfile: wantProfile }).catch(() => {});
+    const wantTier = lvl.current.key;
+    if (profile.verifiedEmail !== emailVerified || profile.verifiedProfile !== profileComplete
+        || profile.score !== score || profile.tierKey !== wantTier) {
+      updateDoc(doc(firestore, "publicProfiles", user.uid), {
+        verifiedEmail: emailVerified, verifiedProfile: profileComplete, score, tierKey: wantTier,
+      }).catch(() => {});
     }
-  }, [firestore, user, profile, emailVerified, profileComplete]);
+  }, [firestore, user, profile, emailVerified, profileComplete, score, lvl]);
 
   const handleLogout = async () => {
     try { await signOut(auth); router.push("/login"); }
@@ -134,7 +138,10 @@ export default function PerfilPage() {
             <Crown className="h-5 w-5" style={{ color: lvl.current.color }} />
             <p className="text-sm font-extrabold text-on-surface">Nivel: {lvl.current.label}</p>
           </div>
-          <span className="text-[10px] font-bold text-on-surface/40">{lvl.score} pts</span>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-bold text-on-surface/40">{lvl.score} pts</span>
+            <HowLevelsButton />
+          </div>
         </div>
         {/* Barra de tiers */}
         <div className="mt-4 flex items-center">
