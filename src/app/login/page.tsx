@@ -102,6 +102,15 @@ export default function LoginPage() {
         role: "user",
         createdAt: serverTimestamp(),
       });
+      // Perfil público (solo datos seguros) para el sistema de reputación.
+      await setDoc(doc(firestore, "publicProfiles", cred.user.uid), {
+        uid: cred.user.uid,
+        displayName: nombre.trim(),
+        avatarSeed: "",
+        ratingSum: 0,
+        ratingCount: 0,
+        createdAt: serverTimestamp(),
+      });
       toast({ title: "¡Cuenta creada!", description: "Bienvenido a Poolera." });
       // Una cuenta recién creada nunca es admin → entorno de usuario.
       router.replace("/inicio");
