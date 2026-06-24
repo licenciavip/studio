@@ -116,6 +116,14 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // Nombres de usuario (slug -> uid). Lectura publica; cada quien reserva el
+    // suyo. No se puede sobrescribir el de otro.
+    match /usernames/{slug} {
+      allow read: if true;
+      allow create: if isSignedIn() && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if isSignedIn() && resource.data.uid == request.auth.uid;
+    }
+
     // Perfiles públicos: solo datos seguros (nombre, avatar, bio, reputación).
     // Lectura pública; el dueño edita su nombre/avatar/bio pero NO su propia
     // reputación. La actualización de la reputación por reseñas se añade aparte.
