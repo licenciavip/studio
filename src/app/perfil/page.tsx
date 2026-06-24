@@ -29,11 +29,7 @@ export default function PerfilPage() {
   const { toast } = useToast();
 
   const [showAvatar, setShowAvatar] = useState(false);
-  const [showEdit, setShowEdit] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [whatsapp, setWhatsapp] = useState("");
 
   const profileRef = useMemo(() => (firestore && user ? doc(firestore, "publicProfiles", user.uid) : null), [firestore, user]);
   const { data: profile } = useDoc<PublicProfile>(profileRef);
@@ -83,26 +79,7 @@ export default function PerfilPage() {
     catch { toast({ title: "Error", description: "No se pudo enviar el correo.", variant: "destructive" }); }
   };
 
-  const openEdit = () => {
-    setName(user?.displayName ?? "");
-    setPhone(profile?.phone ?? "");
-    setWhatsapp(profile?.whatsapp ?? "");
-    setShowEdit(true);
-  };
-
-  const saveProfile = async () => {
-    if (!firestore || !user) return;
-    setSaving(true);
-    try {
-      if (name.trim() && name.trim() !== user.displayName) await updateProfile(user, { displayName: name.trim() });
-      await setDoc(doc(firestore, "publicProfiles", user.uid), {
-        uid: user.uid, displayName: name.trim() || (user.displayName ?? "Usuario"),
-        phone: phone.trim(), whatsapp: whatsapp.trim(), updatedAt: serverTimestamp(),
-      }, { merge: true });
-      toast({ title: "Perfil actualizado" });
-      setShowEdit(false);
-    } catch { toast({ title: "Error", variant: "destructive" }); } finally { setSaving(false); }
-  };
+  const openEdit = () => router.push("/perfil/editar");
 
   const pickAvatar = async (seed: string) => {
     if (!firestore || !user) return;
@@ -223,22 +200,6 @@ export default function PerfilPage() {
               );
             })}
           </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Editar perfil */}
-      <Dialog open={showEdit} onOpenChange={setShowEdit}>
-        <DialogContent className="glass-card rounded-[2.5rem] max-w-[340px] p-6 border-white/30 space-y-2">
-          <DialogHeader><DialogTitle className="text-sm font-bold text-center">Editar perfil</DialogTitle></DialogHeader>
-          <div className="space-y-3 py-2">
-            <div className="space-y-1.5"><Label className="text-[10px] font-black uppercase tracking-widest text-on-surface/40">Nombre</Label><input value={name} onChange={(e) => setName(e.target.value)} className="glass-input w-full h-11 text-sm font-bold px-4" /></div>
-            <div className="space-y-1.5"><Label className="text-[10px] font-black uppercase tracking-widest text-on-surface/40">Teléfono</Label><input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Ej: 914146017" className="glass-input w-full h-11 text-sm font-bold px-4" /></div>
-            <div className="space-y-1.5"><Label className="text-[10px] font-black uppercase tracking-widest text-on-surface/40">WhatsApp</Label><input value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder="Ej: +51914146017" className="glass-input w-full h-11 text-sm font-bold px-4" /></div>
-          </div>
-          <DialogFooter className="flex gap-2">
-            <Button variant="outline" className="h-11 flex-1 rounded-2xl font-bold" onClick={() => setShowEdit(false)} disabled={saving}>Descartar</Button>
-            <Button className="h-11 flex-1 rounded-2xl font-bold" onClick={saveProfile} disabled={saving}>Guardar cambios</Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
