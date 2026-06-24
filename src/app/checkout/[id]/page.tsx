@@ -120,7 +120,7 @@ export default function CheckoutPage({ params: paramsPromise }: { params: Promis
                 {hostProfile?.tierKey && <LevelBadge tierKey={hostProfile.tierKey} size="xs" />}
               </div>
               <div className="mt-1 flex items-center gap-2">
-                <Link href={`/u/${group.hostId}`} className="inline-flex items-center gap-1 text-[11px] underline-offset-2 opacity-80 hover:underline"><Users className="h-3 w-3" /> {group.hostName} · ver perfil</Link>
+                <Link href={`/u/${hostProfile?.slug ?? group.hostId}`} className="inline-flex items-center gap-1 text-[11px] underline-offset-2 opacity-80 hover:underline"><Users className="h-3 w-3" /> {group.hostName} · ver perfil</Link>
                 {hostRatingCount > 0 && (
                   <span className="inline-flex items-center gap-0.5 text-[11px] font-bold"><Star className="h-3 w-3 fill-white text-white" /> {hostRatingAvg.toFixed(1)}</span>
                 )}
