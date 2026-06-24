@@ -170,6 +170,8 @@ export interface PaymentConfig {
 export interface PublicProfile {
   uid: string;
   displayName: string;
+  /** URL amigable del perfil (nombre-apellido). */
+  slug?: string;
   /** Semilla del avatar prediseñado, o vacío para usar iniciales. */
   avatarSeed?: string;
   bio?: string;
