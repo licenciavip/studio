@@ -9,9 +9,9 @@ import { BCP_ACCOUNT } from "@/lib/constants";
 import { useUser, useFirestore, useDoc } from "@/firebase";
 import { collection, doc, setDoc, serverTimestamp } from "firebase/firestore";
 import {
-  ArrowLeft, Sparkles, Landmark, Copy, Hash, CheckCircle2, Users,
+  ArrowLeft, Sparkles, Landmark, Copy, Hash, CheckCircle2, Users, Star,
 } from "lucide-react";
-import type { GroupDoc, PaymentConfig } from "@/lib/types";
+import type { GroupDoc, PaymentConfig, PublicProfile } from "@/lib/types";
 
 type Step = "summary" | "bank" | "operation" | "success";
 
@@ -36,6 +36,11 @@ export default function CheckoutPage({ params: paramsPromise }: { params: Promis
   const bankRef = useMemo(() => (firestore ? doc(firestore, "config", "payment") : null), [firestore]);
   const { data: bankCfg } = useDoc<PaymentConfig>(bankRef);
   const bank = bankCfg ?? BCP_ACCOUNT;
+
+  const hostProfileRef = useMemo(() => (firestore && group ? doc(firestore, "publicProfiles", group.hostId) : null), [firestore, group]);
+  const { data: hostProfile } = useDoc<PublicProfile>(hostProfileRef);
+  const hostRatingCount = hostProfile?.ratingCount ?? 0;
+  const hostRatingAvg = hostRatingCount > 0 ? (hostProfile?.ratingSum ?? 0) / hostRatingCount : 0;
 
   const copyText = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
@@ -110,7 +115,12 @@ export default function CheckoutPage({ params: paramsPromise }: { params: Promis
             <div className="relative z-10">
               <p className="text-[10px] font-bold uppercase tracking-widest opacity-70">Unirme a</p>
               <h1 className="text-2xl font-extrabold tracking-tight">{group.serviceName}</h1>
-              <Link href={`/u/${group.hostId}`} className="mt-1 inline-flex items-center gap-1 text-[11px] underline-offset-2 opacity-80 hover:underline"><Users className="h-3 w-3" /> Anfitrión: {group.hostName} · ver perfil</Link>
+              <div className="mt-1 flex items-center gap-2">
+                <Link href={`/u/${group.hostId}`} className="inline-flex items-center gap-1 text-[11px] underline-offset-2 opacity-80 hover:underline"><Users className="h-3 w-3" /> {group.hostName} · ver perfil</Link>
+                {hostRatingCount > 0 && (
+                  <span className="inline-flex items-center gap-0.5 text-[11px] font-bold"><Star className="h-3 w-3 fill-white text-white" /> {hostRatingAvg.toFixed(1)}</span>
+                )}
+              </div>
             </div>
           </div>
           <div className="glass-card rounded-2xl p-4 space-y-2">
