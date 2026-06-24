@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Sparkles, Users, ChevronRight, Star } from "lucide-react";
 import { useUser, useFirestore, useCollection } from "@/firebase";
 import { collection, query, where } from "firebase/firestore";
+import { LevelBadge } from "@/components/level-badge";
 import type { GroupDoc, PublicProfile } from "@/lib/types";
 
 export default function ExplorarPage() {
@@ -26,6 +27,12 @@ export default function ExplorarPage() {
       const count = p.ratingCount ?? 0;
       if (count > 0) m.set(p.uid, { avg: (p.ratingSum ?? 0) / count, count });
     }
+    return m;
+  }, [profiles]);
+
+  const tierByHost = useMemo(() => {
+    const m = new Map<string, string>();
+    for (const p of profiles ?? []) if (p.tierKey) m.set(p.uid, p.tierKey);
     return m;
   }, [profiles]);
 
@@ -66,7 +73,10 @@ export default function ExplorarPage() {
                     <Sparkles className="h-5 w-5" />
                   </div>
                   <div>
-                    <p className="text-sm font-bold tracking-tight text-on-surface">{g.serviceName}</p>
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-sm font-bold tracking-tight text-on-surface">{g.serviceName}</p>
+                      {tierByHost.get(g.hostId) && <LevelBadge tierKey={tierByHost.get(g.hostId)} size="xs" />}
+                    </div>
                     <div className="mt-0.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-on-surface-variant/40">
                       <span className="flex items-center gap-1"><Users className="h-3 w-3" /> {free} {free === 1 ? "libre" : "libres"}</span>
                       {ratingByHost.get(g.hostId) && (
