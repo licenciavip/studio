@@ -8,6 +8,8 @@ import { useFirestore, useDoc, useCollection } from "@/firebase";
 import { doc, collection, query, where } from "firebase/firestore";
 import { useToast } from "@/hooks/use-toast";
 import { UserAvatar } from "@/components/user-avatar";
+import { LevelBadge } from "@/components/level-badge";
+import { HowLevelsButton } from "@/components/how-levels";
 import { computeScore, levelFor } from "@/lib/levels";
 import { cn } from "@/lib/utils";
 import type { PublicProfile, GroupDoc, Review } from "@/lib/types";
@@ -83,9 +85,9 @@ export default function PublicProfilePage({ params: paramsPromise }: { params: P
           <h1 className="text-xl font-extrabold tracking-tight text-on-surface">{profile.displayName}</h1>
           {verified && <BadgeCheck className="h-5 w-5 text-success" />}
         </div>
-        <div className="mt-1 flex items-center justify-center gap-1.5">
-          <Crown className="h-3.5 w-3.5" style={{ color: lvl.current.color }} />
-          <span className="text-[11px] font-bold" style={{ color: lvl.current.color }}>Nivel {lvl.current.label}</span>
+        <div className="mt-2 flex flex-col items-center gap-1.5">
+          <LevelBadge tierKey={lvl.current.key} size="md" />
+          <HowLevelsButton />
         </div>
         {since && <p className="mt-0.5 text-[11px] font-bold uppercase tracking-widest text-on-surface/40">Anfitrión desde {since}</p>}
 
