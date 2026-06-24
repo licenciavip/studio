@@ -11,12 +11,12 @@ export interface Tier {
 }
 
 export const TIERS: Array<Tier & { min: number }> = [
-  { key: "cobre", label: "Cobre", color: "#b87333", min: 0 },
-  { key: "bronce", label: "Bronce", color: "#cd7f32", min: 60 },
-  { key: "plata", label: "Plata", color: "#9ca3af", min: 180 },
-  { key: "oro", label: "Oro", color: "#f59e0b", min: 400 },
-  { key: "diamante", label: "Diamante", color: "#38bdf8", min: 800 },
-  { key: "lank", label: "Lank", color: "#7c3aed", min: 1600 },
+  { key: "nuevo", label: "Nuevo", color: "#9ca3af", min: 0 },
+  { key: "activo", label: "Activo", color: "#0A84FF", min: 60 },
+  { key: "confiable", label: "Confiable", color: "#30D158", min: 180 },
+  { key: "verificado", label: "Verificado", color: "#5E5CE6", min: 400 },
+  { key: "experto", label: "Experto", color: "#f59e0b", min: 800 },
+  { key: "embajador", label: "Embajador", color: "#7c3aed", min: 1600 },
 ];
 
 export interface LevelInput {

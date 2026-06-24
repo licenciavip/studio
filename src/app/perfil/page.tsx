@@ -132,7 +132,7 @@ export default function PerfilPage() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Crown className="h-5 w-5" style={{ color: lvl.current.color }} />
-            <p className="text-sm font-extrabold text-on-surface">Eres corona de {lvl.current.label}</p>
+            <p className="text-sm font-extrabold text-on-surface">Nivel: {lvl.current.label}</p>
           </div>
           <span className="text-[10px] font-bold text-on-surface/40">{lvl.score} pts</span>
         </div>
