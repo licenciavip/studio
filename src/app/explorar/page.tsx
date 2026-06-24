@@ -2,10 +2,10 @@
 
 import { useMemo } from "react";
 import Link from "next/link";
-import { Sparkles, Users, ChevronRight } from "lucide-react";
+import { Sparkles, Users, ChevronRight, Star } from "lucide-react";
 import { useUser, useFirestore, useCollection } from "@/firebase";
 import { collection, query, where } from "firebase/firestore";
-import type { GroupDoc } from "@/lib/types";
+import type { GroupDoc, PublicProfile } from "@/lib/types";
 
 export default function ExplorarPage() {
   const { user } = useUser();
@@ -16,6 +16,18 @@ export default function ExplorarPage() {
     [firestore]
   );
   const { data: groups, loading } = useCollection<GroupDoc>(groupsQuery);
+
+  // Reputación de los anfitriones (lectura pública, un solo query).
+  const profilesQuery = useMemo(() => (firestore ? query(collection(firestore, "publicProfiles")) : null), [firestore]);
+  const { data: profiles } = useCollection<PublicProfile>(profilesQuery);
+  const ratingByHost = useMemo(() => {
+    const m = new Map<string, { avg: number; count: number }>();
+    for (const p of profiles ?? []) {
+      const count = p.ratingCount ?? 0;
+      if (count > 0) m.set(p.uid, { avg: (p.ratingSum ?? 0) / count, count });
+    }
+    return m;
+  }, [profiles]);
 
   // Grupos con cupos libres, que no sean míos ni a los que ya pertenezco.
   const available = useMemo(() => {
@@ -55,8 +67,11 @@ export default function ExplorarPage() {
                   </div>
                   <div>
                     <p className="text-sm font-bold tracking-tight text-on-surface">{g.serviceName}</p>
-                    <div className="mt-0.5 flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-on-surface-variant/40">
-                      <Users className="h-3 w-3" /> {free} {free === 1 ? "cupo libre" : "cupos libres"} · {g.hostName}
+                    <div className="mt-0.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-on-surface-variant/40">
+                      <span className="flex items-center gap-1"><Users className="h-3 w-3" /> {free} {free === 1 ? "libre" : "libres"}</span>
+                      {ratingByHost.get(g.hostId) && (
+                        <span className="flex items-center gap-0.5 text-warning"><Star className="h-3 w-3 fill-warning" /> {ratingByHost.get(g.hostId)!.avg.toFixed(1)}</span>
+                      )}
                     </div>
                   </div>
                 </div>
