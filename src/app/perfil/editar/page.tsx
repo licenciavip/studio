@@ -9,6 +9,7 @@ import { updateProfile } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { useToast } from "@/hooks/use-toast";
 import { UserAvatar } from "@/components/user-avatar";
+import { reserveSlug } from "@/lib/slug";
 import { AVATAR_SEEDS, avatarUrl } from "@/lib/avatars";
 import { ArrowLeft, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -43,10 +44,13 @@ export default function EditarPerfilPage() {
     if (!firestore || !user) return;
     setSaving(true);
     try {
+      const finalName = name.trim() || (user.displayName ?? "Usuario");
       if (name.trim() && name.trim() !== user.displayName) await updateProfile(user, { displayName: name.trim() });
+      const slug = await reserveSlug(firestore, user.uid, finalName);
       await setDoc(doc(firestore, "publicProfiles", user.uid), {
         uid: user.uid,
-        displayName: name.trim() || (user.displayName ?? "Usuario"),
+        displayName: finalName,
+        slug,
         avatarSeed: seed,
         phone: phone.trim(),
         whatsapp: whatsapp.trim(),

@@ -15,6 +15,7 @@ import {
 } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
+import { reserveSlug } from "@/lib/slug";
 
 /**
  * Decide el destino tras autenticarse leyendo la custom claim `admin` del token.
@@ -103,9 +104,11 @@ export default function LoginPage() {
         createdAt: serverTimestamp(),
       });
       // Perfil público (solo datos seguros) para el sistema de reputación.
+      const slug = await reserveSlug(firestore, cred.user.uid, nombre.trim());
       await setDoc(doc(firestore, "publicProfiles", cred.user.uid), {
         uid: cred.user.uid,
         displayName: nombre.trim(),
+        slug,
         avatarSeed: "",
         ratingSum: 0,
         ratingCount: 0,
