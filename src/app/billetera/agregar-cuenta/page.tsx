@@ -51,7 +51,7 @@ export default function AgregarCuentaPage() {
         entity,
         destination: destination.trim(),
         isPrimary,
-        status: "approved",
+        status: "pending",
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       });
@@ -182,7 +182,7 @@ export default function AgregarCuentaPage() {
           <p className="text-sm text-on-surface/55 max-w-xs leading-relaxed">
             La cuenta <span className="font-bold text-on-surface">{meta.label}</span> a nombre de{" "}
             <span className="font-bold text-on-surface">{holderName}</span> con DNI{" "}
-            <span className="font-bold text-on-surface">{docNumber}</span> fue registrada correctamente.
+            <span className="font-bold text-on-surface">{docNumber}</span> fue enviada a revision.
           </p>
           <Button className="w-full max-w-xs h-11 rounded-2xl font-bold" onClick={() => router.push("/billetera")}>Regresar</Button>
         </div>

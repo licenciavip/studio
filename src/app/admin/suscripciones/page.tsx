@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useFirestore, useCollection, useUser } from "@/firebase";
+import { useFirestore, useCollection, useUser, useDoc } from "@/firebase";
 import { collection, query, orderBy, doc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -35,6 +35,11 @@ export default function AdminSuscripcionesPage() {
   }, [firestore]);
 
   const { data: groups, loading } = useCollection<GroupDoc>(groupsQuery);
+  const credentialsRef = useMemo(
+    () => (firestore && selected ? doc(firestore, "groups", selected.id, "private", "credentials") : null),
+    [firestore, selected]
+  );
+  const { data: credentials } = useDoc<{ email: string; pass: string }>(credentialsRef);
 
   const ensureAdmin = () => {
     if (!firestore || !user || !isAdmin) { toast({ title: "No autorizado", variant: "destructive" }); return false; }
@@ -114,8 +119,8 @@ export default function AdminSuscripcionesPage() {
             </div>
             <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 space-y-1 text-sm">
               <p className="text-[9px] font-black uppercase text-white/40">Credenciales (verificación)</p>
-              <p><span className="text-white/40">Email:</span> <span className="font-mono">{selected?.credentials.email}</span></p>
-              <p><span className="text-white/40">Pass:</span> <span className="font-mono">{selected?.credentials.pass}</span></p>
+              <p><span className="text-white/40">Email:</span> <span className="font-mono">{credentials?.email ?? "No disponible"}</span></p>
+              <p><span className="text-white/40">Pass:</span> <span className="font-mono">{credentials?.pass ?? "No disponible"}</span></p>
             </div>
           </div>
           {selected?.approval === "pending" && (

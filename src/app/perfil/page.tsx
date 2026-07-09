@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useUser, useAuth, useFirestore, useDoc, useCollection } from "@/firebase";
 import { signOut, sendEmailVerification, updateProfile } from "firebase/auth";
-import { doc, setDoc, updateDoc, serverTimestamp, collection, query, where } from "firebase/firestore";
+import { deleteField, doc, setDoc, updateDoc, serverTimestamp, collection, query, where } from "firebase/firestore";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
@@ -19,7 +19,7 @@ import {
   ExternalLink, Check, Crown, Mail, Phone, MessageCircle, BadgeCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { PublicProfile, GroupDoc } from "@/lib/types";
+import type { PublicProfile, PrivateProfile, GroupDoc } from "@/lib/types";
 
 export default function PerfilPage() {
   const router = useRouter();
@@ -33,6 +33,8 @@ export default function PerfilPage() {
 
   const profileRef = useMemo(() => (firestore && user ? doc(firestore, "publicProfiles", user.uid) : null), [firestore, user]);
   const { data: profile } = useDoc<PublicProfile>(profileRef);
+  const privateProfileRef = useMemo(() => (firestore && user ? doc(firestore, "privateProfiles", user.uid) : null), [firestore, user]);
+  const { data: privateProfile } = useDoc<PrivateProfile>(privateProfileRef);
 
   const groupsRef = useMemo(() => (firestore && user ? query(collection(firestore, "groups"), where("hostId", "==", user.uid)) : null), [firestore, user]);
   const { data: groups } = useCollection<GroupDoc>(groupsRef);
@@ -51,7 +53,7 @@ export default function PerfilPage() {
 
   // Verificaciones
   const emailVerified = !!user?.emailVerified;
-  const phoneSet = !!profile?.phone;
+  const phoneSet = !!privateProfile?.phone;
   const profileComplete = !!profile?.avatarSeed && phoneSet;
   const verifiedCount = (emailVerified ? 1 : 0) + (phoneSet ? 1 : 0) + (profileComplete ? 1 : 0);
 
@@ -64,6 +66,7 @@ export default function PerfilPage() {
         || profile.score !== score || profile.tierKey !== wantTier) {
       updateDoc(doc(firestore, "publicProfiles", user.uid), {
         verifiedEmail: emailVerified, verifiedProfile: profileComplete, score, tierKey: wantTier,
+        phone: deleteField(), whatsapp: deleteField(),
       }).catch(() => {});
     }
   }, [firestore, user, profile, emailVerified, profileComplete, score, lvl]);
@@ -85,7 +88,14 @@ export default function PerfilPage() {
     if (!firestore || !user) return;
     setSaving(true);
     try {
-      await setDoc(doc(firestore, "publicProfiles", user.uid), { uid: user.uid, displayName: user.displayName ?? "Usuario", avatarSeed: seed, updatedAt: serverTimestamp() }, { merge: true });
+      await setDoc(doc(firestore, "publicProfiles", user.uid), {
+        uid: user.uid,
+        displayName: user.displayName ?? "Usuario",
+        avatarSeed: seed,
+        phone: deleteField(),
+        whatsapp: deleteField(),
+        updatedAt: serverTimestamp(),
+      }, { merge: true });
       toast({ title: "Avatar actualizado" });
       setShowAvatar(false);
     } catch { toast({ title: "Error", variant: "destructive" }); } finally { setSaving(false); }
@@ -152,11 +162,11 @@ export default function PerfilPage() {
       </div>
 
       {/* Contacto */}
-      {(profile?.phone || profile?.whatsapp) && (
+      {(privateProfile?.phone || privateProfile?.whatsapp) && (
         <div className="glass-card rounded-[1.8rem] p-5 space-y-2">
           <p className="text-[10px] font-black uppercase tracking-widest text-on-surface/40">Contacto</p>
-          {profile?.phone && <p className="flex items-center gap-2 text-sm font-bold text-on-surface"><Phone className="h-4 w-4 text-primary" /> {profile.phone}</p>}
-          {profile?.whatsapp && <p className="flex items-center gap-2 text-sm font-bold text-on-surface"><MessageCircle className="h-4 w-4 text-success" /> WhatsApp: {profile.whatsapp}</p>}
+          {privateProfile?.phone && <p className="flex items-center gap-2 text-sm font-bold text-on-surface"><Phone className="h-4 w-4 text-primary" /> {privateProfile.phone}</p>}
+          {privateProfile?.whatsapp && <p className="flex items-center gap-2 text-sm font-bold text-on-surface"><MessageCircle className="h-4 w-4 text-success" /> WhatsApp: {privateProfile.whatsapp}</p>}
         </div>
       )}
 

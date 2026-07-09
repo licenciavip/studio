@@ -175,10 +175,7 @@ export interface PublicProfile {
   /** Semilla del avatar prediseñado, o vacío para usar iniciales. */
   avatarSeed?: string;
   bio?: string;
-  /** Contacto */
-  phone?: string;
-  whatsapp?: string;
-  /** Verificaciones (sin SMS por ahora; el tel. real queda para Blaze). */
+  /** Verificaciones publicas del perfil. */
   verifiedEmail?: boolean;
   verifiedProfile?: boolean;
   createdAt?: any;
@@ -226,6 +223,7 @@ export interface GroupDoc {
   serviceColor?: string | null;
   slotsTotal: number;
   slotsFilled: number;
+  memberIds: string[];
   pricePerSlot: number;
   hostEarning: number;
   status: 'Activo' | 'Incompleto' | 'Finalizado';
@@ -234,10 +232,19 @@ export interface GroupDoc {
   rejectedReason?: string;
   reviewedBy?: string;
   reviewedAt?: any;
-  credentials: { email: string; pass: string };
   nextBill: string;
   createdAt: any;
   updatedAt: any;
+}
+
+/** Datos privados del perfil (Firestore: privateProfiles/{uid}). */
+export interface PrivateProfile {
+  uid: string;
+  phone?: string;
+  whatsapp?: string;
+  verifiedEmail?: boolean;
+  verifiedProfile?: boolean;
+  updatedAt?: any;
 }
 
 /** Servicio del catálogo, gestionado por el admin en Firestore. */

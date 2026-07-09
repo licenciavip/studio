@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useFirestore, useCollection, useUser } from "@/firebase";
 import {
-  collection, query, orderBy, doc, getDoc, updateDoc, serverTimestamp, increment,
+  collection, query, orderBy, doc, updateDoc, serverTimestamp, increment, runTransaction,
 } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -52,20 +52,25 @@ export default function AdminRetirosPage() {
     if (!ensureAdmin() || !firestore || !user) return;
     setProcessing(true);
     try {
-      const walletRef = doc(firestore, "wallets", w.userId);
-      const walletSnap = await getDoc(walletRef);
-      const current = walletSnap.exists() ? (walletSnap.data().balance as number) ?? 0 : 0;
-      if (current < w.amount) {
-        toast({ title: "Saldo insuficiente", description: `El usuario tiene S/${current.toFixed(2)}.`, variant: "destructive" });
-        setProcessing(false);
-        return;
-      }
-      await updateDoc(walletRef, { balance: increment(-w.amount), updatedAt: serverTimestamp() });
-      await updateDoc(doc(firestore, "withdrawals", w.id), {
-        status: "paid",
-        reviewedBy: user.uid,
-        reviewedAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
+      await runTransaction(firestore, async (tx) => {
+        const withdrawalRef = doc(firestore, "withdrawals", w.id);
+        const withdrawalSnap = await tx.get(withdrawalRef);
+        if (!withdrawalSnap.exists()) throw new Error("WITHDRAWAL_NOT_FOUND");
+        const fresh = withdrawalSnap.data() as Withdrawal;
+        if (fresh.status !== "pending") throw new Error("WITHDRAWAL_NOT_PENDING");
+
+        const walletRef = doc(firestore, "wallets", fresh.userId);
+        const walletSnap = await tx.get(walletRef);
+        const current = walletSnap.exists() ? ((walletSnap.data().balance as number) ?? 0) : 0;
+        if (current < fresh.amount) throw new Error(`INSUFFICIENT:${current}`);
+
+        tx.update(walletRef, { balance: increment(-fresh.amount), updatedAt: serverTimestamp() });
+        tx.update(withdrawalRef, {
+          status: "paid",
+          reviewedBy: user.uid,
+          reviewedAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        });
       });
       await logAdminAction(firestore, user, "withdrawal_paid", {
         targetUserId: w.userId,
@@ -74,8 +79,11 @@ export default function AdminRetirosPage() {
       });
       toast({ title: "Retiro pagado" });
       setSelected(null);
-    } catch {
-      toast({ title: "Error", description: "No se pudo procesar el retiro.", variant: "destructive" });
+    } catch (e) {
+      const description = e instanceof Error && e.message.startsWith("INSUFFICIENT:")
+        ? `Saldo insuficiente. El usuario tiene S/${Number(e.message.split(":")[1]).toFixed(2)}.`
+        : "No se pudo procesar el retiro. Verifica que siga pendiente.";
+      toast({ title: "Error", description, variant: "destructive" });
     } finally {
       setProcessing(false);
     }

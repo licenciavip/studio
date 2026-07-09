@@ -68,15 +68,21 @@ service cloud.firestore {
 
     match /withdrawalAccounts/{id} {
       allow read: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
-      allow create: if isSignedIn() && notBlocked() && isOwner(request.resource.data.userId);
-      allow update, delete: if (isOwner(resource.data.userId) && notBlocked()) || isAdmin();
+      allow create: if isSignedIn() && notBlocked()
+        && isOwner(request.resource.data.userId)
+        && request.resource.data.status == 'pending';
+      allow update, delete: if isAdmin();
     }
 
     match /disputes/{id} {
       allow read: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
       allow create: if isSignedIn() && notBlocked()
         && isOwner(request.resource.data.userId)
-        && request.resource.data.status == 'open';
+        && request.resource.data.status == 'open'
+        && request.resource.data.orderId is string
+        && exists(/databases/$(database)/documents/paymentOrders/$(request.resource.data.orderId))
+        && get(/databases/$(database)/documents/paymentOrders/$(request.resource.data.orderId)).data.userId == request.auth.uid
+        && get(/databases/$(database)/documents/paymentOrders/$(request.resource.data.orderId)).data.status == 'approved';
       allow update, delete: if isAdmin();
     }
 
@@ -129,17 +135,29 @@ service cloud.firestore {
     // reputación. La actualización de la reputación por reseñas se añade aparte.
     match /publicProfiles/{uid} {
       allow read: if true;
-      allow create: if isOwner(uid) && notBlocked();
+      allow create: if isOwner(uid) && notBlocked()
+        && !('phone' in request.resource.data)
+        && !('whatsapp' in request.resource.data);
       // El dueño edita su nombre/avatar pero NO su reputación.
       // Un miembro con reseña puede actualizar SOLO la reputación (no el nombre/avatar).
       allow update: if isAdmin()
         || (isOwner(uid) && notBlocked()
+            && !('phone' in request.resource.data)
+            && !('whatsapp' in request.resource.data)
             && request.resource.data.get('ratingSum', 0) == resource.data.get('ratingSum', 0)
             && request.resource.data.get('ratingCount', 0) == resource.data.get('ratingCount', 0))
         || (isSignedIn() && notBlocked()
+            && !('phone' in request.resource.data)
+            && !('whatsapp' in request.resource.data)
             && request.resource.data.displayName == resource.data.displayName
             && request.resource.data.get('avatarSeed', '') == resource.data.get('avatarSeed', '')
             && exists(/databases/$(database)/documents/reviews/$(uid + '__' + request.auth.uid)));
+    }
+
+    // Datos privados del perfil: contacto y verificaciones no publicas.
+    match /privateProfiles/{uid} {
+      allow read, create, update: if (isOwner(uid) && notBlocked()) || isAdmin();
+      allow delete: if isAdmin();
     }
 
     // Reseñas: una por (anfitrión, miembro). Solo puede crearla un miembro real

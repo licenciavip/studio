@@ -17,6 +17,8 @@ export type AdminActionType =
   | "payment_rejected"
   | "withdrawal_paid"
   | "withdrawal_rejected"
+  | "withdrawal_account_approved"
+  | "withdrawal_account_rejected"
   | "dispute_resolved"
   | "dispute_rejected"
   | "group_approved"

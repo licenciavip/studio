@@ -7,7 +7,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useUser, useFirestore } from '@/firebase';
-import { collection, doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import type { PaymentOrder } from '@/lib/types';
 import { ShieldAlert, CheckCircle2 } from 'lucide-react';
 
 export function DisputeForm({ orderId }: { orderId: string }) {
@@ -28,6 +29,16 @@ export function DisputeForm({ orderId }: { orderId: string }) {
     if (!firestore || !user) return;
     setLoading(true);
     try {
+      const orderSnap = await getDoc(doc(firestore, 'paymentOrders', orderId));
+      const order = orderSnap.exists() ? (orderSnap.data() as PaymentOrder) : null;
+      if (!order || order.userId !== user.uid || order.status !== 'approved') {
+        toast({
+          title: 'Orden no valida',
+          description: 'Solo puedes abrir disputa sobre una orden aprobada propia.',
+          variant: 'destructive',
+        });
+        return;
+      }
       const id = doc(collection(firestore, 'disputes')).id;
       await setDoc(doc(firestore, 'disputes', id), {
         id,

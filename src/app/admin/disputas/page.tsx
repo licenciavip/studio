@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useFirestore, useCollection, useUser } from "@/firebase";
 import {
-  collection, query, orderBy, doc, getDoc, setDoc, updateDoc, serverTimestamp, increment,
+  collection, query, orderBy, doc, updateDoc, serverTimestamp, increment, runTransaction,
 } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -53,22 +53,30 @@ export default function AdminDisputasPage() {
     const refundAmount = parseFloat(refund) || 0;
     setProcessing(true);
     try {
-      if (refundAmount > 0) {
-        const walletRef = doc(firestore, "wallets", selected.userId);
-        const snap = await getDoc(walletRef);
-        if (snap.exists()) {
-          await updateDoc(walletRef, { balance: increment(refundAmount), updatedAt: serverTimestamp() });
-        } else {
-          await setDoc(walletRef, { userId: selected.userId, balance: refundAmount, currency: "PEN", updatedAt: serverTimestamp() });
+      await runTransaction(firestore, async (tx) => {
+        const disputeRef = doc(firestore, "disputes", selected.id);
+        const disputeSnap = await tx.get(disputeRef);
+        if (!disputeSnap.exists()) throw new Error("DISPUTE_NOT_FOUND");
+        const fresh = disputeSnap.data() as Dispute;
+        if (fresh.status !== "open") throw new Error("DISPUTE_NOT_OPEN");
+
+        if (refundAmount > 0) {
+          const walletRef = doc(firestore, "wallets", fresh.userId);
+          const snap = await tx.get(walletRef);
+          if (snap.exists()) {
+            tx.update(walletRef, { balance: increment(refundAmount), updatedAt: serverTimestamp() });
+          } else {
+            tx.set(walletRef, { userId: fresh.userId, balance: refundAmount, currency: "PEN", updatedAt: serverTimestamp() });
+          }
         }
-      }
-      await updateDoc(doc(firestore, "disputes", selected.id), {
-        status: "resolved",
-        resolution: resolution.trim() || null,
-        refundAmount,
-        reviewedBy: user.uid,
-        reviewedAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
+        tx.update(disputeRef, {
+          status: "resolved",
+          resolution: resolution.trim() || null,
+          refundAmount,
+          reviewedBy: user.uid,
+          reviewedAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        });
       });
       await logAdminAction(firestore, user, "dispute_resolved", {
         targetUserId: selected.userId,
@@ -78,7 +86,7 @@ export default function AdminDisputasPage() {
       toast({ title: "Disputa resuelta" });
       close();
     } catch {
-      toast({ title: "Error", description: "No se pudo resolver la disputa.", variant: "destructive" });
+      toast({ title: "Error", description: "No se pudo resolver la disputa. Verifica que siga abierta.", variant: "destructive" });
     } finally {
       setProcessing(false);
     }

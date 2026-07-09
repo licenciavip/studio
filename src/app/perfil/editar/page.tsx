@@ -6,14 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useUser, useFirestore, useDoc } from "@/firebase";
 import { updateProfile } from "firebase/auth";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { deleteField, doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { useToast } from "@/hooks/use-toast";
 import { UserAvatar } from "@/components/user-avatar";
 import { reserveSlug } from "@/lib/slug";
 import { AVATAR_SEEDS, avatarUrl } from "@/lib/avatars";
 import { ArrowLeft, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { PublicProfile } from "@/lib/types";
+import type { PrivateProfile, PublicProfile } from "@/lib/types";
 
 export default function EditarPerfilPage() {
   const router = useRouter();
@@ -22,7 +22,9 @@ export default function EditarPerfilPage() {
   const { toast } = useToast();
 
   const profileRef = useMemo(() => (firestore && user ? doc(firestore, "publicProfiles", user.uid) : null), [firestore, user]);
-  const { data: profile } = useDoc<PublicProfile>(profileRef);
+  const { data: profile, loading: profileLoading } = useDoc<PublicProfile>(profileRef);
+  const privateProfileRef = useMemo(() => (firestore && user ? doc(firestore, "privateProfiles", user.uid) : null), [firestore, user]);
+  const { data: privateProfile, loading: privateProfileLoading } = useDoc<PrivateProfile>(privateProfileRef);
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -32,13 +34,13 @@ export default function EditarPerfilPage() {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    if (hydrated || !user) return;
+    if (hydrated || !user || profileLoading || privateProfileLoading) return;
     setName(user.displayName ?? "");
-    setPhone(profile?.phone ?? "");
-    setWhatsapp(profile?.whatsapp ?? "");
+    setPhone(privateProfile?.phone ?? "");
+    setWhatsapp(privateProfile?.whatsapp ?? "");
     setSeed(profile?.avatarSeed ?? "");
-    if (profile !== undefined) setHydrated(true);
-  }, [user, profile, hydrated]);
+    setHydrated(true);
+  }, [user, profile, privateProfile, profileLoading, privateProfileLoading, hydrated]);
 
   const save = async () => {
     if (!firestore || !user) return;
@@ -52,6 +54,12 @@ export default function EditarPerfilPage() {
         displayName: finalName,
         slug,
         avatarSeed: seed,
+        phone: deleteField(),
+        whatsapp: deleteField(),
+        updatedAt: serverTimestamp(),
+      }, { merge: true });
+      await setDoc(doc(firestore, "privateProfiles", user.uid), {
+        uid: user.uid,
         phone: phone.trim(),
         whatsapp: whatsapp.trim(),
         updatedAt: serverTimestamp(),

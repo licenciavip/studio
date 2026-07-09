@@ -75,6 +75,19 @@ export default function AdminUserDetailPage({ params: paramsPromise }: { params:
     } catch { toast({ title: "Error", variant: "destructive" }); } finally { setBusy(false); }
   };
 
+  const setAccountStatus = async (accountId: string, status: "approved" | "rejected") => {
+    if (!ensure() || !firestore || !admin) return;
+    setBusy(true);
+    try {
+      await updateDoc(doc(firestore, "withdrawalAccounts", accountId), { status, updatedAt: serverTimestamp() });
+      await logAdminAction(firestore, admin, status === "approved" ? "withdrawal_account_approved" : "withdrawal_account_rejected", {
+        targetUserId: id,
+        resourceId: accountId,
+      });
+      toast({ title: status === "approved" ? "Cuenta aprobada" : "Cuenta rechazada" });
+    } catch { toast({ title: "Error", variant: "destructive" }); } finally { setBusy(false); }
+  };
+
   const Section = ({ title, count, children }: { title: string; count: number; children: React.ReactNode }) => (
     <div className="space-y-2">
       <p className="text-[11px] font-black uppercase tracking-widest text-white/40">{title} ({count})</p>
@@ -119,11 +132,17 @@ export default function AdminUserDetailPage({ params: paramsPromise }: { params:
       <Section title="Cuentas de retiro" count={accounts?.length ?? 0}>
         <div className="space-y-2">
           {accounts?.map((a) => (
-            <AdminCard key={a.id} className="flex items-center justify-between">
+            <AdminCard key={a.id} className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-2"><CreditCard className="h-4 w-4 text-white/40" /><div>
                 <p className="text-sm font-bold text-white">{ENTITIES[a.entity]?.label} · {a.destination}</p>
                 <p className="text-[11px] text-white/40">{a.holderName} · DNI {a.docNumber}</p>
               </div></div>
+              {a.status === "pending" && (
+                <div className="flex shrink-0 gap-2">
+                  <Button size="sm" className="h-8 rounded-lg bg-success px-3 text-[11px] font-bold text-white hover:bg-success/90" disabled={busy} onClick={() => setAccountStatus(a.id, "approved")}>Aprobar</Button>
+                  <Button size="sm" variant="outline" className="h-8 rounded-lg border-danger/30 bg-transparent px-3 text-[11px] font-bold text-danger hover:bg-danger/10" disabled={busy} onClick={() => setAccountStatus(a.id, "rejected")}>Rechazar</Button>
+                </div>
+              )}
             </AdminCard>
           ))}
         </div>

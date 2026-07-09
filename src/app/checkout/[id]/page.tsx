@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { BCP_ACCOUNT } from "@/lib/constants";
 import { useUser, useFirestore, useDoc } from "@/firebase";
-import { collection, doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { collection, doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import {
   ArrowLeft, Sparkles, Landmark, Copy, Hash, CheckCircle2, Users, Star,
 } from "lucide-react";
@@ -57,14 +57,31 @@ export default function CheckoutPage({ params: paramsPromise }: { params: Promis
     if (!firestore || !user || !group || !operationNumber.trim()) return;
     setLoading(true);
     try {
+      const latestSnap = await getDoc(doc(firestore, "groups", group.id));
+      const latestGroup = latestSnap.exists() ? ({ ...latestSnap.data(), id: latestSnap.id } as GroupDoc) : null;
+      if (
+        !latestGroup ||
+        latestGroup.approval !== "approved" ||
+        latestGroup.slotsFilled >= latestGroup.slotsTotal ||
+        latestGroup.hostId === user.uid ||
+        (latestGroup.memberIds ?? []).includes(user.uid)
+      ) {
+        toast({
+          title: "Cupo no disponible",
+          description: "Este grupo ya no puede recibir tu pago. Elige otro cupo.",
+          variant: "destructive",
+        });
+        setStep("summary");
+        return;
+      }
       const orderId = doc(collection(firestore, "paymentOrders")).id;
       await setDoc(doc(firestore, "paymentOrders", orderId), {
         id: orderId,
         userId: user.uid,
         type: "membership_payment",
-        relatedGroupId: group.id,
-        amountExpected: group.pricePerSlot,
-        amountPaid: group.pricePerSlot,
+        relatedGroupId: latestGroup.id,
+        amountExpected: latestGroup.pricePerSlot,
+        amountPaid: latestGroup.pricePerSlot,
         currency: "PEN",
         paymentCode,
         operationNumber: operationNumber.trim(),

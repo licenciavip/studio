@@ -3,7 +3,7 @@
 import { use, useMemo } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Star, Layers, ShieldCheck, Crown, BadgeCheck, Share2, MessageCircle } from "lucide-react";
+import { ArrowLeft, Star, Layers, ShieldCheck, Crown, BadgeCheck, Share2 } from "lucide-react";
 import { useFirestore, useDoc, useCollection } from "@/firebase";
 import { doc, collection, query, where } from "firebase/firestore";
 import { useToast } from "@/hooks/use-toast";
@@ -119,15 +119,8 @@ export default function PublicProfilePage({ params: paramsPromise }: { params: P
         </div>
       </div>
 
-      {/* Contacto + compartir */}
-      <div className="flex gap-2">
-        {profile.whatsapp && (
-          <a href={`https://wa.me/${profile.whatsapp.replace(/[^0-9]/g, "")}`} target="_blank" rel="noopener" className="no-underline flex-1">
-            <Button className="h-11 w-full rounded-2xl bg-success font-bold text-white hover:bg-success/90"><MessageCircle className="mr-1.5 h-4 w-4" /> WhatsApp</Button>
-          </a>
-        )}
-        <Button variant="outline" className="h-11 flex-1 rounded-2xl font-bold" onClick={share}><Share2 className="mr-1.5 h-4 w-4" /> Compartir</Button>
-      </div>
+      {/* Compartir */}
+      <Button variant="outline" className="h-11 w-full rounded-2xl font-bold" onClick={share}><Share2 className="mr-1.5 h-4 w-4" /> Compartir</Button>
 
       {/* Reseñas */}
       <section className="space-y-2">

@@ -2,7 +2,9 @@
 
 import { useMemo, useState } from "react";
 import { useFirestore, useCollection, useUser } from "@/firebase";
-import { collection, query, orderBy, doc, updateDoc, getDoc, setDoc, serverTimestamp, increment, arrayUnion } from "firebase/firestore";
+import {
+  collection, query, orderBy, doc, updateDoc, serverTimestamp, increment, arrayUnion, runTransaction,
+} from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -55,30 +57,46 @@ export default function AdminPaymentsPage() {
     if (!ensureAdmin() || !firestore || !user) return;
     setIsProcessing(true);
     try {
-      await updateDoc(doc(firestore, "paymentOrders", order.id), {
-        status: "approved",
-        reviewStatus: "approved",
-        reviewedBy: user.uid,
-        reviewedAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      });
-      if (order.type === "wallet_recharge") {
-        const walletRef = doc(firestore, "wallets", order.userId);
-        const walletSnap = await getDoc(walletRef);
-        const amount = order.amountPaid || order.amountExpected;
-        if (walletSnap.exists()) {
-          await updateDoc(walletRef, { balance: increment(amount), updatedAt: serverTimestamp() });
-        } else {
-          await setDoc(walletRef, { userId: order.userId, balance: amount, currency: order.currency, updatedAt: serverTimestamp() });
-        }
-      } else if (order.type === "membership_payment" && order.relatedGroupId) {
-        // Agregar al usuario como miembro del grupo y ocupar un cupo.
-        await updateDoc(doc(firestore, "groups", order.relatedGroupId), {
-          memberIds: arrayUnion(order.userId),
-          slotsFilled: increment(1),
+      await runTransaction(firestore, async (tx) => {
+        const orderRef = doc(firestore, "paymentOrders", order.id);
+        const freshOrderSnap = await tx.get(orderRef);
+        if (!freshOrderSnap.exists()) throw new Error("ORDER_NOT_FOUND");
+        const freshOrder = freshOrderSnap.data() as PaymentOrder;
+        if (freshOrder.status !== "uploaded") throw new Error("ORDER_NOT_UPLOADED");
+
+        tx.update(orderRef, {
+          status: "approved",
+          reviewStatus: "approved",
+          reviewedBy: user.uid,
+          reviewedAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
         });
-      }
+
+        if (freshOrder.type === "wallet_recharge") {
+          const walletRef = doc(firestore, "wallets", freshOrder.userId);
+          const walletSnap = await tx.get(walletRef);
+          const amount = freshOrder.amountPaid || freshOrder.amountExpected;
+          if (walletSnap.exists()) {
+            tx.update(walletRef, { balance: increment(amount), updatedAt: serverTimestamp() });
+          } else {
+            tx.set(walletRef, { userId: freshOrder.userId, balance: amount, currency: freshOrder.currency, updatedAt: serverTimestamp() });
+          }
+        } else if (freshOrder.type === "membership_payment" && freshOrder.relatedGroupId) {
+          const groupRef = doc(firestore, "groups", freshOrder.relatedGroupId);
+          const groupSnap = await tx.get(groupRef);
+          if (!groupSnap.exists()) throw new Error("GROUP_NOT_FOUND");
+          const group = groupSnap.data() as { approval?: string; slotsFilled?: number; slotsTotal?: number; memberIds?: string[]; hostId?: string };
+          if (group.approval !== "approved") throw new Error("GROUP_NOT_APPROVED");
+          if ((group.memberIds ?? []).includes(freshOrder.userId)) throw new Error("ALREADY_MEMBER");
+          if (group.hostId === freshOrder.userId) throw new Error("HOST_CANNOT_JOIN");
+          if ((group.slotsFilled ?? 0) >= (group.slotsTotal ?? 0)) throw new Error("GROUP_FULL");
+          tx.update(groupRef, {
+            memberIds: arrayUnion(freshOrder.userId),
+            slotsFilled: increment(1),
+            updatedAt: serverTimestamp(),
+          });
+        }
+      });
       await logAdminAction(firestore, user, order.type === "wallet_recharge" ? "recharge_approved" : "payment_approved", {
         targetUserId: order.userId,
         resourceId: order.id,
@@ -86,8 +104,11 @@ export default function AdminPaymentsPage() {
       });
       toast({ title: "Pago aprobado" });
       setSelectedOrder(null);
-    } catch {
-      toast({ title: "Error", description: "No se pudo aprobar el pago.", variant: "destructive" });
+    } catch (e) {
+      const message = e instanceof Error && e.message === "GROUP_FULL"
+        ? "El grupo ya no tiene cupos libres."
+        : "No se pudo aprobar el pago. Verifica que siga pendiente y que el grupo tenga cupos.";
+      toast({ title: "Error", description: message, variant: "destructive" });
     } finally {
       setIsProcessing(false);
     }

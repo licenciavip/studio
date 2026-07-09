@@ -88,6 +88,10 @@ export default function BilleteraPage() {
     [firestore, user]
   );
   const { data: accounts } = useCollection<WithdrawalAccount>(accountsQuery);
+  const approvedAccounts = useMemo(
+    () => (accounts ?? []).filter((a) => a.status === "approved"),
+    [accounts]
+  );
 
   const pendingWithdrawTotal = useMemo(
     () => (withdrawals ?? []).filter((w) => w.status === "pending").reduce((acc, w) => acc + w.amount, 0),
@@ -160,18 +164,18 @@ export default function BilleteraPage() {
   // ── Retiro (todo el saldo disponible) ──
   const openWithdraw = () => {
     if (available <= 0) { toast({ title: "Sin saldo", description: "No tienes saldo disponible para retirar." }); return; }
-    if (!accounts || accounts.length === 0) {
+    if (approvedAccounts.length === 0) {
       toast({ title: "Agrega una cuenta", description: "Primero registra una cuenta de retiro." });
       return;
     }
-    const primary = accounts.find((a) => a.isPrimary) ?? accounts[0];
+    const primary = approvedAccounts.find((a) => a.isPrimary) ?? approvedAccounts[0];
     setSelectedAccountId(primary.id);
     setWDone(false);
     setShowWithdraw(true);
   };
   const handleWithdraw = async () => {
-    if (!firestore || !user || !accounts) return;
-    const acc = accounts.find((a) => a.id === selectedAccountId);
+    if (!firestore || !user) return;
+    const acc = approvedAccounts.find((a) => a.id === selectedAccountId);
     if (!acc || available <= 0) return;
     setWLoading(true);
     try {
@@ -248,7 +252,9 @@ export default function BilleteraPage() {
                 <p className="text-[10px] text-on-surface/40">{a.holderName} · {a.destination}</p>
               </div>
             </div>
-            <span className="text-[8px] font-black uppercase tracking-widest text-success">Aprobada</span>
+            <span className={cn("text-[8px] font-black uppercase tracking-widest", a.status === "approved" ? "text-success" : a.status === "pending" ? "text-warning" : "text-danger")}>
+              {a.status === "approved" ? "Aprobada" : a.status === "pending" ? "En revision" : "Rechazada"}
+            </span>
           </div>
         ))}
         <Link href="/billetera/agregar-cuenta" className="no-underline">
@@ -387,7 +393,7 @@ export default function BilleteraPage() {
               </div>
               <div className="space-y-1.5">
                 <p className="text-[10px] font-black uppercase tracking-widest text-on-surface/40">Cuenta destino</p>
-                {(accounts ?? []).map((a) => (
+                {approvedAccounts.map((a) => (
                   <button key={a.id} onClick={() => setSelectedAccountId(a.id)} className={cn("w-full flex items-center justify-between p-3 rounded-2xl border transition-all", selectedAccountId === a.id ? "border-primary bg-primary/5" : "border-white/30 bg-white/20")}>
                     <div className="flex items-center gap-2.5">
                       <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-[9px] font-black" style={{ background: ENTITIES[a.entity]?.color }}>{ENTITIES[a.entity]?.label.slice(0, 2).toUpperCase()}</div>
