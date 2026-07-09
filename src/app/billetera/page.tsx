@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { BCP_ACCOUNT } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { paymentStatusConfig } from "@/lib/status";
-import { ENTITIES } from "@/lib/withdrawal";
+import { ENTITIES, ENTITY_LIST } from "@/lib/withdrawal";
 import { useUser, useFirestore, useDoc, useCollection } from "@/firebase";
 import { collection, query, where, doc, setDoc, serverTimestamp } from "firebase/firestore";
 import {
@@ -92,6 +92,11 @@ export default function BilleteraPage() {
     () => (accounts ?? []).filter((a) => a.status === "approved"),
     [accounts]
   );
+  const usedEntities = useMemo(
+    () => new Set((accounts ?? []).filter((a) => a.status !== "rejected").map((a) => a.entity)),
+    [accounts]
+  );
+  const canAddWithdrawalAccount = usedEntities.size < ENTITY_LIST.length;
 
   const pendingWithdrawTotal = useMemo(
     () => (withdrawals ?? []).filter((w) => w.status === "pending").reduce((acc, w) => acc + w.amount, 0),
@@ -233,13 +238,15 @@ export default function BilleteraPage() {
       )}
 
       {/* Cuentas de retiro */}
-      <div className="space-y-2">
+      <div className="space-y-3">
         <div className="flex items-center gap-1.5 px-2">
           <CreditCard className="h-3 w-3 text-on-surface/30" />
           <h2 className="text-[10px] font-bold text-on-surface/30 tracking-tight uppercase">Mis cuentas de retiro</h2>
         </div>
+        <div className="space-y-3">
         {(accounts ?? []).map((a) => (
-          <div key={a.id} className="glass-card p-3.5 rounded-[1.5rem] flex items-center justify-between gap-3">
+          <Link key={a.id} href={`/billetera/agregar-cuenta?id=${a.id}`} className="block no-underline">
+          <div className="glass-card p-3.5 rounded-[1.5rem] flex min-h-[74px] items-center justify-between gap-3 transition-colors hover:bg-white/40">
             <div className="flex min-w-0 items-center gap-3">
               <div className="h-9 w-9 shrink-0 rounded-xl flex items-center justify-center text-white text-[10px] font-black" style={{ background: ENTITIES[a.entity]?.color }}>
                 {ENTITIES[a.entity]?.label.slice(0, 2).toUpperCase()}
@@ -256,16 +263,24 @@ export default function BilleteraPage() {
               {a.status === "approved" ? "Aprobada" : a.status === "pending" ? "En revision" : "Rechazada"}
             </span>
           </div>
+          </Link>
         ))}
-        <Link href="/billetera/agregar-cuenta" className="no-underline">
-          <div className="glass-card p-3.5 rounded-[1.5rem] flex items-center justify-between border-dashed transition-colors hover:bg-white/40">
+        </div>
+        {canAddWithdrawalAccount ? (
+          <Link href="/billetera/agregar-cuenta" className="block no-underline">
+          <div className="glass-card p-3.5 rounded-[1.5rem] flex min-h-[74px] items-center justify-between border-dashed transition-colors hover:bg-white/40">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center"><Plus className="h-4 w-4 text-primary" /></div>
               <p className="text-[12px] font-bold text-primary">Agregar cuenta de retiro</p>
             </div>
             <ChevronRight className="h-4 w-4 text-on-surface/25" />
           </div>
-        </Link>
+          </Link>
+        ) : (
+          <div className="rounded-[1.5rem] border border-white/25 bg-white/20 p-3.5 text-center">
+            <p className="text-[11px] font-bold text-on-surface/45">Ya agregaste Yape, Plin y BCP. Toca una cuenta para editarla.</p>
+          </div>
+        )}
       </div>
 
       {/* Actividad */}

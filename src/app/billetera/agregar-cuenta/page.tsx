@@ -1,15 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { useUser, useFirestore } from "@/firebase";
-import { collection, doc, setDoc, getDocs, query, where, serverTimestamp } from "firebase/firestore";
+import { useUser, useFirestore, useCollection } from "@/firebase";
+import { collection, doc, setDoc, updateDoc, getDocs, query, where, serverTimestamp } from "firebase/firestore";
 import { cn } from "@/lib/utils";
 import { ENTITIES, ENTITY_LIST } from "@/lib/withdrawal";
 import { ArrowLeft, CheckCircle2, AlertTriangle } from "lucide-react";
-import type { WithdrawalEntity } from "@/lib/types";
+import type { WithdrawalAccount, WithdrawalEntity } from "@/lib/types";
 
 type Step = "titular" | "entidad" | "confirmar" | "exito";
 
@@ -26,23 +26,54 @@ export default function AgregarCuentaPage() {
   const [destination, setDestination] = useState("");
   const [accountName, setAccountName] = useState("");
   const [saving, setSaving] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [hydratedEdit, setHydratedEdit] = useState(false);
+
+  useEffect(() => {
+    setEditingId(new URLSearchParams(window.location.search).get("id"));
+  }, []);
+
+  const accountsQuery = useMemo(
+    () => (firestore && user ? query(collection(firestore, "withdrawalAccounts"), where("userId", "==", user.uid)) : null),
+    [firestore, user]
+  );
+  const { data: accounts } = useCollection<WithdrawalAccount>(accountsQuery);
+  const editingAccount = useMemo(
+    () => (editingId ? (accounts ?? []).find((a) => a.id === editingId) ?? null : null),
+    [accounts, editingId]
+  );
 
   const meta = entity ? ENTITIES[entity] : null;
+  const usedEntities = useMemo(
+    () => new Set((accounts ?? []).filter((a) => a.status !== "rejected" && a.id !== editingId).map((a) => a.entity)),
+    [accounts, editingId]
+  );
+  const hasNoAvailableMethod = !editingId && ENTITY_LIST.every((e) => usedEntities.has(e));
+
+  useEffect(() => {
+    if (!editingAccount || hydratedEdit) return;
+    setHolderName(editingAccount.holderName ?? "");
+    setDocNumber(editingAccount.docNumber ?? "");
+    setEntity(editingAccount.entity);
+    setDestination(editingAccount.destination ?? "");
+    setAccountName(editingAccount.accountName ?? "");
+    setHydratedEdit(true);
+  }, [editingAccount, hydratedEdit]);
 
   const canTitular = holderName.trim().length > 3 && /^\d{8}$/.test(docNumber);
   const canEntidad = entity !== "" && destination.trim().length >= 6;
 
   const handleSave = async () => {
     if (!firestore || !user || !entity) return;
+    if (usedEntities.has(entity)) {
+      toast({ title: "Metodo ya agregado", description: `Ya tienes una cuenta ${ENTITIES[entity].label}. Edita la existente.`, variant: "destructive" });
+      return;
+    }
     setSaving(true);
     try {
-      // ¿Es la primera cuenta? Entonces será la principal.
       const existing = await getDocs(query(collection(firestore, "withdrawalAccounts"), where("userId", "==", user.uid)));
       const isPrimary = existing.empty;
-
-      const id = doc(collection(firestore, "withdrawalAccounts")).id;
-      await setDoc(doc(firestore, "withdrawalAccounts", id), {
-        id,
+      const payload = {
         userId: user.uid,
         accountName: accountName.trim() || ENTITIES[entity].label,
         holderName: holderName.trim(),
@@ -50,14 +81,24 @@ export default function AgregarCuentaPage() {
         docNumber: docNumber.trim(),
         entity,
         destination: destination.trim(),
-        isPrimary,
+        isPrimary: editingAccount?.isPrimary ?? isPrimary,
         status: "pending",
-        createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
-      });
+      };
+
+      if (editingId) {
+        await updateDoc(doc(firestore, "withdrawalAccounts", editingId), payload);
+      } else {
+        const id = doc(collection(firestore, "withdrawalAccounts")).id;
+        await setDoc(doc(firestore, "withdrawalAccounts", id), {
+          id,
+          ...payload,
+          createdAt: serverTimestamp(),
+        });
+      }
       setStep("exito");
     } catch {
-      toast({ title: "Error", description: "No se pudo registrar la cuenta.", variant: "destructive" });
+      toast({ title: "Error", description: "No se pudo guardar la cuenta.", variant: "destructive" });
     } finally {
       setSaving(false);
     }
@@ -77,8 +118,16 @@ export default function AgregarCuentaPage() {
       {/* PASO 1: Titular */}
       {step === "titular" && (
         <div className="space-y-4">
-          <h1 className="text-xl font-extrabold tracking-tight text-on-surface">Agregar cuenta de retiro</h1>
+          <h1 className="text-xl font-extrabold tracking-tight text-on-surface">{editingId ? "Editar cuenta de retiro" : "Agregar cuenta de retiro"}</h1>
 
+          {hasNoAvailableMethod ? (
+            <div className="glass-card rounded-2xl p-5 text-center">
+              <p className="text-sm font-bold text-on-surface">Ya agregaste todos los métodos</p>
+              <p className="mt-1 text-[11px] text-on-surface/45">Puedes editar una cuenta desde tu billetera.</p>
+              <Button className="mt-4 h-10 rounded-2xl px-5 font-bold" onClick={() => router.push("/billetera")}>Volver</Button>
+            </div>
+          ) : (
+          <>
           <div className="glass-card rounded-2xl p-4 flex gap-3">
             <AlertTriangle className="h-5 w-5 shrink-0 text-warning" />
             <div>
@@ -106,6 +155,8 @@ export default function AgregarCuentaPage() {
           </div>
 
           <Button className="w-full h-11 rounded-2xl font-bold" disabled={!canTitular} onClick={() => setStep("entidad")}>Siguiente</Button>
+          </>
+          )}
         </div>
       )}
 
@@ -124,19 +175,23 @@ export default function AgregarCuentaPage() {
             <div className="space-y-1.5">
               <label className="text-[10px] font-black uppercase tracking-widest text-on-surface/40">Elige la entidad</label>
               <div className="grid grid-cols-3 gap-2">
-                {ENTITY_LIST.map((e) => (
+                {ENTITY_LIST.map((e) => {
+                  const disabled = usedEntities.has(e);
+                  return (
                   <button
                     key={e}
+                    disabled={disabled}
                     onClick={() => setEntity(e)}
                     className={cn(
                       "py-2.5 rounded-xl text-[12px] font-black border transition-all",
+                      disabled && "cursor-not-allowed opacity-35",
                       entity === e ? "text-white border-transparent" : "bg-white/20 text-on-surface/50 border-white/30"
                     )}
                     style={entity === e ? { background: ENTITIES[e].color } : undefined}
                   >
                     {ENTITIES[e].label}
                   </button>
-                ))}
+                )})}
               </div>
             </div>
             {meta && (
@@ -168,7 +223,7 @@ export default function AgregarCuentaPage() {
             <div className="flex justify-between"><span className="text-on-surface/40">{meta.destinationLabel}</span><span className="font-bold text-on-surface">{destination}</span></div>
           </div>
 
-          <Button className="w-full h-11 rounded-2xl font-bold" disabled={saving} onClick={handleSave}>{saving ? "Registrando..." : "Confirmar"}</Button>
+          <Button className="w-full h-11 rounded-2xl font-bold" disabled={saving} onClick={handleSave}>{saving ? "Guardando..." : editingId ? "Guardar cambios" : "Confirmar"}</Button>
         </div>
       )}
 
@@ -178,7 +233,7 @@ export default function AgregarCuentaPage() {
           <div className="w-16 h-16 bg-success/10 rounded-full flex items-center justify-center">
             <CheckCircle2 className="h-8 w-8 text-success" />
           </div>
-          <h1 className="text-xl font-extrabold tracking-tight text-on-surface">¡Agregaste tu cuenta con éxito!</h1>
+          <h1 className="text-xl font-extrabold tracking-tight text-on-surface">{editingId ? "Cuenta actualizada" : "Cuenta agregada con exito"}</h1>
           <p className="text-sm text-on-surface/55 max-w-xs leading-relaxed">
             La cuenta <span className="font-bold text-on-surface">{meta.label}</span> a nombre de{" "}
             <span className="font-bold text-on-surface">{holderName}</span> con DNI{" "}
