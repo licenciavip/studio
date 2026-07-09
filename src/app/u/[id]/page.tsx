@@ -27,7 +27,11 @@ export default function PublicProfilePage({ params: paramsPromise }: { params: P
   const { data: profile, loading: profileLoading } = useDoc<PublicProfile>(profileRef);
   const loading = unameLoading || profileLoading;
 
-  const groupsRef = useMemo(() => (firestore ? query(collection(firestore, "groups"), where("hostId", "==", uid)) : null), [firestore, uid]);
+  const groupsRef = useMemo(() => (
+    firestore
+      ? query(collection(firestore, "groups"), where("hostId", "==", uid), where("approval", "==", "approved"))
+      : null
+  ), [firestore, uid]);
   const { data: groups } = useCollection<GroupDoc>(groupsRef);
 
   const reviewsRef = useMemo(() => (firestore ? query(collection(firestore, "reviews"), where("hostId", "==", uid)) : null), [firestore, uid]);
