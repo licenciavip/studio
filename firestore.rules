@@ -125,7 +125,8 @@ service cloud.firestore {
     match /groups/{id} {
       allow read: if isAdmin()
         || resource.data.get('approval','') == 'approved'
-        || (isSignedIn() && resource.data.hostId == request.auth.uid);
+        || (isSignedIn() && resource.data.hostId == request.auth.uid)
+        || (isSignedIn() && request.auth.uid in resource.data.memberIds);
       allow create: if isSignedIn() && notBlocked()
         && isOwner(request.resource.data.hostId)
         && request.resource.data.approval == 'pending'
