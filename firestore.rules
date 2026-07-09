@@ -10,70 +10,91 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == userId;
     }
 
-    // Autorización REAL de admin: custom claim del token de Firebase Auth.
     function isAdmin() {
       return isSignedIn() && request.auth.token.admin == true;
     }
 
-    // FIX #6: un usuario bloqueado no puede escribir nada (ni pegándole a
-    // Firestore directo). Lee su propio doc para ver la marca `blocked`.
+    // Usuario bloqueado no puede escribir nada.
     function notBlocked() {
       return isSignedIn()
         && !(exists(/databases/$(database)/documents/users/$(request.auth.uid))
              && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('blocked', false) == true);
     }
 
-    // FIX #1: cada quien lee SOLO su propio documento (el admin, todos).
-    // Antes cualquier logueado leía el email de todos.
-    // El usuario no puede cambiar `role` ni `blocked` (eso es solo del admin).
+    // ─── users ───────────────────────────────────────────────────────────────
+    // Allowlist estricta: usuario solo puede editar displayName y avatarSeed.
+    // uid, email, role, blocked, createdAt son inmutables desde cliente.
     match /users/{userId} {
       allow read: if isOwner(userId) || isAdmin();
       allow create: if isOwner(userId)
+        && request.resource.data.uid == request.auth.uid
         && (!('role' in request.resource.data) || request.resource.data.role == 'user')
         && (!('blocked' in request.resource.data) || request.resource.data.blocked == false);
       allow update: if isAdmin()
         || (isOwner(userId) && notBlocked()
+            && request.resource.data.uid == resource.data.uid
+            && request.resource.data.get('email', '') == resource.data.get('email', '')
             && request.resource.data.role == resource.data.role
-            && request.resource.data.get('blocked', false) == resource.data.get('blocked', false));
+            && request.resource.data.get('blocked', false) == resource.data.get('blocked', false)
+            && request.resource.data.get('createdAt', null) == resource.data.get('createdAt', null)
+            && request.resource.data.keys().hasOnly(
+                ['uid','email','displayName','role','blocked','createdAt','updatedAt','avatarSeed']));
       allow delete: if isAdmin();
     }
 
-    // FIX #2 y #3: crear solo órdenes propias, con estado inicial válido; el
-    // usuario YA NO puede modificarlas (los flujos crean la orden completa de
-    // una vez). Solo el admin las actualiza.
+    // ─── paymentOrders ───────────────────────────────────────────────────────
+    // Cliente solo puede crear con campos controlados; monto/estado no pueden
+    // ser arbitrarios: el admin es quien aprueba; la validación real de montos
+    // ocurre en la revisión manual (hasta tener Cloud Functions).
     match /paymentOrders/{orderId} {
       allow read: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
       allow create: if isSignedIn() && notBlocked()
         && isOwner(request.resource.data.userId)
         && request.resource.data.status in ['pending', 'uploaded']
-        && request.resource.data.type in ['wallet_recharge', 'membership_payment'];
+        && request.resource.data.type in ['wallet_recharge', 'membership_payment']
+        && request.resource.data.keys().hasOnly([
+            'id','userId','type','relatedGroupId','amountExpected','amountPaid',
+            'currency','paymentCode','operationNumber','bankDestination',
+            'destinationAccountNumber','payerName','status','reviewStatus',
+            'expiresAt','createdAt','updatedAt']);
       allow update, delete: if isAdmin();
     }
 
+    // ─── wallets ─────────────────────────────────────────────────────────────
     match /wallets/{userId} {
       allow read: if isOwner(userId) || isAdmin();
       allow write: if isAdmin();
     }
 
-    // Retiros: el usuario crea los suyos con monto positivo; el admin los gestiona.
+    // ─── withdrawals ─────────────────────────────────────────────────────────
     match /withdrawals/{id} {
       allow read: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
       allow create: if isSignedIn() && notBlocked()
         && isOwner(request.resource.data.userId)
         && request.resource.data.status == 'pending'
         && request.resource.data.amount is number
-        && request.resource.data.amount > 0;
+        && request.resource.data.amount > 0
+        && request.resource.data.keys().hasOnly([
+            'id','userId','amount','currency','entity','destination','holderName',
+            'docNumber','accountId','status','createdAt','updatedAt']);
       allow update, delete: if isAdmin();
     }
 
+    // ─── withdrawalAccounts ──────────────────────────────────────────────────
+    // status siempre 'pending' al crear; solo admin lo cambia.
     match /withdrawalAccounts/{id} {
       allow read: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
       allow create: if isSignedIn() && notBlocked()
         && isOwner(request.resource.data.userId)
-        && request.resource.data.status == 'pending';
+        && request.resource.data.status == 'pending'
+        && request.resource.data.keys().hasOnly([
+            'id','userId','accountName','entity','destination','holderName',
+            'docType','docNumber','isPrimary','status','createdAt','updatedAt']);
       allow update, delete: if isAdmin();
     }
 
+    // ─── disputes ────────────────────────────────────────────────────────────
+    // La orden referenciada DEBE pertenecer al usuario que abre la disputa.
     match /disputes/{id} {
       allow read: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
       allow create: if isSignedIn() && notBlocked()
@@ -82,23 +103,31 @@ service cloud.firestore {
         && request.resource.data.orderId is string
         && exists(/databases/$(database)/documents/paymentOrders/$(request.resource.data.orderId))
         && get(/databases/$(database)/documents/paymentOrders/$(request.resource.data.orderId)).data.userId == request.auth.uid
-        && get(/databases/$(database)/documents/paymentOrders/$(request.resource.data.orderId)).data.status == 'approved';
+        && get(/databases/$(database)/documents/paymentOrders/$(request.resource.data.orderId)).data.status == 'approved'
+        && request.resource.data.keys().hasOnly([
+            'id','userId','orderId','evidence','status','createdAt','updatedAt']);
       allow update, delete: if isAdmin();
     }
 
-    // Grupos: listado legible por usuarios autenticados (para explorar).
-    // Crear en revisión; actualizar solo el admin (aprobar, sumar miembros);
-    // borrar el dueño o el admin. Las credenciales van en subcolección privada.
+    // ─── groups ──────────────────────────────────────────────────────────────
+    // Solo grupos aprobados son visibles para todos los autenticados.
+    // Pendientes y rechazados solo los lee su host o el admin.
+    // Host no puede borrar grupos con miembros; eso lo hace el admin.
     match /groups/{id} {
-      allow read: if isSignedIn();
+      allow read: if isAdmin()
+        || (isSignedIn() && resource.data.get('approval','') == 'approved')
+        || (isSignedIn() && resource.data.hostId == request.auth.uid);
       allow create: if isSignedIn() && notBlocked()
         && isOwner(request.resource.data.hostId)
         && request.resource.data.approval == 'pending'
         && request.resource.data.slotsFilled == 0
         && request.resource.data.memberIds.size() == 0;
       allow update: if isAdmin();
-      allow delete: if isOwner(resource.data.hostId) || isAdmin();
+      allow delete: if isAdmin()
+        || (isOwner(resource.data.hostId) && notBlocked()
+            && resource.data.memberIds.size() == 0);
 
+      // Credenciales privadas: solo host/miembros/admin.
       match /private/{doc} {
         allow read: if isSignedIn() && (
           get(/databases/$(database)/documents/groups/$(id)).data.hostId == request.auth.uid
@@ -112,56 +141,72 @@ service cloud.firestore {
       }
     }
 
-    // Catálogo de servicios y configuración: lectura pública, escritura admin.
+    // ─── services ────────────────────────────────────────────────────────────
     match /services/{id} {
       allow read: if true;
       allow write: if isAdmin();
     }
+
+    // ─── config ──────────────────────────────────────────────────────────────
+    // Datos de pago solo para usuarios autenticados en flujo activo.
     match /config/{id} {
-      allow read: if true;
+      allow read: if isSignedIn();
       allow write: if isAdmin();
     }
 
-    // Nombres de usuario (slug -> uid). Lectura publica; cada quien reserva el
-    // suyo. No se puede sobrescribir el de otro.
+    // ─── usernames ───────────────────────────────────────────────────────────
+    // Slug -> uid. No se puede reasignar a otro uid.
     match /usernames/{slug} {
       allow read: if true;
       allow create: if isSignedIn() && request.resource.data.uid == request.auth.uid;
-      allow update, delete: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow update: if isSignedIn()
+        && resource.data.uid == request.auth.uid
+        && request.resource.data.uid == request.auth.uid;
+      allow delete: if isSignedIn() && resource.data.uid == request.auth.uid;
     }
 
-    // Perfiles públicos: solo datos seguros (nombre, avatar, bio, reputación).
-    // Lectura pública; el dueño edita su nombre/avatar/bio pero NO su propia
-    // reputación. La actualización de la reputación por reseñas se añade aparte.
+    // ─── publicProfiles ──────────────────────────────────────────────────────
+    // CRÍTICO #2 fix: allowlist estricta.
+    // El usuario SOLO puede editar: displayName, avatarSeed, bio, slug, updatedAt.
+    // Campos de confianza (verified*, rating*, score, tierKey) SOLO los escribe el admin/backend.
+    // uid debe siempre coincidir con el doc id.
+    // Se elimina la rama de "reviewer actualiza perfil del host" — solo admin puede.
     match /publicProfiles/{uid} {
       allow read: if true;
       allow create: if isOwner(uid) && notBlocked()
+        && request.resource.data.uid == uid
         && !('phone' in request.resource.data)
-        && !('whatsapp' in request.resource.data);
-      // El dueño edita su nombre/avatar pero NO su reputación.
-      // Un miembro con reseña puede actualizar SOLO la reputación (no el nombre/avatar).
+        && !('whatsapp' in request.resource.data)
+        && !('verifiedEmail' in request.resource.data)
+        && !('verifiedProfile' in request.resource.data)
+        && !('score' in request.resource.data)
+        && !('tierKey' in request.resource.data);
       allow update: if isAdmin()
         || (isOwner(uid) && notBlocked()
+            && request.resource.data.uid == uid
             && !('phone' in request.resource.data)
             && !('whatsapp' in request.resource.data)
             && request.resource.data.get('ratingSum', 0) == resource.data.get('ratingSum', 0)
-            && request.resource.data.get('ratingCount', 0) == resource.data.get('ratingCount', 0))
-        || (isSignedIn() && notBlocked()
-            && !('phone' in request.resource.data)
-            && !('whatsapp' in request.resource.data)
-            && request.resource.data.displayName == resource.data.displayName
-            && request.resource.data.get('avatarSeed', '') == resource.data.get('avatarSeed', '')
-            && exists(/databases/$(database)/documents/reviews/$(uid + '__' + request.auth.uid)));
+            && request.resource.data.get('ratingCount', 0) == resource.data.get('ratingCount', 0)
+            && request.resource.data.get('verifiedEmail', false) == resource.data.get('verifiedEmail', false)
+            && request.resource.data.get('verifiedProfile', false) == resource.data.get('verifiedProfile', false)
+            && request.resource.data.get('score', 0) == resource.data.get('score', 0)
+            && request.resource.data.get('tierKey', '') == resource.data.get('tierKey', '')
+            && request.resource.data.keys().hasOnly([
+                'uid','displayName','avatarSeed','bio','slug',
+                'createdAt','updatedAt','ratingSum','ratingCount',
+                'verifiedEmail','verifiedProfile','score','tierKey']));
     }
 
-    // Datos privados del perfil: contacto y verificaciones no publicas.
+    // Datos privados del perfil: contacto no publico.
     match /privateProfiles/{uid} {
       allow read, create, update: if (isOwner(uid) && notBlocked()) || isAdmin();
       allow delete: if isAdmin();
     }
 
-    // Reseñas: una por (anfitrión, miembro). Solo puede crearla un miembro real
-    // de un grupo de ese anfitrión, con 1-5 estrellas.
+    // ─── reviews ─────────────────────────────────────────────────────────────
+    // Allowlist de campos; límite de longitud en comment; raterName derivado del
+    // perfil (no editable para suplantar a otros).
     match /reviews/{id} {
       allow read: if true;
       allow create, update: if isSignedIn() && notBlocked()
@@ -169,17 +214,25 @@ service cloud.firestore {
         && id == request.resource.data.hostId + '__' + request.auth.uid
         && request.resource.data.stars is number
         && request.resource.data.stars >= 1 && request.resource.data.stars <= 5
+        && request.resource.data.get('comment', '').size() <= 500
         && request.auth.uid in get(/databases/$(database)/documents/groups/$(request.resource.data.groupId)).data.memberIds
-        && get(/databases/$(database)/documents/groups/$(request.resource.data.groupId)).data.hostId == request.resource.data.hostId;
+        && get(/databases/$(database)/documents/groups/$(request.resource.data.groupId)).data.hostId == request.resource.data.hostId
+        && request.resource.data.keys().hasOnly([
+            'id','hostId','raterId','raterName','groupId','stars','comment','createdAt','updatedAt']);
       allow delete: if isAdmin();
     }
 
+    // ─── serviceRecommendations ──────────────────────────────────────────────
     match /serviceRecommendations/{id} {
-      allow create: if isSignedIn() && notBlocked();
+      allow create: if isSignedIn() && notBlocked()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.get('serviceName', '').size() <= 100
+        && request.resource.data.keys().hasOnly(['userId','serviceName','comment','createdAt']);
       allow read: if isAdmin();
     }
 
-    // Registro de acciones administrativas: inmutable desde el cliente.
+    // ─── adminLogs ───────────────────────────────────────────────────────────
+    // Solo lectura/creación admin; nunca se puede modificar ni borrar.
     match /adminLogs/{logId} {
       allow read: if isAdmin();
       allow create: if isAdmin();
