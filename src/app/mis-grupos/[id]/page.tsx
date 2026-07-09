@@ -4,11 +4,10 @@ import { use, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Mail, Key, Copy, Eye, EyeOff, AlertCircle, Info, Users, Sparkles, Lock, Star } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useUser, useFirestore, useDoc } from "@/firebase";
-import { doc, getDoc, setDoc, updateDoc, increment, serverTimestamp } from "firebase/firestore";
+import { deleteField, doc, getDoc, setDoc, updateDoc, increment, serverTimestamp } from "firebase/firestore";
 import { cn } from "@/lib/utils";
 import type { GroupDoc, Review } from "@/lib/types";
 
@@ -27,18 +26,17 @@ export default function GroupDetailPage({ params: paramsPromise }: { params: Pro
   const credRef = useMemo(() => (firestore ? doc(firestore, "groups", params.id, "private", "credentials") : null), [firestore, params.id]);
   const { data: creds } = useDoc<Credentials>(credRef);
 
-  // Reseña del miembro al anfitrión
+  // Calificación del miembro al anfitrión.
   const reviewRef = useMemo(
     () => (firestore && group && user ? doc(firestore, "reviews", `${group.hostId}__${user.uid}`) : null),
     [firestore, group, user]
   );
   const { data: existingReview } = useDoc<Review>(reviewRef);
   const [stars, setStars] = useState(0);
-  const [comment, setComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    if (existingReview) { setStars(existingReview.stars); setComment(existingReview.comment ?? ""); }
+    if (existingReview) setStars(existingReview.stars);
   }, [existingReview]);
 
   const submitReview = async () => {
@@ -51,7 +49,7 @@ export default function GroupDetailPage({ params: paramsPromise }: { params: Pro
       const old = snap.exists() ? ((snap.data().stars as number) ?? 0) : 0;
       await setDoc(ref, {
         id: rid, hostId: group.hostId, raterId: user.uid, raterName: user.displayName ?? "Miembro",
-        groupId: group.id, stars, comment: comment.trim(), createdAt: serverTimestamp(),
+        groupId: group.id, stars, comment: deleteField(), createdAt: serverTimestamp(),
       }, { merge: true });
       const profileRef = doc(firestore, "publicProfiles", group.hostId);
       if (snap.exists()) {
@@ -59,9 +57,9 @@ export default function GroupDetailPage({ params: paramsPromise }: { params: Pro
       } else {
         await updateDoc(profileRef, { ratingSum: increment(stars), ratingCount: increment(1), updatedAt: serverTimestamp() });
       }
-      toast({ title: "¡Gracias por tu reseña!" });
+      toast({ title: "Gracias por tu calificación" });
     } catch {
-      toast({ title: "Error", description: "No se pudo guardar la reseña.", variant: "destructive" });
+      toast({ title: "Error", description: "No se pudo guardar la calificación.", variant: "destructive" });
     } finally {
       setSubmitting(false);
     }
@@ -189,14 +187,8 @@ export default function GroupDetailPage({ params: paramsPromise }: { params: Pro
                 </button>
               ))}
             </div>
-            <Textarea
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              placeholder="Cuenta cómo fue tu experiencia (opcional)…"
-              className="glass-input rounded-2xl text-sm"
-            />
             <Button className="h-11 w-full rounded-2xl font-bold" onClick={submitReview} disabled={submitting || stars < 1}>
-              {submitting ? "Enviando…" : existingReview ? "Actualizar reseña" : "Enviar reseña"}
+              {submitting ? "Enviando..." : existingReview ? "Actualizar calificación" : "Enviar calificación"}
             </Button>
           </div>
         </section>

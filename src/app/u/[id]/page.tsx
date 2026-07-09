@@ -11,8 +11,7 @@ import { UserAvatar } from "@/components/user-avatar";
 import { LevelBadge } from "@/components/level-badge";
 import { HowLevelsButton } from "@/components/how-levels";
 import { computeScore, levelFor } from "@/lib/levels";
-import { cn } from "@/lib/utils";
-import type { PublicProfile, GroupDoc, Review } from "@/lib/types";
+import type { PublicProfile, GroupDoc } from "@/lib/types";
 
 export default function PublicProfilePage({ params: paramsPromise }: { params: Promise<{ id: string }> }) {
   const { id } = use(paramsPromise);
@@ -33,9 +32,6 @@ export default function PublicProfilePage({ params: paramsPromise }: { params: P
       : null
   ), [firestore, uid]);
   const { data: groups } = useCollection<GroupDoc>(groupsRef);
-
-  const reviewsRef = useMemo(() => (firestore ? query(collection(firestore, "reviews"), where("hostId", "==", uid)) : null), [firestore, uid]);
-  const { data: reviews } = useCollection<Review>(reviewsRef);
 
   const { toast } = useToast();
   const activeGroups = (groups ?? []).filter((g) => g.approval === "approved");
@@ -105,7 +101,7 @@ export default function PublicProfilePage({ params: paramsPromise }: { params: P
         <div className="mt-4 flex items-center justify-center gap-1.5">
           <Star className={ratingCount > 0 ? "h-5 w-5 fill-warning text-warning" : "h-5 w-5 text-on-surface/20"} />
           <span className="text-lg font-extrabold text-on-surface">{ratingCount > 0 ? ratingAvg.toFixed(1) : "—"}</span>
-          <span className="text-[11px] text-on-surface/40">({ratingCount} {ratingCount === 1 ? "reseña" : "reseñas"})</span>
+          <span className="text-[11px] text-on-surface/40">({ratingCount} {ratingCount === 1 ? "calificación" : "calificaciones"})</span>
         </div>
       </div>
 
@@ -126,26 +122,6 @@ export default function PublicProfilePage({ params: paramsPromise }: { params: P
       {/* Compartir */}
       <Button variant="outline" className="h-11 w-full rounded-2xl font-bold" onClick={share}><Share2 className="mr-1.5 h-4 w-4" /> Compartir</Button>
 
-      {/* Reseñas */}
-      <section className="space-y-2">
-        <h2 className="px-1 text-[11px] font-black uppercase tracking-widest text-on-surface/40">Reseñas</h2>
-        {(reviews ?? []).length === 0 && (
-          <p className="px-2 text-[11px] text-on-surface/30">Aún no hay reseñas.</p>
-        )}
-        {(reviews ?? []).map((r) => (
-          <div key={r.id} className="glass-card rounded-2xl p-4">
-            <div className="flex items-center justify-between">
-              <p className="text-[12px] font-bold text-on-surface">{r.raterName || "Miembro"}</p>
-              <div className="flex gap-0.5">
-                {[1, 2, 3, 4, 5].map((n) => (
-                  <Star key={n} className={cn("h-3.5 w-3.5", n <= r.stars ? "fill-warning text-warning" : "text-on-surface/15")} />
-                ))}
-              </div>
-            </div>
-            {r.comment && <p className="mt-1 text-[12px] leading-snug text-on-surface/60">{r.comment}</p>}
-          </div>
-        ))}
-      </section>
     </div>
   );
 }

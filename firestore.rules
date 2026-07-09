@@ -205,8 +205,7 @@ service cloud.firestore {
     }
 
     // ─── reviews ─────────────────────────────────────────────────────────────
-    // Allowlist de campos; límite de longitud en comment; raterName derivado del
-    // perfil (no editable para suplantar a otros).
+    // Allowlist de campos; solo estrellas, sin comentario escrito.
     match /reviews/{id} {
       allow read: if true;
       allow create, update: if isSignedIn() && notBlocked()
@@ -214,11 +213,10 @@ service cloud.firestore {
         && id == request.resource.data.hostId + '__' + request.auth.uid
         && request.resource.data.stars is number
         && request.resource.data.stars >= 1 && request.resource.data.stars <= 5
-        && request.resource.data.get('comment', '').size() <= 500
         && request.auth.uid in get(/databases/$(database)/documents/groups/$(request.resource.data.groupId)).data.memberIds
         && get(/databases/$(database)/documents/groups/$(request.resource.data.groupId)).data.hostId == request.resource.data.hostId
         && request.resource.data.keys().hasOnly([
-            'id','hostId','raterId','raterName','groupId','stars','comment','createdAt','updatedAt']);
+            'id','hostId','raterId','raterName','groupId','stars','createdAt','updatedAt']);
       allow delete: if isAdmin();
     }
 
