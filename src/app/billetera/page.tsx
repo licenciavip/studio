@@ -198,7 +198,7 @@ export default function BilleteraPage() {
   };
 
   return (
-    <div className="pb-24 pt-2 space-y-5">
+    <div className="pb-40 pt-2 space-y-5">
       {/* Saldo disponible */}
       <div className="relative overflow-hidden bg-gradient-to-br from-[#1c1c1e] to-[#2c2c2e] p-6 rounded-[2.2rem] text-white shadow-2xl border border-white/5">
         <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none"><TrendingUp className="h-20 w-20" /></div>
@@ -239,20 +239,20 @@ export default function BilleteraPage() {
           <h2 className="text-[10px] font-bold text-on-surface/30 tracking-tight uppercase">Mis cuentas de retiro</h2>
         </div>
         {(accounts ?? []).map((a) => (
-          <div key={a.id} className="glass-card p-3.5 rounded-[1.5rem] flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white text-[10px] font-black" style={{ background: ENTITIES[a.entity]?.color }}>
+          <div key={a.id} className="glass-card p-3.5 rounded-[1.5rem] flex items-center justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-3">
+              <div className="h-9 w-9 shrink-0 rounded-xl flex items-center justify-center text-white text-[10px] font-black" style={{ background: ENTITIES[a.entity]?.color }}>
                 {ENTITIES[a.entity]?.label.slice(0, 2).toUpperCase()}
               </div>
-              <div>
-                <p className="text-[12px] font-bold text-on-surface flex items-center gap-1">
-                  {a.accountName || ENTITIES[a.entity]?.label}
-                  {a.isPrimary && <Star className="h-3 w-3 fill-warning text-warning" />}
+              <div className="min-w-0">
+                <p className="text-[12px] font-bold text-on-surface flex min-w-0 items-center gap-1">
+                  <span className="truncate">{a.accountName || ENTITIES[a.entity]?.label}</span>
+                  {a.isPrimary && <Star className="h-3 w-3 shrink-0 fill-warning text-warning" />}
                 </p>
-                <p className="text-[10px] text-on-surface/40">{a.holderName} · {a.destination}</p>
+                <p className="truncate text-[10px] text-on-surface/40">{a.holderName} · {a.destination}</p>
               </div>
             </div>
-            <span className={cn("text-[8px] font-black uppercase tracking-widest", a.status === "approved" ? "text-success" : a.status === "pending" ? "text-warning" : "text-danger")}>
+            <span className={cn("shrink-0 whitespace-nowrap text-[8px] font-black uppercase tracking-widest", a.status === "approved" ? "text-success" : a.status === "pending" ? "text-warning" : "text-danger")}>
               {a.status === "approved" ? "Aprobada" : a.status === "pending" ? "En revision" : "Rechazada"}
             </span>
           </div>
@@ -282,17 +282,17 @@ export default function BilleteraPage() {
         )}
         <div className="space-y-1.5">
           {activity.map((it) => (
-            <div key={it.id} className="glass-card p-3 rounded-[1.5rem] flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 flex items-center justify-center rounded-xl bg-white/5 text-primary border border-white/10">
+            <div key={it.id} className="glass-card p-3 rounded-[1.5rem] flex items-center justify-between gap-3">
+              <div className="flex min-w-0 items-center gap-3">
+                <div className="h-8 w-8 shrink-0 flex items-center justify-center rounded-xl bg-white/5 text-primary border border-white/10">
                   {it.sign === "+" ? <Plus className="h-4 w-4" /> : <ArrowUpRight className="h-4 w-4" />}
                 </div>
-                <div>
+                <div className="min-w-0">
                   <p className="text-[11px] font-bold text-on-surface tracking-tight">{it.label}</p>
-                  <p className="text-[9px] text-on-surface-variant/30 font-bold uppercase tracking-widest">{it.code}</p>
+                  <p className="truncate text-[9px] text-on-surface-variant/30 font-bold uppercase tracking-widest">{it.code}</p>
                 </div>
               </div>
-              <div className="text-right">
+              <div className="shrink-0 text-right">
                 <p className={cn("text-[11px] font-bold tracking-tight", it.sign === "+" && it.statusText === "Aprobado" ? "text-success" : "text-on-surface")}>
                   {it.sign}S/{it.amount.toFixed(2)}
                 </p>

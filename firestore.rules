@@ -115,7 +115,7 @@ service cloud.firestore {
     // Host no puede borrar grupos con miembros; eso lo hace el admin.
     match /groups/{id} {
       allow read: if isAdmin()
-        || (isSignedIn() && resource.data.get('approval','') == 'approved')
+        || resource.data.get('approval','') == 'approved'
         || (isSignedIn() && resource.data.hostId == request.auth.uid);
       allow create: if isSignedIn() && notBlocked()
         && isOwner(request.resource.data.hostId)

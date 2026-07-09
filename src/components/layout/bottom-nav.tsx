@@ -21,6 +21,7 @@ export function BottomNav() {
 
   if (!mounted) return null;
   if (HIDDEN_PATHS.includes(pathname)) return null;
+  if (pathname.startsWith("/u/")) return null;
 
   return (
     <nav className="lg-tab-bar">

@@ -9,6 +9,7 @@ import type { UserDoc } from "@/lib/types";
 
 // Rutas accesibles sin iniciar sesión
 const PUBLIC_PATHS = ["/", "/login"];
+const PUBLIC_PREFIXES = ["/u/"];
 
 /**
  * Protege el entorno de usuario normal.
@@ -23,7 +24,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
 
-  const isPublic = PUBLIC_PATHS.includes(pathname);
+  const isPublic = PUBLIC_PATHS.includes(pathname) || PUBLIC_PREFIXES.some((prefix) => pathname.startsWith(prefix));
 
   const userDocRef = useMemo(
     () => (firestore && user ? doc(firestore, "users", user.uid) : null),
